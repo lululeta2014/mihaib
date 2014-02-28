@@ -1,0 +1,9 @@
+<ul id="navlist">
+{{range .sections}}
+	{{if $label := .GetNavLabel}}
+		<li {{if call $.isCrtSec .}}class="crtSec"{{end}}>
+			<a href="{{.GetPath}}">{{$label}}</a>
+		</li>
+	{{end}}
+{{end}}
+</ul>

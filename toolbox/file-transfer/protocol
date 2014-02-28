@@ -1,0 +1,79 @@
+1. Program start and connection
+
+Start server and client, each knows who must send (from cmd line args).
+The client connects and explicitly says who will send:
+
+SERVER SENDS\n
+or
+CLIENT SENDS\n
+
+If the server agrees, it sends:
+DIRECTION OK\n
+if not, it sends any other (or no) message and closes the connection.
+
+This confirms that both the server and the client were started
+for the same direction of the transfer.
+
+From this point on, we don't care who is the server and who is the client.
+We only care about who is the sender and who is the receiver.
+
+
+2. Sender announces total number of files and their names
+
+FILE COUNT nr_files\n
+1#\n
+name of file\n
+size in bytes\n
+2#\n
+name of file\n
+size in bytes\n
+...
+nr_files#\n
+name of file\n
+size in bytes\n
+
+nr_files is between 1 and 100
+file names are between 1 and 255 characters long
+file sizes have between 1 and 13 digits (each digit is 0-9)
+
+If the receiver accepts it sends:
+SEND FILES\n
+if not, it sends any other (or no) message and closes the connection.
+
+
+3. Sending files
+
+The following exchange of messages is repeated for all nr_files files:
+(example for file nr 1)
+
+The sender sends:
+OFFER 1\n
+
+If the receiver wants to skip this file, it sends:
+SKIP 1\n
+and they move to the next file.
+
+If the receiver wants to receive this file, it sends:
+ACCEPT 1\n
+
+The sender sends all bytes in the file.
+After getting all of them, the receiver sends:
+COMPLETED 1\n
+and they move on to the next file.
+
+
+4. Closing the connection
+
+After repeating step 3 a total of nr_files times,
+both the sender and the receiver close the connection.
+
+
+5. ASCII bytes allowed in text messages
+
+The protocol describes sending text messages and file contents.
+When sending text messages, only the following ASCII characters are allowed:
+- letters and digits: a-z, A-Z, 0-9
+- newline (ASCII 10) and space (ASCII 32)
+- symbols: !#$%&'()+,-.;=@[]^_`{}~
+
+Any other byte is illegal in text messages.

@@ -1,0 +1,6 @@
+Python3 modules.
+To use them, you must add this directory to the module search path by adding
+it to PYTHONPATH or sys.path.
+These modules assume you have already done this and they may import each other,
+whether they are used as additional modules or run as the main module.
+They will not alter the module search path.

@@ -1,0 +1,63 @@
+<table id="newRowTable">
+{{/* A range changes DOT, so we're saving it here */}}
+{{with $root := .}}
+<tr>
+{{range $idx, $uc := $root.userCols}}
+{{if not $uc.NoInsert | and $uc.IsCol}}
+<th>{{$uc.DisplayName}}</th>
+{{end}}
+{{end}}
+<th></th>
+</tr>
+
+<tr class="rowBeingInserted">
+{{range $idx, $uc := $root.userCols}}
+{{if not $uc.NoInsert | and $uc.IsCol}}
+<td>
+{{/* Non-empty kvPairs[idx] means <select>, for both Selector and Booleans.
+If Sel != nil, show a <select> even if it's empty (no currencies defined). */}}
+{{if index $root.kvPairs $idx | or $uc.Sel}}
+	{{/*Option starting with N means NULL. Starting with V means value*/}}
+	<select name="col{{$idx}}">
+	{{/*For dbBool, kvPairs[idx] is non-empty but uc.Sel may be nil*/}}
+	{{if $uc.Sel}}
+		{{if $uc.Sel.AllowNull}}
+		<option value="N">{{$uc.Sel.NullDropdownText}}</option>
+		{{end}}
+	{{end}}
+	{{range $kv := index $root.kvPairs $idx}}
+		<option value="V{{$kv.K}}">{{$kv.V}}</option>
+	{{end}}
+	</select>
+{{else}}
+	{{if $uc.WhatType.IsDateType}}<div class="groupingDiv">{{end}}
+	<input name="col{{$idx}}" type="text"
+		{{if $sz := $uc.InputFieldSize}}size="{{$sz}}"{{end}}
+		{{if $uc.GroupDigits}}class="groupDigits"{{end}}
+		onkeydown="keyDownNewRowForm(this, event);
+			{{if $uc.WhatType.IsDateType}}
+				checkDateLater(this, false);
+			{{end}}"
+		{{if $uc.WhatType.IsDateType}}
+			onfocus="checkDateLater(this, true);"
+			onblur="checkDateLater(this, true);"
+		{{end}}
+	>
+	{{if $uc.WhatType.IsDateType}}
+		<br>
+		<span class="parsedDate">–</span>
+		</div>
+	{{end}}
+{{end}}
+</td>
+{{end}}
+{{end}}
+<td>
+<button type="button" onclick="submitNewRowForm(this);">Add</button>
+<button type="button" onclick="cancelNewRowForm(this);">Cancel</button>
+<br>
+<span class="errSpan"></span>
+</td>
+</tr>
+{{end}}
+</table>

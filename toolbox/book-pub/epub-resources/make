@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+
+SCRIPT=`readlink -f "$0"`
+DIR=`dirname "$SCRIPT"`
+
+cd "$DIR"
+rm -f book.epub
+zip book.epub -DX0 mimetype
+zip book.epub -rDX9 META-INF OEBPS

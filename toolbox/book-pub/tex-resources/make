@@ -1,0 +1,8 @@
+#! /usr/bin/env bash
+
+SCRIPT=`readlink -f "$0"`
+DIR=`dirname "$SCRIPT"`
+
+cd "$DIR"
+xelatex book.tex && xelatex book.tex
+rm -f book.aux book.log book.out book.toc

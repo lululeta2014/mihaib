@@ -1,0 +1,49 @@
+{{template "header" .}}
+{{template "navigation" .}}
+{{if $err := .err}}
+Error: {{$err.Error}}
+{{else}}
+<div id="tablePageContainer">
+
+{{if len .groupBy | not}}
+	<div id="newRowButtonContainer">
+	<button type="button" onclick="showNewRowForm(this);">New Row</button>
+	<span class="errSpan"></span>
+	</div>
+	<div id="newRowContainer"></div>
+	<br>
+{{end}}
+
+{{template "pager" .}}
+
+<table id="mainTable">
+{{if len .rowsAndMeta}}{{/*If there are rows in the table*/}}
+{{if not .noTitles}}
+	<tr>
+	{{with $firstRow := index .rowsAndMeta 0}}
+		{{range $uc := $firstRow.userCols}}
+			{{if not $uc.NoView}}
+				<th>
+				{{if not $uc.NoHeader}}
+					{{$uc.DisplayName}}
+				{{end}}
+				</th>
+			{{end}}
+		{{end}}
+	{{end}}
+
+	{{if len .groupBy | not}}
+		<th>{{/*Extra column for Edit/Save/Delete buttons*/}}</th>
+		</tr>
+	{{end}}
+{{end}}
+{{end}}
+
+{{range $rowAndMeta := .rowsAndMeta}}
+	{{template "viewrow" $rowAndMeta}}
+{{end}}
+</table>
+</div>
+
+{{end}}
+{{template "footer"}}

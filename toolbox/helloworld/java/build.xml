@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<project name="HelloWorld" default="all" basedir=".">
+	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="build"/>
+	<property name="dist.dir" value="dist"/>
+	<property name="doc.dir" value="doc"/>
+
+	<property name="jar.file" value="${dist.dir}/${ant.project.name}.jar"/>
+	<property name="main.class" value="helloworld.HelloWorld"/>
+
+	<target name="all" depends="clean, jar, test, doc"
+		description="Clean then make JAR and docs"/>
+
+	<target name="prepare">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+
+	<target name="clean" depends="test-clean"
+		description="Remove all generated files">
+		<delete dir="${build.dir}"/>
+		<delete dir="${dist.dir}"/>
+		<delete dir="${doc.dir}"/>
+	</target>
+
+	<target name="compile" depends="prepare">
+		<javac srcdir="${src.dir}" encoding="UTF-8"
+			destdir="${build.dir}"
+			includeAntRuntime="false"/>
+	</target>
+
+	<target name="doc" description="Generate javadoc">
+		<javadoc sourcepath="${src.dir}" encoding="UTF-8"
+			destdir="${doc.dir}"/>
+	</target>
+
+	<target name="jar" depends="compile" description="Build the JAR">
+		<jar jarfile="${jar.file}">
+			<fileset dir="${build.dir}"/>
+			<manifest>
+				<attribute name="Main-Class"
+					value="${main.class}"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run" depends="jar" description="Run from JAR">
+		<java jar="${jar.file}" fork="true"/>
+	</target>
+
+
+	<!-- Test targets -->
+	<property name="test.dir" value="test"/>
+	<property name="test.src.dir" value="${test.dir}/src"/>
+	<property name="test.lib.dir" value="${test.dir}/lib"/>
+	<property name="test.build.dir" value="${test.dir}/build"/>
+
+	<property name="main.test.class" value="helloworld.Test"/>
+
+	<path id="test-classpath">
+		<fileset dir="${test.lib.dir}" includes="**/*.jar"/>
+		<pathelement location="${jar.file}"/>
+	</path>
+
+	<target name="test-prepare">
+		<mkdir dir="${test.build.dir}"/>
+	</target>
+
+	<target name="test-clean">
+		<delete dir="${test.build.dir}"/>
+	</target>
+
+	<target name="test-compile" depends="jar, test-prepare">
+		<javac srcdir="${test.src.dir}" encoding="UTF-8"
+			destdir="${test.build.dir}"
+			classpathref="test-classpath"
+			includeAntRuntime="false"/>
+	</target>
+
+	<target name="test" depends="test-compile" description="Run tests">
+		<java classname="${main.test.class}"
+			fork="true" failonerror="true"
+			classpathref="test-classpath">
+			<classpath location="${test.build.dir}"/>
+		</java>
+	</target>
+</project>

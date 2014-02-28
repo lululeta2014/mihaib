@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    <!--Required metadata-->
+    <dc:title>$title</dc:title>
+    <dc:language>en-us</dc:language>
+    <dc:identifier id="BookId" opf:scheme="uuid">urn:uuid:$uuid</dc:identifier> <!--Can generate at http://www.famkruithof.net/uuid/uuidgen-->
+    <dc:creator>$author</dc:creator> <!--The Author-->
+    <dc:publisher>$publisher</dc:publisher> <!--Name of Publisher or yourself if self-published-->
+    <dc:date>$publish_date</dc:date> <!--Published Date in YYYY-MM-DD-->
+    <meta name="cover" content="my-cover-image" /> <!--Required for KindleGen-->
+    <!--Extra metadata here (recommended)-->
+    <!--<dc:description>Book's Description</dc:description>--> <!--Backjacket description-->
+    <!--
+    <dc:subject>Keyword 1</dc:subject>
+    <dc:subject>Keyword 2</dc:subject>
+    <dc:subject>Keyword 3</dc:subject>
+    -->
+    <!--<dc:contributor opf:role="edt">Editor's Name</dc:contributor>-->
+  </metadata>
+  <!--Declarations for media-types in the Manifest Section
+    "application/xhtml+xml" - XHTML content files
+    "application/x-dtbncx+xml" - NCX table of contents
+    "text/css" - CSS files
+    "image/jpeg" - JPEG image
+    "image/gif" - GIF image
+    "image/png" - PNG Image -->
+  <manifest>
+    <!--Required in manifest-->
+    <item href="cover.jpg" id="my-cover-image" media-type="image/jpeg" />
+    <item href="toc.ncx" id="ncx-toc" media-type="application/x-dtbncx+xml" />
+    <item href="book.html" id="book" media-type="application/xhtml+xml" />
+    <!--Optional but recommended in Manifest-->
+    <item href="style.css" id="my-css" media-type="text/css" />
+    <item href="cover.html" id="html-cover" media-type="application/xhtml+xml" />
+  </manifest>
+  <spine toc="ncx-toc">
+    <itemref idref="html-cover" linear="no" />
+    <itemref idref="book" />
+  </spine>
+  <guide>
+    <reference type="cover" title="Cover" href="cover.html" />
+    <reference type="toc" title="Table of Contents" href="book.html#toc" />
+    <reference type="text" title="Beginning" href="book.html#chapter-1" />
+  </guide>
+</package>

@@ -1,0 +1,6 @@
+    <navPoint id="ncx-Chapter-$chapter_num" playOrder="$play_order">
+      <navLabel>
+        <text>$chapter_title</text>
+      </navLabel>
+      <content src="book.html#chapter-$chapter_num" />
+    </navPoint>

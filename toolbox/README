@@ -1,0 +1,27 @@
+Toolbox
+
+§ Building
+build.py puts bin/ in PATH and builds all tools.
+build.json lists the symlinks (to create in bin/) and each tool's build script.
+All symlinks are created (to possibly non-exising targets), then the tools are
+built in order. While building a tool, tools which precede it in the build
+order are available, as well as tools which do not need to be built.
+
+§ Project Structure
+build.py, build.json and meta/ build the toolbox.
+bin/ is created to hold symlinks to the tools.
+The rest are the tools themselves.
+
+§ Go Programs
+If you have multiple copies of this toolbox,
+go build some-package
+builds the one currently in your GOPATH.
+Running ‘toolbox-golink’ before each Go build will run the first
+‘toolbox-golink’ in your PATH, and puts its directory in GOPATH.
+
+To ensure a Go program's build script puts its own toolbox directory in GOPATH,
+we keep ‘toolbox-golink’ and ‘toolbox-gopath’ outside bin/ and run them by
+absolute path, e.g. the build script finds the absolute path to itself,
+SCRIPT_PATH, and runs ‘SCRIPT_PATH/../../meta/toolbox-gobuild.py «args»’.
+
+toolbox-gobuild.py runs toolbox-golink to ensure its toolbox is in GOPATH.

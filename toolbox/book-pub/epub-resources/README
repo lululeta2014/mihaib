@@ -1,0 +1,6 @@
+The EPUB (zip) format is very easy to break:
+– The ‘mimetype’ file must be exactly 20 bytes, no newline at end
+– ‘mimetype’ needs to be the first in the zip, and stored not compressed
+
+zip book.epub -DX0 mimetype
+zip book.epub -rDX9 META-INF OEBPS

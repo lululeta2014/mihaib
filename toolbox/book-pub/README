@@ -1,0 +1,18 @@
+Generate PDF and EPUB books from a simple plain text format
+
+Thanks go out to Paul Salvette for his excellent EPUB tutorial & example:
+http://www.paulsalvette.com/2011/08/epub-and-kindlegen-tutorial-ebook.html
+
+Your book source must be in a single directory with the following format:
+– A file named cover.jpg
+– A file named ‘title’ with metadata in JSON, e.g.:
+{
+  "title": "Alice's Adventures in Wonderland",
+  "author": "Lewis Carroll"
+}
+Run the program with ‘--help’ to see all fields allowed in the ‘title’ file.
+– All other files, in lexicographical order, are chapters in the book,
+and have the following format: the first line of the file is the chapter title,
+and every subsequent line is a paragraph in the book.
+The file names are ignored so you may use any ordering scheme e.g.:
+[‘1.down-the-rabbit-hole’, ‘2.the-pool-of-tears’] or [‘chapter1’, ‘chapter2’].

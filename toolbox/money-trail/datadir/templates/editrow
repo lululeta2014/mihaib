@@ -1,0 +1,122 @@
+{{/*
+Ugly hack: we have N userCols, N+1 rows (an extra __MT__ID at the end).
+"len.userCols - 1 | index .row" is illegal, do doing this instead:
+*/}}
+<tr dbRowId="{{len .userCols | index .row}}"
+	class="rowBeingEdited{{if $rowCls := call .cssRowClassFunc .row}} {{$rowCls}}{{end}}">
+{{/* A range changes DOT, so we're saving it here */}}
+{{with $root := .}}
+{{range $idx, $uc := $root.userCols}}
+{{if not $uc.NoView}}
+{{if not $uc.IsCol | or $uc.NoEdit}}
+	<td {{if $uc.GroupDigits}}class="groupDigits"{{end}}>
+	{{with $val := index $root.row $idx}}
+		{{if $uc.GroupDigits}}
+			{{call $root.groupDigitsFunc $val $uc.NoZeroOnGroup}}
+		{{else}}
+			{{$val}}
+		{{end}}
+	{{end}}
+	</td>
+{{else}}
+	<td>
+	{{/* This 'if' is explained in the 'newrow' template */}}
+	{{if index $root.kvPairs $idx | or $uc.Sel}}
+		{{/*Option starting with N means NULL. With V means value*/}}
+		<select name="col{{$idx}}">
+		{{/*For dbBool kvPairs[idx] is non-empty, uc.Sel may be nil*/}}
+		{{if $uc.Sel}}
+			{{if $uc.Sel.AllowNull}}
+			<option value="N">{{$uc.Sel.NullDropdownText}}</option>
+			{{end}}
+		{{end}}
+		{{range $kv := index $root.kvPairs $idx}}
+			<option value="V{{$kv.K}}"
+				{{if index $root.row $idx|call $root.eq $kv.K}}
+					selected="selected"
+				{{end}}
+			>{{$kv.V}}</option>
+		{{end}}
+		</select>
+	{{else}}
+		{{if $uc.WhatType.IsDateType}}<div class="groupingDiv">{{end}}
+		<input name="col{{$idx}}" type="text"
+			value="{{index $root.row $idx}}"
+			{{if $sz := $uc.InputFieldSize}}size="{{$sz}}"{{end}}
+			{{if $uc.GroupDigits}}class="groupDigits"{{end}}
+			onkeydown="keyDownDbRow(this, event);
+				{{if $uc.WhatType.IsDateType}}
+					checkDateLater(this, false);
+				{{end}}"
+			{{if $uc.WhatType.IsDateType}}
+				onfocus="checkDateLater(this, true);"
+				onblur="checkDateLater(this, true);"
+			{{end}}
+		>
+		{{if $uc.WhatType.IsDateType}}
+			<br>
+			<span class="parsedDate">–</span>
+			</div>
+		{{end}}
+	{{end}}
+	</td>
+{{end}}
+{{end}}{{/* if not $uc.NoView */}}
+{{end}}{{/* range */}}
+<td>
+<button type="button" onclick="updateDbRow(this);">Save</button>
+<button type="button" onclick="cancelDbRowEdit(this);">Cancel</button>
+
+{{/* Columns which are editable but hidden from the normal view */}}
+{{range $idx, $uc := $root.userCols}}
+{{if $uc.NoView}}
+{{if not $uc.NoEdit | and $uc.IsCol}}
+	{{$uc.DisplayName}}:
+	{{/* This 'if' is explained in the 'newrow' template */}}
+	{{if index $root.kvPairs $idx | or $uc.Sel}}
+		{{/*Option starting with N means NULL. With V means value*/}}
+		<select name="col{{$idx}}">
+		{{/*For dbBool kvPairs[idx] is non-empty, uc.Sel may be nil*/}}
+		{{if $uc.Sel}}
+			{{if $uc.Sel.AllowNull}}
+			<option value="N">{{$uc.Sel.NullDropdownText}}</option>
+			{{end}}
+		{{end}}
+		{{range $kv := index $root.kvPairs $idx}}
+			<option value="V{{$kv.K}}"
+				{{if index $root.row $idx|call $root.eq $kv.K}}
+					selected="selected"
+				{{end}}
+			>{{$kv.V}}</option>
+		{{end}}
+		</select>
+	{{else}}
+		{{if $uc.WhatType.IsDateType}}<div class="groupingDiv">{{end}}
+		<input name="col{{$idx}}" type="text"
+			value="{{index $root.row $idx}}"
+			{{if $sz := $uc.InputFieldSize}}size="{{$sz}}"{{end}}
+			{{if $uc.GroupDigits}}class="groupDigits"{{end}}
+			onkeydown="keyDownDbRow(this, event);
+				{{if $uc.WhatType.IsDateType}}
+					checkDateLater(this, false);
+				{{end}}"
+			{{if $uc.WhatType.IsDateType}}
+				onfocus="checkDateLater(this, true);"
+				onblur="checkDateLater(this, true);"
+			{{end}}
+		>
+		{{if $uc.WhatType.IsDateType}}
+			<br>
+			<span class="parsedDate">–</span>
+			</div>
+		{{end}}
+	{{end}}
+{{end}}
+{{end}}{{/* if $uc.NoView */}}
+{{end}}{{/* range */}}
+
+<br>
+<span class="errSpan"></span>
+</td>
+{{end}}
+</tr>

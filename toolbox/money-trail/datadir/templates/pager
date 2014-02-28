@@ -1,0 +1,39 @@
+<div id="mainTablePager">
+<button type="button"
+	{{if .pagerPrev}}
+		onclick="pagerGoto(1);"
+	{{else}}
+		disabled="disabled"
+	{{end}}
+>{{"«"}}</button>
+<button type="button"
+	{{if $n := .pagerPrev}}
+		onclick="pagerGoto({{$n}});"
+	{{else}}
+		disabled="disabled"
+	{{end}}
+>{{"←"}}</button>
+
+<select onchange="pagerGoto(this.options[this.selectedIndex].value);">
+{{range .pagerSlice}}
+<option value="{{.optionVal}}" {{if .selected}}selected="true"{{end}}>
+	{{.first}}–{{.last}}
+</option>
+{{end}}
+</select> / {{.totalRows}}
+
+<button type="button"
+	{{if $n := .pagerNext}}
+		onclick="pagerGoto({{$n}});"
+	{{else}}
+		disabled="disabled"
+	{{end}}
+>{{"→"}}</button>
+<button type="button"
+	{{if .pagerNext}}
+		onclick="pagerGoto({{len .pagerSlice}});"
+	{{else}}
+		disabled="disabled"
+	{{end}}
+>{{"»"}}</button>
+</div>

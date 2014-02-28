@@ -1,0 +1,32 @@
+{
+    "link": {
+        "⌘download-kit": "download-kit.py",
+
+        "book-pub": "book-pub/book-pub.py",
+        "checkgmail-gnome-keyring": "checkgmail-gnome-keyring/checkgmail-gnome-keyring.sh",
+        "ft": "file-transfer/ft.sh",
+        "sync-diff.py": "sync-diff.py",
+        "dir-index": "dir-index.py",
+        "online-backup": "online-backup/online-backup.py",
+        "golink": "golink.py",
+        "gopath-destroy": "gopath-destroy.py",
+        "json-pretty": "json-pretty.py",
+        "argv": "argv/go/argv",
+        "textproc": "textproc/cmd/textproc",
+        "⌘remove-path-entry": "remove-path-entry/remove_path_entry.py",
+
+        "noop": "noop.sh"
+    },
+    "build": [
+        "money-trail/build.sh",
+        "checkgmail-gnome-keyring/build.sh",
+        "file-transfer/build.sh",
+        "helloworld/build.sh",
+        "argv/build.sh",
+        "textproc/test.sh",
+        "textproc/cmd/build.sh",
+        "⌘remove-path-entry/test.sh",
+
+        "noop.sh"
+    ]
+}

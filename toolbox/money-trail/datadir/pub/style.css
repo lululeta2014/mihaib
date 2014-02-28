@@ -1,0 +1,88 @@
+@charset "utf-8";
+
+ul#navlist {
+	list-style-type: none;
+}
+
+ul#navlist li {
+	display: inline;
+}
+
+ul#navlist li a {
+	text-decoration: none;
+}
+
+ul#navlist li.crtSec a {
+	font-weight: bold;
+}
+
+tr.rowToDelete {
+	background-color: pink;
+}
+
+tr.rowBeingEdited {
+	background-color: Gold;
+}
+
+table#newRowTable {
+	background-color: aliceBlue;
+}
+
+/* There are some cases where the 'groupingDiv' rules help */
+tr.rowBeingEdited td, tr.rowBeingInserted td,
+tr.rowBeingEdited td div.groupingDiv, tr.rowBeingInserted td div.groupingDiv {
+	vertical-align: top;
+}
+
+span.errSpan {
+	background-color: pink;
+	font-family: monospace;
+}
+
+td.groupDigits, input.groupDigits {
+	text-align: right;
+}
+
+div.groupingDiv {
+	display: inline-block;
+}
+
+span.parsedDate {
+	color: gray;
+}
+
+div#tablePageContainer {
+	display: inline-block;
+}
+
+div#newRowButtonContainer, div#newRowContainer, div#mainTablePager {
+	text-align: center;
+}
+
+/* Center the table if it's narrower than the pager */
+table#mainTable {
+	margin: auto;
+}
+
+tr.incomeTransactionRow,
+tr.incomeTransactionRow input, tr.incomeTransactionRow select {
+	color: DarkGreen;
+}
+
+tr.paymentTransactionRow,
+tr.paymentTransactionRow input, tr.paymentTransactionRow select {
+	color: DarkRed;
+}
+
+tr.transferTransactionRow,
+tr.transferTransactionRow input, tr.transferTransactionRow select {
+	color: DarkBlue;
+}
+
+tr.incomeReportRow {
+	color: DarkGreen;
+}
+
+tr.paymentReportRow {
+	color: DarkRed;
+}
