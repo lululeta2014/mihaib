@@ -1,0 +1,1 @@
+-i ascii -o ascii -c StripTrailingWhitespace f1 g1 f2 g2 f3 g3

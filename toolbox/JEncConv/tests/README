@@ -1,0 +1,16 @@
+Run texttest from this directory
+http://www.texttest.org/
+
+“TextTest only collates files created or modified by the test run.”
+
+Seems that “modified” means “whose timestamp has changed”.
+This behavior is bad for some tests (eg Overwrite\ExistingBakFileForce).
+Here's why:
+
+– After git clone, all files (f2, f2.bak etc.) have the same timestamp
+– They're all copied to the sandbox and the test is run
+– The test renames f2 to f2.bak; because f2 had the same timestamp as f2.bak,
+texttest thinks that f2.bak hasn't been changed (and doesn't collate it).
+
+A workaround is to ‘touch f2’ to ensure different timestamp from f2.bak.
+(same for f4).

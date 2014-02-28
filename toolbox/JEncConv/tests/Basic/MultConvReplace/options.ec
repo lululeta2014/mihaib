@@ -1,0 +1,1 @@
+-i utf-8 -o latin1 --replace f1 f2 f3 f4

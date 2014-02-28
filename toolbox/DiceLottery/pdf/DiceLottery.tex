@@ -1,0 +1,118 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+
+%\hypersetup{pdfborder = {0 0 0}}
+\hypersetup{colorlinks=true,%
+%	citecolor=black,%
+%	filecolor=black,%
+%	linkcolor=black,%
+	urlcolor=blue,%
+%
+	pdftitle={DiceLottery},%
+	pdfauthor={Mihai Borobocea}%
+}
+
+\begin{document}
+\title{DiceLottery math}
+\date{2009}
+\author{}
+\maketitle
+
+We have 2 event universes,
+and in each universe all events have equal probability.
+We want to perform a bidirectional mapping between these 2 universes
+\(U_{Src}\) and \(U_{Dest}\).
+Let \(N_S\) and \(N_D\) stand for
+the event counts of the respective event universes:
+\[N_S = |U_S|, N_D = |U_D|\]
+
+The mapping has an additional parameter --- \(K\) ---
+the number of outcomes from \(U_S\) which are used
+for a single mapping operation to an event in \(U_D\).
+\(K\) outcomes from \(U_{Src}\) represent an event in \({U_{Src}}^K\).
+All the \(N_S\) events in \(U_{Src}\) have equal probability,
+so all the \({N_S}^K\) events in \({U_{Src}}^K\)
+have equal probability as well.
+The mapping is thus performed between
+\({N_S}^K\) and \(N_D\) elements.
+The following relation must hold (it establishes a minimum value for \(K\)):
+\begin{equation}
+\label{eq:K}
+{N_S}^K \geq N_D
+\end{equation}
+
+Having the values of \(N_S\), \(N_D\) and \(K\),
+the values of \(Q\) and \(R\) can be computed by integer division
+(with \(R < N_D\)):
+\begin{equation}
+\label{eq:QR}
+{N_S}^K = Q * N_D + R
+\end{equation}
+
+In order for all possible \(N_D\) results of the mapping
+to have equal probability,
+only \(Q * N_D\) source elements can be mapped (out of the total \({N_S}^K\)).
+The remaining \(R\) cannot be mapped and the user is asked to try again.
+The fraction of mappings which cannot be performed is:
+\begin{equation}
+\label{eq:invalid-mappings}
+\text{invalid fraction of mappings} =
+\frac{R}{{N_S}^K} < \frac{N_D}{{N_S}^K} \leq 1
+\end{equation}
+
+
+\section{Treating the K source outcomes}
+
+\subsection{Treating K outcomes as a single larger outcome}
+
+We wish to map
+\(e_{K-1}, e_{K-2}, \dots, e_1, e_0 \in U_{Src}\)
+to a single event \(e' \in {U_{Src}}^K\).
+\begin{equation}
+e' = e_{K-1} * {N_S}^{K-1} + e_{K-2} * {N_S}^{K-2} + \dots + e_1 * N_S + e_0
+\end{equation}
+
+\subsection{Treating a larger outcome as K source outcomes}
+
+We wish to map \(e' \in {U_{Src}}^K\) to
+\(e_{K-1}, e_{K-2}, \dots, e_1, e_0 \in U_{Src}\)
+\begin{equation}
+\begin{array}{l|l}
+e' = q_{-1} & \\
+q_{-1} = q_0 * N_S + r_0 & e_0 = r_0\\
+q_0 = q_1 * N_S + r_1 & e_1 = r_1\\
+\vdots & \vdots \\
+q_{K-2} = q_{K-1} * N_S + r_{K-1} & e_{K-1} = r_{K-1}
+\end{array}
+\end{equation}
+
+
+\section{The mapping operation}
+
+The mapping is performed between \({U_{Src}}^K\) and \(U_{Dest}\).
+
+\subsection{Forward mapping}
+We wish to map \(e \in {U_{Src}}^K\) to \(e' \in U_{Dest}\).
+According to equations \ref{eq:QR} and \ref{eq:invalid-mappings}:
+\begin{equation}
+\begin{array}{r l}
+e' = e \bmod N_D, & \text{if } e < q * N_D \\
+\text{invalid}, & \text{if } e \geq q * N_D
+\end{array}
+\end{equation}
+
+\subsection{Reverse mapping}
+We wish to map \(e' \in U_{Dest}\) to \(e \in {U_{Src}}^K\).
+There are multiple solutions. All \(Q\) are listed below:
+\begin{equation}
+e \in \{ e', e' + N_D, e' + 2*N_D, \dots, e' + (Q-1) * N_D \}
+\end{equation}
+
+\end{document}

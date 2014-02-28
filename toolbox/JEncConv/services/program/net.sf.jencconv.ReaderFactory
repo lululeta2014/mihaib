@@ -1,0 +1,10 @@
+net.sf.jencconv.plugins.RoCorrectDiacritics
+net.sf.jencconv.plugins.Ro2Ascii
+net.sf.jencconv.plugins.LowerCase
+net.sf.jencconv.plugins.UpperCase
+net.sf.jencconv.plugins.InvertCase
+net.sf.jencconv.plugins.ROT13
+net.sf.jencconv.plugins.UnixNewlines
+net.sf.jencconv.plugins.StripTrailingWhitespace
+net.sf.jencconv.plugins.AddNewlineAtEnd
+net.sf.jencconv.plugins.NoSpaceBeforePunctuation

@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+
+<project name="JEncConv" default="plugins" basedir=".">
+
+	<property name="src.dir" value="src" />
+	<property name="src.program" value="${src.dir}/program" />
+	<property name="src.plugins" value="${src.dir}/sample-plugins" />
+
+	<property name="services.dir" location="services" />
+	<property name="services.program" location="${services.dir}/program" />
+	<property name="services.plugins" location="${services.dir}/sample-plugins" />
+
+	<property name="lib.dir" value="lib" />
+	<property name="build.dir" value="build" />
+
+	<property name="dist.dir" value="dist" />
+	<property name="dist.lib" value="${dist.dir}/lib" />
+	<property name="dist.plugins" value="${dist.dir}/plugins" />
+
+	<property name="doc.dir" value="doc" />
+
+
+	<!-- JAR file name -->
+	<property name="jar.file" value="${dist.dir}/JEncConv.jar" />
+
+	<!-- ClassPath -->
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<!-- Target to create build directories before compile target -->
+	<target name="prepare">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.plugins}" />
+	</target>
+
+	<!-- Target to clean everything -->
+	<target name="clean" description="Remove all generated files.">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${doc.dir}" />
+	</target>
+
+	<!-- Target to compile source code -->
+	<target name="compile" depends="prepare" description="Compile source code for main program.">
+		<javac srcdir="${src.program}" encoding="UTF-8"
+			destdir="${build.dir}" classpathref="classpath"
+			includeAntRuntime="false" />
+
+		<!-- copy services -->
+		<copy todir="${build.dir}/META-INF/services/">
+			<fileset dir="${services.program}" includes="*" />
+		</copy>
+
+		<!-- copy icons; when icons/ is missing, succeeds (and does nothing) -->
+		<copy todir="${build.dir}">
+			<fileset dir=".">
+				<include name="icons/*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Target to build the jar -->
+	<target name="jar" depends="compile" description="Build the JAR in dist/JEncConv.jar.">
+		<!-- copy lib/ to dist/lib -->
+		<copy todir="${dist.lib}">
+			<fileset dir="${lib.dir}" includes="**/*.jar" />
+		</copy>
+
+		<path id="dist.classpath">
+			<fileset dir="${dist.lib}" includes="**/*.jar" />
+			<dirset dir="." includes="${dist.plugins}" />
+		</path>
+
+		<manifestclasspath property="manifest.classpath" jarfile="${jar.file}">
+			<classpath refid="dist.classpath" />
+		</manifestclasspath>
+
+		<jar jarfile="${jar.file}">
+			<!-- put classes and icons in the jar -->
+			<fileset dir="${build.dir}" />
+			<manifest>
+				<attribute name="Main-Class" value="net.sf.jencconv.ArgsParser" />
+				<attribute name="Class-Path" value="${manifest.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Build the plugins, with the jar in the classpath -->
+	<target name="plugins" depends="jar" description="Build the plugins">
+		<javac srcdir="${src.plugins}" encoding="UTF-8"
+			destdir="${dist.plugins}" classpath="${jar.file}"
+			includeAntRuntime="false" />
+
+		<!-- copy services -->
+		<copy todir="${dist.plugins}/META-INF/services">
+			<fileset dir="${services.plugins}" includes="*" />
+		</copy>
+	</target>
+
+	<!-- Target to run the jar -->
+	<target name="run" depends="plugins" description="Run the program from the built JAR.">
+		<java jar="${jar.file}" fork="true" />
+	</target>
+
+	<!-- Target to generate Java documentation -->
+	<target name="doc" description="Generate javadoc.">
+		<javadoc sourcepath="${src.program}" encoding="UTF-8" destdir="${doc.dir}">
+			<classpath refid="classpath" />
+		</javadoc>
+	</target>
+
+	<!-- Target to clean and then build the jar and the plugins -->
+	<target name="rebuild" depends="clean, plugins" description="Cleans, compiles and builds the JAR and the plugins." />
+
+	<!-- Target to clean and then build the jar, plugins and documentation -->
+	<target name="rebuild-all" depends="rebuild, doc" description="Cleans, compiles, builds the JAR, the plugins and generates the documentation." />
+
+</project>

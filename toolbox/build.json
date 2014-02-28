@@ -14,6 +14,7 @@
         "argv": "argv/go/argv",
         "textproc": "textproc/cmd/textproc",
         "⌘remove-path-entry": "remove-path-entry/remove_path_entry.py",
+        "pyencconv": "PyEncConv/pyencconv.py",
 
         "noop": "noop.sh"
     },
@@ -26,6 +27,8 @@
         "textproc/test.sh",
         "textproc/cmd/build.sh",
         "⌘remove-path-entry/test.sh",
+        "JEncConv/build.sh",
+        "DiceLottery/build.sh",
 
         "noop.sh"
     ]

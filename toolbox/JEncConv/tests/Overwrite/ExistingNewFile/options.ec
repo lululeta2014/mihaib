@@ -1,0 +1,1 @@
+-i ascii -o ascii f1 g1 f2 f4 f3 g3

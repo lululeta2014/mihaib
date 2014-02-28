@@ -1,0 +1,1 @@
+-i ascii -o ascii -c AddNewlineAtEnd f1 g1 f2 g2 f3 g3 f4 g4

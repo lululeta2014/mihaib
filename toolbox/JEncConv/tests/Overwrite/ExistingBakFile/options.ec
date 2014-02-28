@@ -1,0 +1,1 @@
+-i ascii -o ascii -r f1 f2 f3 f4

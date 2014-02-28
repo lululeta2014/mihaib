@@ -1,0 +1,6 @@
+This file
+
+
+has Windows newlines
+
+before conversion.

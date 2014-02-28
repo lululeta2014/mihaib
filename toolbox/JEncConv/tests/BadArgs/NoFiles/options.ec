@@ -1,0 +1,1 @@
+-i ascii -o ascii

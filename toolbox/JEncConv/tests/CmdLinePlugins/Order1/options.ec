@@ -1,0 +1,1 @@
+-i utf8 -o utf8 --chain ROT13#Ro2Ascii f1 g1

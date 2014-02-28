@@ -1,0 +1,10 @@
+/build
+/test/build
+*.jar
+/dist
+/pdf/DiceLottery.aux
+/pdf/DiceLottery.log
+/pdf/DiceLottery.out
+/pdf/DiceLottery.pdf
+/doc
+.*.swp
