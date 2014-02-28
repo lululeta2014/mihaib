@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/MihaiB/forge/go/sqlite"
+	"github.com/MihaiB/mihaib/toolbox/gosqlite/sqlite"
 	"net/http"
 )
 

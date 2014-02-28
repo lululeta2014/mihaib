@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/MihaiB/toolbox/textproc"
+	"github.com/MihaiB/mihaib/toolbox/textproc"
 	"io/ioutil"
 	"os"
 	"sort"

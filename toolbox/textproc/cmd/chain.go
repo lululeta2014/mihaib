@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/MihaiB/toolbox/textproc"
+	"github.com/MihaiB/mihaib/toolbox/textproc"
 	"io"
 	"strings"
 )

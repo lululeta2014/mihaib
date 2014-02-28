@@ -3,7 +3,7 @@
 package textproc_test
 
 import (
-	"github.com/MihaiB/toolbox/textproc"
+	"github.com/MihaiB/mihaib/toolbox/textproc"
 	"io"
 	"io/ioutil"
 	"strings"

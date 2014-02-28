@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"github.com/MihaiB/forge/go/sqlite"
+	"github.com/MihaiB/mihaib/toolbox/gosqlite/sqlite"
 	"log"
 	"net/http"
 	"strings"

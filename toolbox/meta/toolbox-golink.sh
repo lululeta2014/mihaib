@@ -8,4 +8,4 @@ SCRIPT=`readlink -f "$0"`
 SCRIPT_DIR=`dirname "$SCRIPT"`
 TOOLBOX_ROOT=`dirname "$SCRIPT_DIR"`
 
-golink --replace github.com/MihaiB/toolbox "$TOOLBOX_ROOT"
+golink --replace github.com/MihaiB/mihaib/toolbox "$TOOLBOX_ROOT"

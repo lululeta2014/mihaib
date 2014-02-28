@@ -6,6 +6,9 @@ import subprocess
 import sys
 
 
+TOOLBOX_GO_PKG_ROOT = 'github.com/MihaiB/mihaib/toolbox'
+
+
 def parseArgs():
     p = argparse.ArgumentParser(
             description='''Link this Toolbox in GOPATH, download dependencies,
@@ -37,13 +40,12 @@ def getToolboxRoot():
 
 
 def toolboxGoLink():
-    toolboxRoot = getProgramDir()
-    subprocess.check_call([os.path.join(toolboxRoot, 'toolbox-golink.sh')])
+    subprocess.check_call([os.path.join(getProgramDir(), 'toolbox-golink.sh')])
 
 
 def goBuild(dirRelPath, outFile=None):
     """Download dependencies and build package, with optional command name."""
-    pkg = os.path.join('github.com/MihaiB/toolbox', dirRelPath)
+    pkg = os.path.join(TOOLBOX_GO_PKG_ROOT, dirRelPath)
     subprocess.check_call(['go', 'get', '-d', pkg])
     subprocess.check_call(['go', 'test', pkg])
     buildCmd = ['go', 'build']

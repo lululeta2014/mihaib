@@ -2,7 +2,7 @@ package textproc_test
 
 import (
 	"errors"
-	"github.com/MihaiB/toolbox/textproc"
+	"github.com/MihaiB/mihaib/toolbox/textproc"
 	"io"
 	"strings"
 	"testing"

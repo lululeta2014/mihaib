@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/MihaiB/toolbox/textproc"
+	"github.com/MihaiB/mihaib/toolbox/textproc"
 	"testing"
 )
 
