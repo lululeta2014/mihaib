@@ -1,0 +1,29 @@
+Supported for:
+Ubuntu 13.10
+Ubuntu 13.04
+Ubuntu 12.10
+Ubuntu 12.04
+
+Debian Jessie
+Debian Wheezy
+
+
+Write version-specific manner such that the newest Ubuntu version is on the
+default (non-version-specific) execution path, to keep running its code on
+future versions.
+
+if Ubuntu-previous:
+	code
+else if Ubuntu-before-previous:
+	code
+else if Debian:
+	if Debian-previous:
+		code
+	else:
+		Debian-specific code for current and future versions
+else:
+	code for current and future versions
+
+
+Try to keep all conditional logic in sourceme.bash, so the other scripts
+“blindly execute” what that logic decided.

@@ -1,0 +1,13 @@
+Mb-Metabox theme
+
+Gnome3 appears to need both ~/.themes and ~/.local/share/themes
+https://bbs.archlinux.org/viewtopic.php?pid=1190720
+so make one a symlink to the other, then create in that directory:
+Mb-Metabox/metacity-1/metacity-theme-1.xml
+
+Notes:
+original.xml is /usr/share/themes/Metabox/metacity-1/metacity-theme-1.xml
+v-2010.xml likely adjust's Metabox's ‘menu button’ to have the program icon
+and some other tweaks. That menu button doesn't appear in Gnome3 (Feb 2014).
+metacity-theme-1.xml shrinks some borders and shows the program icon, tested
+in Gnome3.

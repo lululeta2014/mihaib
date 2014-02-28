@@ -1,0 +1,84 @@
+alignment top_middle
+
+#cpu_avg_samples 2
+no_buffers yes	# subtract filesystem buffers from used memory
+#net_avg_samples 2
+
+# Whether you draw them or not, borders take up ‘border_width’ pixels,
+# which is at least 1 pixel.
+# For alignment *_left, the content is displayed at x=0, with the
+# inner margin, border, and outer margin to its left, outside the screen.
+# To have everything on the screen, set
+# gap_x = border_outer_margin + border_width + border_inner_margin
+# Setting it to that value + 1 will show 1 pixel of the desktop background
+# to the left of the conky window.
+draw_borders no
+draw_graph_borders yes
+border_width 3
+border_inner_margin 0
+border_outer_margin 0
+
+gap_x -20	# horizontal adjustment
+gap_y 3
+
+# OK, so this panel's height gets easily messed up: too much or too little.
+# Turns out we can try to fix it by commenting out ‘use_xft’ and ‘xftfont’
+# or by adjusting the font size when adjusting the graph height.
+# Maybe use minimum_size width (height) as well.
+use_xft yes
+xftfont DejaVu Sans Mono:size=13
+
+# XFCE, Gnome use N+1 pixels for a N pixel panel
+minimum_size 0 25	# 30+1 (panel) = 25 + 3 + 3 (content + borders)
+
+# Some values can have variable width, causing the window to adjust,
+# e.g. "97.3M" vs "100M".
+# use_spacer {none | left | right} can add extra space when the text size is
+# less than maximum to its left or right.
+use_spacer left
+
+default_color lightgray
+#draw_outline no
+#draw_shades no
+#own_window_colour black
+
+own_window yes
+
+# own_window_type panel
+# own_window_type desktop
+#
+# Use ‘panel’ to reserve space when maximizing windows.
+# If using ‘desktop’, conky might start too soon after you log in and it looks
+# like it gets "covered" when your desktop manager (XFCE) paints the desktop
+# background.
+# You can add a small delay before starting conky to work around this issue.
+own_window_type panel
+
+# own_window_hints above
+# own_window_hints below
+#
+# above: If there is an (XFCE, Gnome) top panel below conky,
+#        make sure conky stays on top when mouse clicking on the panel.
+# below: use with ‘panel’ window type; keeps conky above the desktop background
+#        when clicking the mouse on the desktop background.
+own_window_hints above
+
+double_buffer yes
+update_interval 0.5
+update_interval_on_battery 1.5
+
+short_units yes	# M instead of MiB, G instead of GiB
+temperature_unit celsius
+
+TEXT
+${offset 5}${color skyblue}$freq_g${color}\
+# Hermes sensors
+${color yellow}${hwmon 0 temp 1}${color}\
+${color goldenrod}${hddtemp /dev/sda}${color}\
+ \
+${cpugraph 23,41 00a2fe 00a2fe}${offset 5}\
+${memgraph 23,41 00b25b 00b25b}${offset 5}$mem $swap${offset 5}\
+# Maybe change eth0 to smth else when on wireless
+${downspeedgraph eth0 23,21 fbe84f fbe84f}\
+${upspeedgraph eth0 23,21 c39f00 c39f00}${offset 5}\
+${diskiograph 23,31 05cc00 05cc00}${offset 5}\

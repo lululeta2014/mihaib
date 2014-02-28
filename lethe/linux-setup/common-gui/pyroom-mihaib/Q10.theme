@@ -1,0 +1,12 @@
+[theme]
+name = Q10
+background = #000000
+border = #404040
+textboxbg = #000000
+foreground = #D0A000
+cursor = #FFFFFF
+info = #78B900
+height = 0.95
+width = 0.54
+padding = 8
+

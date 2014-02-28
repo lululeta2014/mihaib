@@ -1,0 +1,9 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon=$MB_PRG_DIR/npp.minimalist/npp.png
+Name=Notepad++
+Exec=wine $MB_PRG_DIR/npp.minimalist/notepad++.exe

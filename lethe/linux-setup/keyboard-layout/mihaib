@@ -1,0 +1,164 @@
+// ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
+// │` ≈│@  │# ♯│{  │}  │%  │^  │&  │$ −│< ≤│> ≥│+ ±│? ¿│       │
+// │~ ―│1  │2 ½│3 ‹│4 ›│5 ‰│6  │7  │8 ∞│9 «│0 »│= ≠│! ¡│       │
+// └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───────┘
+// ┌────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬──────┐
+// │    │/ ÷│Y  │W  │D  │Q  │Z  │U  │C ¢│F  │G  │_ —│: ⇒│ | ⇔  │
+// │    │. …│y  │w  │d  │q  │z  │u  │c ©│f  │g  │- –│; →│ \ ←  │
+// └────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴──────┘
+// ┌─────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬─────────┐
+// │     │S Ș│N Ñ│O  │T Ț│R  │M  │E  │A Ă│I Î│H  │L  │         │
+// │     │s ș│n ñ│o °│t ț│r  │m µ│e €│a ă│i î│h  │l  │         │
+// └─────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴─────────┘
+// ┌───────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
+// │       │X ×│" „│V  │B  │[ “│] ”│P  │* Â│K  │J  │       │
+// │       │x ✗│' ‚│v ✓│b ♭│( ‘│) ’│p §│, â│k  │j  │       │
+// └───────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───────┘
+//
+// Umlaut
+// ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
+// │   │   │   │   │   │   │   │   │   │   │   │   │   │       │
+// │   │   │   │   │   │   │   │   │   │   │   │   │   │       │
+// └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───────┘
+// ┌────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬──────┐
+// │    │   │   │   │   │   │   │U Ü│   │   │   │   │   │      │
+// │    │   │   │   │   │   │   │u ü│   │   │   │   │   │      │
+// └────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴──────┘
+// ┌─────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬─────────┐
+// │     │   │   │O Ö│   │   │   │   │A Ä│   │   │   │         │
+// │     │   │   │o ö│   │   │   │   │a ä│   │   │   │         │
+// └─────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴─────────┘
+// ┌───────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
+// │       │   │   │   │   │   │   │   │   │   │   │       │
+// │       │   │   │   │   │   │   │   │   │   │   │       │
+// └───────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───────┘
+//
+// Came up with the layout below based on character frequencies and, when most
+// characters had been placed, putting ‘(‘ and ‘)’ next to each other
+// and J near the other 3 vim movement keys (which happened to be placed well).
+// Looked at common two-letter groups and moved a few letters around to avoid
+// very common two-letter groups being typed with a single finger.
+// Incidentally this made the distribution, based on occurrences of all
+// letters assigned to a finger, more even between the two index fingers.
+//
+//              ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
+//              │`  │@  │#  │{  │}  │%  │^  │&  │$  │<  │>  │ + │ ? │       │
+//              │~  │1  │2  │3  │4  │5  │6  │7  │8  │9  │0  │ = │ ! │       │
+//              └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───────┘
+//              ┌────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬──────┐
+//              │    │ / │Y  │W  │M  │Q  │Z  │U  │C  │F  │G  │_  │:  │ |    │
+//              │    │ . │   │   │   │   │   │   │   │   │   │-  │;  │ \    │
+//              └────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴──────┘
+//              ┌─────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬─────────┐
+//              │     │S  │N  │O  │T  │D  │R  │E  │A  │I  │H  │L  │         │
+//              │     │   │   │   │ * │   │   │ * │   │   │   │   │         │
+//              └─────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴─────────┘
+//              ┌───────┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───────┐
+//              │       │X  │"  │V  │B  │[  │]  │P  │*  │K  │J  │       │
+//              │       │   │'  │   │   │(  │)  │   │,  │   │   │       │
+//              └───────┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───────┘
+//
+//
+// In Ubuntu (currently 13.04 and older)
+// Gnome's 'Show layout chart' seems to cache the visual chart the first time
+// it sees the new 'filename' under symbols/. Editing that file changes your
+// layout but the visual chart won't reflect it unless you change the filename.
+//
+// Check if the friendly symbol names you want to use work in all Ubuntus and
+// Debian you want to support (e.g. ‘permille’ didn't work so this file
+// uses ‘U2030’).
+//
+// /usr/share/X11/xkb/
+// - symbols/newfilename
+// - rules/evdev.lst
+// - rules/evdev.xml
+//
+// /usr/share/xfce4/xkb/flags/
+//
+// http://hektor.umcs.lublin.pl/~mikosmul/computing/articles/custom-keyboard-layouts-xkb.html
+// https://help.ubuntu.com/community/Howto%3A%20Custom%20keyboard%20layout%20definitions
+// http://www.charvolant.org/~doug/xkb/html/node5.html
+// http://packages.debian.org/x11proto-core-dev keysymdef.h
+//
+// https://en.wikipedia.org/wiki/Dash
+// http://en.wikipedia.org/wiki/Quotation_mark
+// http://en.wikipedia.org/wiki/Non-English_use_of_quotation_marks
+//
+// https://en.wikipedia.org/wiki/Box-drawing_character
+
+default
+partial alphanumeric_keys
+xkb_symbols "basic" {
+
+    name[Group1] = "MihaiB";
+
+    key <TLDE> {[asciitilde,    grave,      Greek_horizbar, approxeq]};
+    key <AE01> {[1,             at]};
+    key <AE02> {[2,             numbersign, onehalf,        musicalsharp]};
+    key <AE03> {[3,             braceleft,  U2039]};
+    key <AE04> {[4,             braceright, U203A]};
+    key <AE05> {[5,             percent,    U2030]};
+    key <AE06> {[6,             asciicircum]};
+    key <AE07> {[7,             ampersand]};
+    key <AE08> {[8,             dollar,     infinity,       U2212]};
+    key <AE09> {[9,             less,       guillemotleft,  lessthanequal]};
+    key <AE10> {[0,             greater,    guillemotright, greaterthanequal]};
+    key <AE11> {[equal,         plus,       notequal,       plusminus]};
+    key <AE12> {[exclam,        question,   exclamdown,     questiondown]};
+
+    key <AD01> {[period,    slash,      ellipsis,   division]};
+    key <AD02> {[y,         Y]};
+    key <AD03> {[w,         W]};
+    key <AD04> {[d,         D]};
+    key <AD05> {[q,         Q]};
+    key <AD06> {[z,         Z]};
+    key <AD07> {[u,         U]};
+    key <AD08> {[c,         C,          copyright,  cent]};
+    key <AD09> {[f,         F]};
+    key <AD10> {[g,         G]};
+    key <AD11> {[minus,     underscore, endash,     emdash]};
+    key <AD12> {[semicolon, colon,      rightarrow, implies]};
+    key <BKSL> {[backslash, bar,        leftarrow,  ifonlyif]};
+
+    key <AC01> {[s, S,  U0219,          U0218]};
+    key <AC02> {[n, N,  ntilde,         Ntilde]};
+    key <AC03> {[o, O,  degree]};
+    key <AC04> {[t, T,  U021B,          U021A]};
+    key <AC05> {[r, R]};
+    key <AC06> {[m, M,  mu]};
+    key <AC07> {[e, E,  EuroSign]};
+    key <AC08> {[a, A,  abreve,         Abreve]};
+    key <AC09> {[i, I,  icircumflex,    Icircumflex]};
+    key <AC10> {[h, H]};
+    key <AC11> {[l, L]};
+
+    key <AB01> {[x,             X,              ballotcross,            multiply]};
+    key <AB02> {[apostrophe,    quotedbl,       singlelowquotemark,     doublelowquotemark]};
+    key <AB03> {[v,             V,              checkmark]};
+    key <AB04> {[b,             B,              musicalflat]};
+    key <AB05> {[parenleft,     bracketleft,    leftsinglequotemark,    leftdoublequotemark]};
+    key <AB06> {[parenright,    bracketright,   rightsinglequotemark,   rightdoublequotemark]};
+    key <AB07> {[p,             P,              section]};
+    key <AB08> {[comma,         asterisk,       acircumflex,            Acircumflex]};
+    key <AB09> {[k,             K]};
+    key <AB10> {[j,             J]};
+
+    include "level3(ralt_switch)"
+    include "compose(rctrl)"
+
+};
+
+
+partial alphanumeric_keys
+xkb_symbols "umlaut" {
+
+    name[Group1] = "MihaiB (Umlaut)";
+
+    include "mb(basic)"
+
+    key <AD07> {[u, U,  udiaeresis, Udiaeresis]};
+
+    key <AC03> {[o, O,  odiaeresis, Odiaeresis]};
+    key <AC08> {[a, A,  adiaeresis, Adiaeresis]};
+
+};

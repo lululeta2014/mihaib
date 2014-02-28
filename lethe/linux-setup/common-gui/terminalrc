@@ -1,0 +1,49 @@
+[Configuration]
+TitleMode=TERMINAL_TITLE_REPLACE
+ScrollingOnOutput=FALSE
+ScrollingBar=TERMINAL_SCROLLBAR_NONE
+ScrollingLines=4096
+MiscMenubarDefault=FALSE
+
+# Disable 'Tab activity’ indication
+#TabActivityTimeout=0
+
+FontName=Monospace 11
+
+
+# Colors
+# The default color palette is the same as gnome terminal's ‘Linux console’.
+
+# Black on white
+ColorForeground=#000000
+ColorBackground=#ffffff
+
+# Vary the background color for each tab
+#ColorBackgroundVary=TRUE
+
+# Tango color scheme
+ColorPalette=#000000000000;#cccc00000000;#4e4e9a9a0606;#c4c4a0a00000;#34346565a4a4;#757550507b7b;#060698989a9a;#d3d3d7d7cfcf;#555557575353;#efef29292929;#8a8ae2e23434;#fcfce9e94f4f;#72729f9fcfcf;#adad7f7fa8a8;#3434e2e2e2e2;#eeeeeeeeecec
+
+# To change the cursor color
+#ColorCursor=#000000000000
+# If character under cursor is not inverted (black character and black cursor):
+#ColorCursor=
+
+
+# Hidden Options http://docs.xfce.org/apps/terminal/advanced
+# In XFCE, vertically maximizing then opening a second tab resizes the window
+# and you can't unmaximize back. Gnome3 handles this fine.
+# Workaround: always show tabs, so no resizing occurs.
+MiscAlwaysShowTabs=TRUE
+MiscCursorBlinks=TRUE
+MiscMouseAutohide=TRUE
+
+# http://docs.xfce.org/apps/terminal/dropdown
+# Always show tabs, so we get the bottom-right button to keep the window open
+# when it loses focus. That button applies just to the current window and is
+# different from the checkbox in the ‘preferences’ dialog for each new window.
+#DropdownAlwaysShowTabs=FALSE
+
+# Don't keep it on top – this only makes a difference when we choose to ‘keep
+# window open when it loses focus’ from the bottom-right button.
+DropdownKeepAbove=FALSE

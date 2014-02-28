@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# using /bin/sh like /etc/xdg/xfce4/xinitrc for no reason
+# which seems to make syntax easy to break (errors in ~/.xsession-errors)
+# like <if [ "a" == "b" ]; then> so just doing things like xinitrc above does
+
+EXISTING_GNOME_KEYRING_PID=$GNOME_KEYRING_PID
+eval `gnome-keyring-daemon --start | sed 's/^\(\(..*\)=.*\)$/\1\nexport \2\n/'`
+
+/etc/xdg/xfce4/xinitrc
+
+if test "$EXISTING_GNOME_KEYRING_PID" = "$GNOME_KEYRING_PID" ; then
+	true # do nothing
+else
+	# kill -SIGINT doesn't work
+	kill -INT $GNOME_KEYRING_PID
+fi

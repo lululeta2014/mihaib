@@ -1,0 +1,20 @@
+#! /usr/bin/env bash
+
+set -u	# exit if using uninitialised variable
+set -e	# exit if some command in this script fails
+trap "echo $0 failed because a command in the script failed" ERR
+
+SCRIPT=`readlink -f "$0"`
+DIR=`dirname "$SCRIPT"`
+
+source "$DIR/../sourceme.bash"
+
+if [ ! -e ~/.mb-web-browsers-done ]; then
+	"$DIR/firefox.py" --force
+	"$DIR/chromium.sh" --force
+	"$DIR/opera.py" --force
+
+	touch ~/.mb-web-browsers-done
+else
+	echo 'Web Browsers have already been set up, doing nothing.'
+fi
