@@ -1,0 +1,20 @@
+testcase TCExample() runs on DNSClient {
+	timer replyTimer;
+	serverPort.send(a_Question(123, "www.example.com"));
+	replyTimer.start(20.0);
+
+	alt {
+		[] serverPort.receive(a_Answer(123, "208.77.188.166")) {
+			setverdict(pass);
+			replyTimer.stop;
+		}
+		[] serverPort.receive {
+			setverdict(fail);
+			replyTimer.stop;
+		}
+		[] replyTimer.timeout {
+			setverdict(fail);
+		}
+	}
+	stop;
+}

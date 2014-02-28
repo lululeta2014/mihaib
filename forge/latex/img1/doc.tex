@@ -1,0 +1,30 @@
+% run xelatex twice
+\documentclass[a4paper]{report}
+
+\usepackage{fontspec}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{hyperref}
+% link to the start of the photo, no the caption line (where \label is).
+\usepackage[all]{hypcap}
+
+\floatstyle{ruled}
+\graphicspath{{./img/}}
+
+\begin{document}
+
+\chapter{Some Chapter}
+Figure \ref{fig:lion} shows the \LaTeX{} lion.
+
+% allow placement here, top, bottom with the optional param
+\begin{figure}[htb]
+	\centering
+	\includegraphics{latex-lion}
+	\caption{The \LaTeX{} lion logo%
+	\label{fig:lion}}
+\end{figure}
+
+\appendix
+
+\listoffigures
+\end{document}

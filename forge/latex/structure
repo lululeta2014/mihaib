@@ -1,0 +1,105 @@
+\documentclass{…}
+% Preamble
+\begin{document}
+% Document Text
+\end{document}
+
+\documentclass[11pt,twoside,a4paper]{article}
+There are classes for letters and slides.
+Other useful options: twocolumn, oneside, landscape, draft
+
+Packages:
+\usepackage[options]{package}
+If you don't pass options, you may include several packages with one command:
+\usepackage{package1,package2,package3}
+
+Top Matter
+
+\documentclass[11pt,a4paper]{report}
+\begin{document}
+\title{My Title}
+\author{John Black \and Jackie White}
+% If you omit the \date command, today's date is used, \date{\today}.
+% To omit the date, use \date{}.
+\date{February 2014}
+\maketitle	% Top Matter ends here
+\end{document}
+
+Abstract
+
+Available for article and report, not book.
+After the top matter, before the rest of the document.
+The default title is ‘Abstract’, you can change it:
+\renewcommand{\abstractname}{My Title}
+\begin{abstract}
+\end{abstract}
+
+Sectioning commands
+
+\part		(level -1)
+\chapter	(level 0)
+\section
+\subsection
+\subsubsection
+\paragraph
+\subparagraph	(level 5)
+
+\section{A section}
+Text goes here
+
+\section{Another section}
+More text
+\subsection{A subsection}
+Text
+
+If the section name is very long or has unusual styling or line-breaks,
+you may give an optional version of the text for the table of contents
+and any running heads.
+\section[A short name]{A very long
+section name}
+
+\setcounter{tocdepth}{3}	% depth for Table of Contents
+
+Ordinary paragraphs
+Type the text and leave a blank line between paragraphs.
+
+Table of contents
+Add the command \tableofcontents, e.g. after the Abstract.
+Process the document twice for correct pagenumber references.
+The commands \listoffigures and \listoftables work in the same way.
+If used, they're usually placed after \tableofcontents.
+\renewcommand{\contentsname}{My Contents Title}	% change TOC title
+\listfigurename and \listtablename are similar.
+
+Book structure
+
+\begin{document}
+\frontmatter	% chapters not numbered, roman numeral page numbers
+\maketitle
+\chapter{Preface}
+\mainmatter	% back to normal, reset page numbers and use arabic numerals
+\chapter{First chapter}
+\appendix
+\chapter{First Appendix}
+\backmatter	% similar to frontmatter
+\chapter{Last note}
+
+To put the whole preamble in a separate .sty file:
+\documentclass[a4paper,12pt]{report}
+\usepackage{mystyle}
+%preamble ends here
+\begin{document}
+\end{document}
+
+mystyle.sty:
+\ProvidesPackage{mystyle}
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{setspace}
+\onehalfspacing
+
+Include files (nested \input commands are relative to the main file):
+\begin{document}
+\input{./tex/a-file.tex}
+\input{./tex/another-file.tex}
+\end{document}

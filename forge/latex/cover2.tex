@@ -1,0 +1,49 @@
+% xelatex file.tex
+\documentclass[a4paper]{article}
+
+% fontspec is needed for UTF-8 input
+\usepackage{fontspec}
+
+% Example of specifying page margins, if the title page is its own document.
+% If the title page is included in the whole document, the document should
+% set its own page margins and the title page should be adjusted to that.
+\usepackage[left=2.54cm,right=2.54cm,bottom=2cm,top=2cm]{geometry}
+
+\begin{document}
+\begin{titlepage}
+
+\begin{center}
+
+\textsc{\huge ∞MARS∞ University}\\
+\textsc{\huge Knowledge Brings Fear}\\[8cm]
+
+\textbf{\Huge THESIS WORK}\\[6cm]
+
+{\Large
+
+% don't put any blank line between the two minipages
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushleft}
+\emph{Student:}\\
+{\LARGE Name \textsc{Surname}}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{flushright}
+\emph{Coordinators:}\\
+prof.\ dr.\ eng.\
+{\LARGE Jim \textsc{Surname1}}\\
+{\LARGE Jane \textsc{Surname2}}
+\end{flushright}
+\end{minipage}
+
+}
+
+\vfill
+
+\textsc{\Large Mars\\ 3001}
+
+\end{center}
+
+\end{titlepage}
+\end{document}

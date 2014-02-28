@@ -1,0 +1,4 @@
+type record ObjectType {
+	charstring typeName,
+	address handle
+} with { variant "java.lang.Object" }

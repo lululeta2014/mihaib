@@ -1,0 +1,26 @@
+% xelatex doc
+% bibtex doc
+% xelatex doc
+% xelatex doc
+\documentclass{report}
+
+\usepackage{fontspec}
+\usepackage{natbib}
+%\usepackage[round]{natbib}	% use round parantheses.
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true}	% color the text instead of colored boxes
+
+\begin{document}
+\chapter{Whatever}
+Cite a book. With \verb+\citep+: \citep{TIJ}, with \verb+\citet+: \citet{TIJ}.
+
+A website. With \verb=\citep=: \citep{website:reflection},
+with \verb=\citet=: \citet{website:reflection}.
+
+\appendix
+
+\nocite{*}	% also show entries we didn't cite in the text
+\bibliographystyle{unsrtnat}
+\bibliography{bibl}
+\end{document}

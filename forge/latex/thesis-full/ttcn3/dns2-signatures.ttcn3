@@ -1,0 +1,8 @@
+signature ClearTable() return boolean;
+signature DeleteEntry(in charstring name) return boolean;
+signature AddEntry(in charstring name, in charstring ip)
+	return boolean;
+
+type port ManagementPort procedure {
+	out ClearTable, DeleteEntry, AddEntry
+}

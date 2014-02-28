@@ -1,0 +1,4 @@
+template AddEntry a_AddEntry(charstring p_name, charstring p_ip) := {
+	name	:= p_name,
+	ip	:= p_ip
+}

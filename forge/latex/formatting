@@ -1,0 +1,93 @@
+Non-breaking spaces use the ‘~’ symbol.
+Phillip~J.~Fry,
+50~€.
+‘\ ’ → a space that will not be enlarged.
+
+Quotes
+`quote' → ‘quote’
+``quote'' → “quote”
+
+One way to avoid long words beyond the right margin is to place the paragraph
+in \begin{sloppyvar}…\end{sloppyvar}.
+
+Slash marks
+Use ‘input\slash output’ to allow a line break after the ‘/’. Only use the ‘/’
+in units, e.g. ‘mm/year’, which should not be broken.
+
+Superscript, subscript
+March 6\textsuperscript{th}
+\usepackage{fixltx2e}	% to add subscript support
+Sub\textsubscript{script}
+
+Dashes
+- → hyphen, -- → en-dash, --- → em-dash, $-1$ minus sign in math formula.
+Ellipsis: \ldots or \textellipsis (so spacing between the dots can vary?)
+\today, \TeX, \LaTeX, etc.
+
+Paragraph alignment
+Justified by default.
+Environments: flushleft, flushright, center.
+Equivalent commands: \raggedright, \raggedleft, \centering.
+There's no explicit way to justify text, so if you use the commands outside
+of a group they'll affect the rest of the document.
+
+Manual breaks
+\newline, \\, \\* (prohibits a page break after this forced line break).
+
+Verbatim text
+In the ‘verbatim’ environment, all spaces and new lines are reproduced and
+LaTeX commands are ignored.
+See also the ‘alltt’ package and environment.
+For a short verbatim phrase, the \verb command, \verb+my text+, can use any
+delimiter (here ‘+’) except ‘*’.
+See also the fancyvrb package and its Verbatim environment.
+The moreverb package adds \begin{listing}[step]{first line}.
+First line is the line number of the first line, step is how often to show
+line numbers.
+
+URLs: the hyperref or url packages provide the \url command
+
+Environments for Quoting Text: quote, quotation, verse.
+
+Emphasizing text:
+I want to \emph{emphasize} a word.
+\emph{In this emphasized sentence, there is an emphasized \emph{word}
+which looks upright.}
+
+\textnormal{document font family}
+\emph{emphasis}
+\textrm{roman font family}
+\textsf{sans serif font family}
+\texttt{teletypefont family}
+\textup{upright shape}
+\textit{italic shape}
+\textsl{slanted shape}
+\textsc{Small Capitals}
+\uppercase and \lowercase, but they have caveats.
+\textbf{bold}
+\textmd{medium weight}
+
+Avoid \underline, bad typography, the text won't break properly,
+and complications with the ‘ulem’ package which takes over \emph.
+
+Some font styles are incompatible with each other; extra packages help.
+For bold small capitals use:
+\usepackage{bold-extra}
+\textsc{ \textbf{This is bold small capitals} }
+
+Font sizes:
+\tiny
+\scriptsize
+\footnotesize
+\small
+\normalsize
+\large
+\Large
+\LARGE
+\huge
+\Huge
+
+Use as: {\Large some words}
+
+To use any font installed on the system in XeTeX:
+\usepackage{fontspec}

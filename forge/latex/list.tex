@@ -1,0 +1,33 @@
+% xelatex «this-file.tex»
+\documentclass{article}
+\usepackage{fontspec}
+\begin{document}
+3 enviroments for lists: itemize, enumerate and description.
+
+\begin{itemize}
+	\item Itemize
+	\item Another item.
+
+		Another paragraph in this item.
+	\item
+		One more item
+\end{itemize}
+
+\begin{enumerate}
+	\item Enumerate
+	\item Another item
+		\begin{enumerate}
+			\item This Enumerate
+			\item is nested.
+		\end{enumerate}
+		Now the outer item continues.
+	\item One more item
+\end{enumerate}
+
+\begin{description}
+	\item[Custom Label] Description allows an optional description.
+	\item This item is missing the optional label.
+	\item[Another Label] \hfill \\
+		To start the text on a new line use \verb+\hfill \\+.
+\end{description}
+\end{document}

@@ -1,0 +1,16 @@
+LaTeX notes
+
+Use XeLaTex and the fontspec (and maybe xunicode) packages and UTF-8 input.
+
+thesis-full/	A complete thesis.
+
+syntax		Basic syntax. Groups, environments, commands, comments, spaces.
+structure	Document structure
+formatting	formatting
+list.tex	lists
+cover[12].tex	cover page examples
+acronym.tex	acronyms
+references.tex	references
+bib1/		bibliography
+prog1/		program (source code) listings
+img1/		images

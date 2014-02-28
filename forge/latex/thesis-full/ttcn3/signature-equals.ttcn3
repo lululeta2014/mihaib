@@ -1,0 +1,5 @@
+signature equals__1__java_0_lang_0_Object(
+	in type_java_0_lang_0_Object__ objHandle,
+	in type_java_0_lang_0_Object__ p1)
+	return boolean
+	exception (type_java_0_lang_0_Throwable__);

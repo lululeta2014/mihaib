@@ -1,0 +1,3 @@
+A full Thesis
+
+Create the PDF with ./comp.sh, delete auxiliary files with ./clean.sh.

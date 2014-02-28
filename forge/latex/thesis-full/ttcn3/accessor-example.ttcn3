@@ -1,0 +1,4 @@
+signature get_memory__(in type_ro_0_pub_0_Calculator__ objHandle)
+	return float;
+signature set_memory__(in type_ro_0_pub_0_Calculator__ objHandle,
+	in float newValue);

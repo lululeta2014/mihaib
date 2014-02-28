@@ -1,0 +1,123 @@
+\chapter{Conclusions}
+\label{chap:conclusions}
+
+The previous chapter has evaluated the solution
+in light of the requirements stated in chapter \ref{chap:motivation}.
+The following pages aim to provide
+an overview of inferences made by my work
+and some ideas for future research.
+During the design and implementation of this project
+the topics below have been addressed.
+While some are directly related to the topic of this paper,
+I feel that others
+(such as generating name manglings in order to perform a language mapping)
+may be of a more general interest.
+
+\paragraph{Java Unit Testing with \ac{TTCN-3}}
+The presented work proves that Java code can successfully be tested
+using the \ac{TTCN-3} language.
+Object creation, public field reading and writing and
+method invocations with exception handling
+can be performed from within \ac{TTCN-3} testcases.
+Primitive and object types from Java
+are automatically mapped to \ac{TTCN-3} types
+and some compile time type safety is also provided to the test developer.
+
+\paragraph{Language mapping}
+Most of the work on this project
+involved finding a \emph{translation scheme} between a Java type
+and its representation as an auto-generated \ac{TTCN-3} type
+(this correspondence between types needed to be in both directions).
+The mapping has been particularly interesting because \ac{TTCN-3}
+is not object oriented and lacks support for overloaded signatures.
+This has led to a solution which tries to provide support
+for the additional features of Java in the generated \ac{TTCN-3} modules.
+
+\subparagraph{Name mangling}
+The name mangling scheme is mostly straightforward:
+element names are kept unchanged, and some receive a prefix and/or suffix
+to protect against clashes with others from the same module.
+The more interesting part deals with translating Java overloaded method names.
+I feel this is of general interest and is not tied to the particular case
+of Java and \ac{TTCN-3} tackled in this project.
+
+\subparagraph{Object creation}
+Apart from constructors, objects in Java may be created using
+\verb=String= literals, the \verb=null= literal and arrays
+(which must be treated as objects
+and methods from the \verb=java.util.Arrays= class
+may be used by test developers).
+Because of these \emph{entry points} for objects in a Java program,
+this project needed to provide them as well ---
+and did so by using the meta-signatures \verb=makeNull= and \verb=makeString=.
+Entry points for objects in a running program are an important subject
+for any language mapping.
+
+\subparagraph{Object storage}
+For this project, the target language for the mapping (\ac{TTCN-3})
+only held \emph{handles} for the real Java objects in use.
+The runtime system intercepted signature calls and
+decoded the information in the handles to obtain the actual objects.
+The solution used for storing the objects and even its implementation
+(with the \verb=ObjectHolder= hidden class)
+may be of interest for other language mapping situations.
+
+
+\section{Future work}
+\label{sec:future-work}
+
+This project has used and built upon
+the architecture of a \ac{TTCN-3} test system.
+The purpose has been to bring unit testing into the world of \ac{TTCN-3}
+(and not to bring \ac{TTCN-3} to the area of unit testing local code,
+although the project is a proof of concept
+that this can be successfully done as well).
+With this in mind, the following may be developed
+by building upon this project:
+
+\paragraph{Unit testing on embedded devices}
+Embedded devices have limited resources
+and are unable to load an auxiliary \emph{parent} system for
+performing unit tests on software.
+As a result, software for such devices is tested in a simulator
+which may not always reproduce the conditions (and the limitations)
+encountered when running on the device itself.
+
+An approach to testing software directly on the device
+is to load a resource-consuming test system on a different computer
+and only load a small component of the test system on the embedded device.
+This small component is responsible for
+testing the target software on the device itself.
+The complex, resource-consuming parent software
+may communicate with this component
+by exchanging messages through the network.
+An attempt could be made to split the project presented here
+in order to have a component (for performing the invocations)
+running on a remote device.
+
+\paragraph{Making use of \ac{TTCN-3}'s pattern matching}
+One use case for this project involves using existing Java code
+for communicating with a device.
+Instead of encoding network packets by hand,
+users may benefit from from a \verb=.jar= file with code from the vendor.
+This code may allow communicating with the device on a higher level.
+
+Such a use case may involve receiving a structure with several fields
+as a return value.
+This project has designed and implemented a general purpose solution
+for Java unit testing,
+so all non-primitive return types will be seen as objects
+(and a handle will be used for them).
+
+For cases where easier inspection of the received structure is desired
+a custom solution could be used which:
+\begin{itemize}
+\item Maps certain classes to \ac{TTCN-3} records with corresponding fields
+\item Falls back to the mapping presented in this paper for everything else
+(generating handles for other types)
+\end{itemize}
+This approach (of customizing the mapping for some classes)
+needs to be known when auto-generating the \ac{TTCN-3} modules,
+when encoding/decoding and when invoking the Java methods.
+It will allow test developers to both access the class fields more easily
+and use the powerful pattern matching mechanism built into the language.

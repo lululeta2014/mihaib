@@ -1,0 +1,17 @@
+testcase TC_resolveEtsiWww() runs on DnsClient {
+	timer t_ack;
+	serverPort.send(m_dnsQuestion("www.etsi.org"));
+	t_ack.start(1.0);
+	alt {
+		[] serverPort.receive(mw_dnsAnswer("172.26.1.17")) {
+			setverdict (pass);
+		}
+		[] serverPort.receive { // any other message
+			setverdict(fail);
+		}
+		[] t_ack.timeout {
+			setverdict(inconc);
+		}
+	}
+	t_ack.stop;
+}

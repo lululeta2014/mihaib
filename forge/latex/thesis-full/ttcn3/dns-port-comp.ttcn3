@@ -1,0 +1,7 @@
+type port DNSPort message {
+	inout DNSMessage
+}
+
+type component DNSClient {
+	port DNSPort serverPort
+}

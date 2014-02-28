@@ -1,0 +1,25 @@
+module Calculator {
+	import from JAVAAUX all;
+	type record type_Calculator__ {
+		charstring typeName("ro.pub.Calculator"), address handle
+	}
+
+	signature reset__0(in type_ro_0_pub_0_Calculator__ objHandle);
+	signature construct__0__() return type_ro_0_pub_0_Calculator__;
+	signature get_result__(in type_ro_0_pub_0_Calculator__ objHandle) return float;
+	// all signatures (including ones inherited from java.lang.Object) are listed
+
+	template(value) type_ro_0_pub_0_Calculator__ castTo_Calculator(ObjectType x) := {
+		typeName := "ro.pub.Calculator", handle := x.handle
+	}
+
+	type port port_ro_0_pub_0_Calculator__ procedure {
+		inout reset__0;
+		// all signatures listed here
+	}
+
+	type record type_ro_0_pub_0_Calculator_1_Operations__ {
+		charstring typeName("ro.pub.Calculator$Operations"), address handle
+	} with { variant "ro.pub.Calculator$Operations" }
+	// all types used in the module are listed here
+} with { variant "ro.pub.Calculator"}

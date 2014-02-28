@@ -1,0 +1,10 @@
+rm \
+document.aux \
+document.bbl \
+document.blg \
+document.log \
+document.out \
+document.toc \
+document.lot \
+document.lof \
+document.lop \

@@ -1,0 +1,4 @@
+type record type_HashMap {
+	charstring typeName("java.util.HashMap"),
+	address handle
+} with { variant "java.util.HashMap" }

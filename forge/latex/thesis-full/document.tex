@@ -1,0 +1,33 @@
+\documentclass[a4paper,12pt]{report}
+
+\usepackage{mystyle}
+
+%preamble ends here
+\begin{document}
+
+\input{./tex/title.tex}
+\input{./tex/abstract.tex}
+
+\tableofcontents
+
+\input{./tex/intro.tex}
+\input{./tex/background-info.tex}
+\input{./tex/motivation.tex}
+\input{./tex/description.tex}
+\input{./tex/evaluation.tex}
+\input{./tex/conclusions.tex}
+
+\appendix
+
+\input{./tex/acronyms.tex}
+\input{./tex/code-listings.tex}
+
+\listof{program}{List of Programs}
+\listoftables
+\listoffigures
+
+\nocite{*}
+\bibliographystyle{unsrtnat}
+\bibliography{mybibl}
+
+\end{document}

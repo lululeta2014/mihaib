@@ -1,0 +1,38 @@
+\ProvidesPackage{mystyle}
+
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+
+\usepackage{setspace}
+%\usepackage[top=2.54cm,bottom=2.54cm,left=2.54cm,right=2.54cm]{geometry}
+\usepackage[top=3.81cm,bottom=3cm,left=3.5cm,right=2.54cm]{geometry}
+\usepackage[footnote,printonlyused]{acronym}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{moreverb}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+
+\floatstyle{ruled}
+\newfloat{program}{htb}{lop}[chapter]
+\floatname{program}{Listing}
+
+% Set "one and a half" line spacing
+\onehalfspacing
+\graphicspath{{./img/}}
+%\hypersetup{pdfborder = {0 0 0}}
+\hypersetup{colorlinks=true,%
+%	citecolor=black,%
+%	filecolor=black,%
+%	linkcolor=black,%
+	urlcolor=blue,%
+%
+	pdftitle={An approach to Java Unit Testing with TTCN-3},%
+	pdfauthor={Mihai B.}%
+}
+
+\pagestyle{plain}
+%\pagestyle{headings}

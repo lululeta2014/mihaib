@@ -1,0 +1,6 @@
+// method of class String
+boolean startsWith(String prefix, int toffset);
+
+// mapping to TTCN-3 signature
+signature startsWith(in address objHandle,
+	in address prefix, in int toffset) return boolean;

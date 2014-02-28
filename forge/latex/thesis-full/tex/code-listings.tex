@@ -1,0 +1,79 @@
+\chapter{Code Listings}
+
+
+\section{The JAVAAUX module}
+\label{sec:javaaux-appendix}
+
+This is an auxiliary \ac{TTCN-3} module provided by this solution
+and needed by all generated code.
+
+{
+\scriptsize
+\listinginput[5]{1}{./ttcn3/JAVAAUX.ttcn3}
+}
+
+
+\section{The Storage Codec}
+
+The storage codec extends the \verb=AbstractStorageCodec= class,
+used for other (similar) language plugins.
+This base class is responsible for encoding \ac{TTCN-3} \verb=Value=s
+to binary data (\verb=TriMessage=s).
+All implementing classes are only responsible for encoding and decoding
+between \ac{TTCN-3} \verb=Values=s and the \verb=Object=s
+stored in the registry.
+As an example, the encoding and decoding of \verb=record= types is shown below:
+
+{
+\scriptsize
+\renewcommand\verbatimtabsize{4\relax}
+\listinginput[10]{1}{./java/JAVACodec.java}
+}
+
+If the \verb=isinstance= check in line 26 fails,
+the decoding method returns \verb=null=.
+This may happen, for instance, when catching a thrown exception:
+\ac{TTCN-3} code may provide several catch clauses
+for different types of exceptions (if they need to be handled differently).
+Decoding will be tried with each of those types as \emph{decoding hypotheses},
+until one matches.
+Java inheritance \emph{is} supported:
+if the programmer tries to catch a \verb=java.lang.Throwable=,
+any thrown exception will be correctly decoded
+(because all exceptions \emph{are} \verb=Throwable=s).
+
+
+\section{The Port Plugin}
+
+The port plugin's task is to carry out the actual invocations on Java bytecode.
+It receives encoded registry keys from the codec
+and requests the associated objects.
+After performing the invocations, the port plugin stores the returned value
+or thrown exception in the codec
+and enqueues the key for the object on the appropriate port queue.
+
+{
+\scriptsize
+\renewcommand\verbatimtabsize{4\relax}
+\listinginput[10]{1}{./java/JAVAPortPlugin.java}
+}
+
+When a signature call is performed, the port plugin's \verb=triCall= method
+is called (at line 70) and the signature is examined.
+The \emph{encoding variant} specifies the original Java type.
+If this indicates that the signature is defined in the \verb=JAVAAUX= module,
+the meta-signature semantic is executed.
+Lines 76--120 show the implementation of some of the meta-signatures.
+
+Otherwise the signature name is checked for the special prefixes
+and an unescaped separator suffix,
+indicating that it is a constructor or an accessor.
+If this is not the case, then it must represent a method mapping.
+Constructor, accessor and method calls are carried out in a similar manner.
+The first part of the listing shows how a method call is carried out.
+The signature is unmangled and the original method name
+and parameter types are obtained.
+The supplied parameters are retrieved from the codec
+and checked to be of the correct type.
+In the end a separate thread is launched to carry out the invocation
+and enqueue the returned value or thrown exception.

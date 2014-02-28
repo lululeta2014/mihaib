@@ -1,0 +1,16 @@
+% 2 times: xelatex file.tex
+\documentclass{article}
+
+\usepackage{fontspec}
+\usepackage{hyperref}
+
+\begin{document}
+\section{Tranquil plants}
+\label{sec:plants}
+The section \ref{sec:animals} (\nameref{sec:animals})
+is on page \pageref{sec:animals}
+
+\section{The Animal Kingdom}
+\label{sec:animals}
+This link uses \verb=autoref=: \autoref{sec:plants}.
+\end{document}

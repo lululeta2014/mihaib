@@ -1,0 +1,21 @@
+% 2 times: xelatex file.tex
+\documentclass{article}
+
+\usepackage{fontspec}
+\usepackage[footnote]{acronym}	% on first usage, expand in footnote not inline
+\usepackage{hyperref}
+
+\begin{document}
+
+Bla bla \ac{DNS} bla bla bla.
+Smth smth \ac{CORBA} smth else.
+Repeating \ac{DNS} here.
+
+\appendix
+
+\section{Acronyms}
+\begin{acronym}[CORBA]	% the option sets the with of the description field
+	\acro{DNS}{Domain Name System}
+	\acro{CORBA}{Common Object Request Broker Architecture}
+\end{acronym}
+\end{document}

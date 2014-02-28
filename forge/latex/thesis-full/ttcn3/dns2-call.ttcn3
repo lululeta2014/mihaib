@@ -1,0 +1,12 @@
+function ClearMappingTable(ManagementPort p) return boolean {
+	var boolean result;
+
+	p.call(a_ClearTable, 10.0) {
+		[] p.getreply(a_ClearTable) -> value result {
+			return result;
+		}
+		[] p.catch(timeout) {
+			return false;
+		}
+	}
+}

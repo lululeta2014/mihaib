@@ -1,0 +1,5 @@
+* links (\ref, \ac, \hyperref) must not start a paragraph
+(or at least the first paragraph in a section)
+or the section name may end up last on a page
+and the first paragraph on the next page
+Seems that \url and \href work ok.

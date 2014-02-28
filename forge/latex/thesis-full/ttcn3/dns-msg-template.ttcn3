@@ -1,0 +1,13 @@
+template DNSMessage a_Question (Ident id, Question q) := {
+	ident		:= id,
+	messageKind	:= e_Question,
+	question	:= q,
+	answer		:= omit
+}
+
+template DNSMessage a_Answer (Ident id, Answer a) := {
+	ident		:= id,
+	messageKind	:= e_Answer,
+	question	:= ?,
+	answer		:= a
+}

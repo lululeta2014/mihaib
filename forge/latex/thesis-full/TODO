@@ -1,0 +1,7 @@
+customize handle name to be either based on module name (like now)
+	or be chosen by hand
+limitation: user defined names may not start with replacement strings
+limitation: parameter names are p1, p2, p3
+
+motivation in introduction
+evaluation - first listing - unindent last brace `}'

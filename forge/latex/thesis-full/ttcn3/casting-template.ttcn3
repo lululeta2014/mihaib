@@ -1,0 +1,3 @@
+template(value) type_Map castTo_Map(ObjectType x) := {
+	typeName := "java.util.Map", handle := x.handle
+}

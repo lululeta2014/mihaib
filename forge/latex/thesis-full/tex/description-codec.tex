@@ -1,0 +1,283 @@
+\section{Storage Codec}
+\label{sec:storage-codec}
+
+As described in section \ref{sec:test-system-arch},
+the task of the codec is to encode sent messages
+from their \ac{TTCN-3} representation
+to the real world bits and bytes which need to be sent.
+The codec also decodes received messages from their real world representation
+to the data structures used in \ac{TTCN-3}.
+
+In this project the \ac{SUT} is compiled Java code.
+The unit tests call signatures and supply parameters for them,
+test return values and handle thrown exceptions.
+The information sent to the \ac{SUT} in a \emph{procedure oriented} scenario
+is made up of signatures (which are called) and their respective parameters.
+When testing a remote system (such as a \ac{CORBA} or \ac{RPC} system)
+one might expect this information to be encoded in network packets
+which get sent as messages to the remote \ac{SUT}.
+
+The particular case of testing local Java bytecode
+does not need to send any messages to a remote system
+(though the test system itself may be split into several components
+which communicate among themselves through messages,
+as described in section \ref{sec:future-work}).
+The tasks that need to be performed are:
+\begin{itemize}
+\item identifying the Java types and methods used
+(by unmangling the \ac{TTCN-3} names)
+\item invoking the requested methods
+\item enqueueing the method return values or thrown exceptions
+to be processed on the respective port (used for the procedure call)
+\end{itemize}
+
+The codec is responsible for encoding parameter types
+from the \ac{TTCN-3} representation to a binary one
+(as required by the standard interfaces for the codec)
+and decode return values and exception types from a binary representation
+to the corresponding \ac{TTCN-3} format.
+The encoded parameters are communicated between the \emph{codec}
+and the \emph{port plugin}
+(which for this project resides on the same machine).
+
+If the Java bytecode to be tested would reside on a different machine
+(as suggested in section \ref{sec:future-work}).
+the system might include a component which would run on that machine.
+The binary messages between the components
+would then be sent via the network.
+
+Because objects are stateful they need to be \emph{kept alive} between calls.
+As mentioned in section \ref{sec:type-safe-object-handles}
+type-safe object handles prevent some programmer errors
+but type checks also need to be performed at runtime to ensure correct usage
+(as type names may be altered by hand or by using the \emph{casting template}
+previously mentioned in section \ref{sec:type-casting}).
+These checks are made both by the codec and the port plugin.
+\begin{itemize}
+\item when the codec is asked to
+decode a returned value or a thrown exception type
+(to make sure the actual value corresponds to the \emph{decoding hypothesis})
+\item when the port plugin performs the invocation (to make sure
+the handles point to objects of the correct type for parameters)
+\end{itemize}
+
+In order to keep the objects alive they will be stored
+in an \emph{object registry}.
+Since it is the codec's task to encode between the \ac{TTCN-3} representation
+and some binary representation of object handles
+the codec will also be the component responsible for
+maintaining the object registry.
+
+The previous paragraphs have covered \emph{what} tasks need to be performed
+and \emph{why} some have been assigned to the codec.
+The stage has now been set for presenting the codec's components
+and describing the mechanisms used to achieve their functionality.
+
+
+\subsection{Standard Interfaces}
+
+Since the \ac{TTCN-3} language and test system architecture are standardized,
+the codec needs to implement the standard \ac{ETSI} interface\\
+\verb=org.etsi.ttcn.tci.TciCDProvided=\\
+with its methods of interest presented in
+Listing \ref{prog:codec-standard-interf}.
+The semantics of the \verb=encode= and \verb=decode= methods
+is to convert between \emph{binary} and \ac{TTCN-3} representations of data.
+For this project byte representation of keys for the object registry
+are returned.
+
+\begin{program}
+\verbatimtabinput{./java/codec-standard-interface.java}
+\caption{Standard codec interface\label{prog:codec-standard-interf}}
+\end{program}
+
+The \ac{TTCN-3} \verb=Value= interface is used to describe
+data types and data structures used in the language.
+It has methods for retrieving the
+\verb=Encoding=, \verb=EncodingVariant= and the \verb=Type=
+(which allows inspection of the particular type of the data manipulated).
+Several sub-interfaces are defined, both for primitive and structured types,
+some of which are listed in Table \ref{tab:value-subinterfaces}.
+Most of these types have \emph{accessor} (\verb=get= and \verb=set=) methods
+for the data contained;
+the \verb=RecordValue= interface has accessor methods which take
+a \emph{field name} as argument.
+The \verb=RecordValue= interface is used
+for manipulating object handles in the codec
+(which are represented as record structures
+with a field for the object's \emph{key} in the registry
+and another field containing a charstring representation
+of the Java type name).
+
+\begin{table}
+\centering
+\begin{tabular}{|l|}
+\hline
+BooleanValue \\
+UniversalCharstringValue \\
+IntegerValue \\
+FloatValue \\
+RecordOfValue \\
+\hline
+\end{tabular}
+\caption{Sub-interfaces of the TTCN-3 \texttt{Value} type%
+	\label{tab:value-subinterfaces}}
+\end{table}
+
+The \verb=TriMessage= interface allows the representation of a byte array.
+This is the encoded message created by the codec for the port plugin.
+The port plugin is expected to send it to the \ac{SUT}.
+In a traditional scenario this would be sent as a network message.
+For unit testing the \verb=TriMessage=s received by the port plugin
+are byte representations of keys for registry objects.
+These are the parameters for the invocations
+and the particular object instance to invoke the method on.
+
+
+\subsection{Object registry}
+
+The \emph{object registry} is a \emph{Map}
+assigning keys to the contained objects.
+It is needed because of the way objects are referenced from \ac{TTCN-3} code;
+test developers use a record type with two fields:
+\begin{itemize}
+\item A \emph{handle} (of type \verb=address=) used to identify the object
+\item A \emph{field} of type \verb=charstring= used for type safety
+\end{itemize}
+
+Since the \emph{handle} is being used to reference an existing object,
+the approach chosen is to keep the objects in a Map
+and store the key in the handle.
+The codec will pass this key to the port plugin when a signature is called.
+For object parameters, the key stored in the handle is passed.
+Parameters of primitive types are wrapped in an \verb=Object=
+and the key for that object is passed.
+
+When a method call has a return value,
+the returned object is put in the registry
+(after wrapping it if it is of a primitive type)
+and the key for it is enqueued as a procedure reply.
+When the testcase code tries to store this returned value
+in a variable of a proper record type,
+the codec is asked to \emph{decode} the returned value.
+The codec then checks the object in the registry
+against the \emph{encoding variant} of the type used for the return variable.
+A successful attempt at decoding is signaled by returning
+a proper \ac{TTCN-3} \verb=Value=
+while an unsuccessful one is signaled by returning \verb=null=.
+
+
+\subsubsection{The reversed Map}
+
+Objects are added to the registry
+when the signatures called have a return value.
+The port plugin asks the storage codec to put a new object in the registry
+and then enqueues the key for this object as return value.
+It is desirable to only store each object once in the registry.
+Since the registry only maps \emph{keys} to \emph{objects},
+it is not well suited for checking if an object is already present.
+
+For this reason a second map has been introduced,
+called a \emph{reversed registry}.
+It maps the objects to their keys in the other registry.
+After being added to the first registry,
+a new object and its key must also be added to the reversed registry.
+When the programmer requests the deleting of an object from the registry,
+it must be removed from both.
+
+When adding a new object, the reversed registry is used
+to check if the object is already present.
+If so, its existing key is returned by the \verb=add()= operation,
+otherwise a new key is generated and the object (together with its key)
+is added to both registries.
+
+
+\subsubsection{Implementation}
+
+\paragraph{Encoding and Decoding}
+translate between the \ac{TTCN-3} representation of data
+(the \verb=Value= interface)
+and a binary representation (the \verb=TriMessage= type).
+The \verb=TriMessage= sent to the port plugin
+(and also enqueued by the port plugin as return value)
+is always the representation of a registry key.
+The object pointed to is the actual Java object
+or a wrapper for a primitive type.
+
+The decoding operation also performs type checking
+and if the object type and the handle type are incompatible,
+it returns \verb=null=
+to signal that decoding cannot be performed with this hypothesis.
+When encoding \verb=integer= types, the \verb=java.lang.Integer= type
+is always used as wrapper
+(because \ac{TTCN-3} has a single \verb=IntegerValue= interface
+used for representing unbounded  integers).
+The port plugin will retrieve the \verb=Integer= from the registry
+and perform the appropriate conversion to a primitive type
+before calling a method.
+Values returned by the port plugin are automatically wrapped
+in the appropriate wrapper type (e.g.\ \verb=Short=, \verb=Byte=)
+and the codec will check for this before downcasting
+the object obtained from the registry and returning an \verb=IntegerValue=.
+
+\paragraph{Registries}
+The first registry maps \verb=String=s to \verb=Object=s
+while the reverse registry performs the mapping the other way around,
+using the \verb=Object=s as keys.
+As previously stated, this requires each object to be stored only once
+by the codec (since it must be used as a key in one of the registries).
+Obviously, this is also desirable in order to avoid wasting memory.
+
+The keys for the registry have been chosen of type \verb=String=.
+They are actually string representations of integer numbers.
+An internal counter is used for generating the keys,
+and it is incremented whenever a new object is stored.
+Keys are assigned consecutively (\verb="0"=, \verb="1"=, \verb="2"= etc.).
+
+When objects are deleted from the registry their keys are not reused.
+The only operation changing the internal counter is the adding of new objects.
+
+Some particular challenges need to be overcome
+when implementing these two registries.
+Keys for a map are considered equal (i.e.\ they are the same key)
+based on the \verb=boolean= result of the \verb=equals= method.
+This is a crucial problem for storing user objects
+and using them as keys.
+Storing the distinct value \verb=null= may also be desirable.
+When the codec tries to retrieve the object associated with a key,
+\verb=java.util.Map= uses \verb=null=
+to indicate a missing mapping for that key.
+The codec must be able to distinguish this situation from a key mapped to the 
+\verb=null= object.
+
+These issues have been addressed by a slight change in design:
+The objects are not directly stored in the maps.
+They are wrapped inside objects of the type \verb=ObjectHolder=
+presented in Listing \ref{prog:ObjectHolder}.
+\verb=ObjectHolder= is a private inner type
+not exposed outside the \verb=JavaCodec= class.
+It is only used internally.
+The \verb=encode= and \verb=decode= methods
+\emph{always} use the stored \verb=Objects= as parameters or return values.
+This holder type overrides the \verb=equals= method such that
+it returns \verb=true= when two holders hold the same object
+and \verb=false= otherwise.
+
+Another important point to make (regarding implementation) is
+the \emph{Contract for the \texttt{hashCode} method} in Java
+which states that \emph{equal objects must have equal hashcodes},
+as detailed in \citep{website:equals-hashcode}
+and \citep{website:java-api}.\footnote{\raggedright%
+	\url{http://java.sun.com/javase/6/docs/api/%
+	java/lang/Object.html\#equals(java.lang.Object)}}
+Thus the \verb=ObjectHolder= class also needs to override
+the \verb=hashCode= method, and does so
+by returning the hashCode of the encapsulated \verb=Object=.
+Fulfilling this contract is especially important
+because the \verb=ObjectHolder=s are used as keys in the reversed registry.
+All implementation details are found in Listing \ref{prog:ObjectHolder}.
+
+\begin{program}
+\verbatimtabinput{./java/ObjectHolder.java}
+\caption{ObjectHolder used for the registries\label{prog:ObjectHolder}}
+\end{program}

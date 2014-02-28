@@ -1,0 +1,7 @@
+type type_Calculator__ CalcType;
+type type_ro_0_pub_0_Calculator_1_Operations__ OpType;
+template toMemory__1__ro_0_pub_0_Calculator_1_Operations
+	toMemory(CalcType objH, OpType op) := {
+		objHandle := objH,
+		p1 := op
+	}

@@ -1,0 +1,29 @@
+module JAVAAUX {
+	type integer byte (- 128 .. 127) ;
+	type integer short (- 32768 .. 32767) ;
+	type integer int (- 2147483648 .. 2147483647) ;
+	type integer long (- 9223372036854775808 .. 9223372036854775807) ;
+	type universal charstring jchar length(1);
+	type charstring address;
+	type universal charstring stringliteral;
+
+	type record ObjectType {
+		charstring typeName,
+		address handle
+	} with { variant "java.lang.Object" }
+	
+	type record StringType {
+		charstring typeName("java.lang.String"),
+		address handle
+	} with { variant "java.lang.String" }
+
+	signature makeString(in stringliteral strLiteral) return StringType;
+	signature eq(in ObjectType objId1, in ObjectType objId2) return boolean;
+	signature makeNull() return ObjectType;
+	signature deleteObject(in ObjectType objHandler);
+	signature clearRegistry();
+
+	type port JavaAuxPort procedure {
+		inout makeString; inout eq; inout makeNull; inout deleteObject;
+	}
+} with {variant "com.testingtech.javaplugin.javaaux"}

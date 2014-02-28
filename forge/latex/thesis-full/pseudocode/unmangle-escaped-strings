@@ -1,0 +1,5 @@
+for each occurence of "_0_":
+	if another "_0_" follows it
+		replace both occurences with "_0_"
+	else
+		replace it with "."

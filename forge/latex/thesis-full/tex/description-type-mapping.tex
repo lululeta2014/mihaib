@@ -1,0 +1,536 @@
+\section{Type Mapping}
+\label{sec:type-mapping}
+
+
+\subsection{Primitive Types}
+\label{sec:type-mapping-primitive-types}
+
+The Java programming language defines 8 built-in types
+(as detailed in \citep{website:learning-java}%
+\footnote{\url{http://java.sun.com/docs/books/tutorial/%
+	java/nutsandbolts/datatypes.html}}):
+\verb=byte=, \verb=short=, \verb=int=, \verb=long=,
+\verb=float=, \verb=double=, \verb=boolean= and \verb=char=.
+
+Table \ref{tab:ttcn3-prim-types} lists
+the primitive data types defined by the \ac{TTCN-3} language,
+which are of interest for mapping Java types.
+Other built in data types reflect the language's design and use
+for protocol testing:\\
+\verb=verdicttype=, \verb=bitstring=, \verb=hexstring=, \verb=octetstring=.\\
+In addition, the language allows the user to define custom
+structured types
+(e.g.\ \verb=enumerated=, \verb=record=, \verb=set=, \verb=union=)
+and list types (\verb=array=, \verb=set of=, \verb=record of=).
+This allows the test developer to express data structures as close as possible
+to the real data transmitted when running test scenarios
+in a variety of test domains.
+
+\begin{table}
+\centering
+\begin{tabular}{| r || l |}
+	\hline
+	\ac{TTCN-3} built-in type	& Description \\
+	\hline
+	\verb=boolean=	& May take the values \verb=true= and \verb=false= \\
+	\verb=integer=	& Arbitrarily large integer values \\
+	\verb=float=	& Arbitrarily large real numbers \\
+	\verb=(universal) charstring=	& String of (unicode) characters \\
+	\hline
+\end{tabular}
+\caption{TTCN-3 primitive types of interest\label{tab:ttcn3-prim-types}}
+\end{table}
+
+\ac{TTCN-3} also allows the definition of new types
+by restricting the value range of an existing type.
+The basic syntax for numeric type ranges is presented in
+Listing \ref{prog:type-range-restrict}.
+The built-in \verb=integer= and \verb=float= types
+permit arbitrarily large values.
+Java integer types (\verb=byte=, \verb=short=, \verb=int=, \verb=long=)
+can be mapped to specific value ranges of the unbounded \verb=integer= type.
+The Java \verb=float= and \verb=double= types are mapped to
+\ac{TTCN-3}'s \verb=float= type.
+The \verb=char= type in Java can be mapped to a
+\ac{TTCN-3} \texttt{universal charstring} of length \verb=1=.
+The \verb=boolean= type can be directly mapped between the two languages
+since it has the same semantic.
+The Java \verb=void= type may only be used as a method return type.
+Such Java methods will be mapped to
+\ac{TTCN-3} signatures with no return value.
+The mapping of primitive Java types to \ac{TTCN-3} is shown in
+Listing \ref{prog:java-primitive-type-mapping}.
+
+\begin{program}
+\verbatimtabinput{./ttcn3/type-range-restrict.ttcn3}
+\caption{New type definition by restricting the value range %
+	of an existing type\label{prog:type-range-restrict}}
+\end{program}
+
+\begin{program}
+\verbatimtabinput{./ttcn3/java-primitive-type-mapping.ttcn3}
+\caption{Mapping of primitive Java types to TTCN-3%
+	\label{prog:java-primitive-type-mapping}}
+\end{program}
+
+
+\subsection{Using Java Objects from TTCN-3 code}
+\label{sec:using-java-objects-from-ttcn3}
+
+In order to use Java objects from \ac{TTCN-3} code,
+test developers will use \emph{handles}.
+Upon creation, objects are stored in a map (called the \emph{object registry}).
+Each \verb=Object= gets a unique \emph{key} associated to it in this registry.
+The handles used in \ac{TTCN-3} code encapsulate information about the key
+and the programmer is not concerned
+about the mechanism used to translate the handle into an object reference.
+Future changes in the information contained in the handle
+should have little or no impact on client code.
+
+The object registry uses \verb=String=s as keys.
+\ac{TTCN-3} provides a reserved type, \verb=address=,
+which must be defined before being used.
+It will be used as the type for object handles,
+and the contents will be hidden from the user.
+The \verb=address= type has been defined as a charstring
+in Listing \ref{prog:address-definition}.
+The current registry implementation uses \verb=String=s
+representing increasing integer numbers for the keys
+(e.g.\ \verb="1"=, \verb="2"=).
+
+\begin{program}
+\verbatimtabinput{./ttcn3/address-definition.ttcn3}
+\caption{Definition of \texttt{address} as handle type%
+	\label{prog:address-definition}}
+\end{program}
+
+
+\subsubsection{Mapping signatures to instance methods}
+
+The procedure oriented syntax of the \ac{TTCN-3} language
+allows the programmer to define and call signatures
+which may take parameters, may return values and may throw exceptions.
+This syntax covers most aspects of methods in an object oriented language.
+But methods in an object oriented language
+may be \emph{invoked} for different \emph{object instances}.
+
+A description of how this can be achieved by a compiler is given in
+\citep[pg.~116]{tij}:
+
+\begin{quotation}
+If there’s only one method being called, how can that method know
+whether it’s being called for one object or another?
+To allow you to write the code in a convenient object-oriented syntax
+in which you ``send a message to an object,''
+the compiler does some undercover work for you.
+There’s a secret first argument passed to the method,
+and that argument is the reference to the object that’s being manipulated.
+\end{quotation}
+
+This mechanism is used at runtime to map \ac{TTCN-3} signature calls
+to Java instance method invocations.
+When instance methods are mapped to \ac{TTCN-3} signatures,
+an extra first parameter is introduced,
+as shown in Listing \ref{prog:signature-not-type-safe}.
+Static methods need no additional parameter for the object handle.
+
+\begin{program}
+\verbatimtabinput{./ttcn3/signature-not-type-safe.ttcn3}
+\caption{A signature definition (with no type safety)%
+	\label{prog:signature-not-type-safe}}
+\end{program}
+
+After solving the issue of specifying the instance handle
+when calling a signature,
+another (not critical but important) issue comes to light: \emph{Type Safety}.
+If handles for all Java object types are \ac{TTCN-3} \verb=address=es,
+then no type checking is done when compiling the \ac{TTCN-3} source.
+Whenever signatures require an object handle as parameter,
+any variable of type \verb=address= may be used.
+If the test developer supplies handles for objects of the wrong type
+the \ac{TTCN-3} compiler will be unable to detect this.
+When the compiled test cases are executed,
+runtime errors will show the problem which can then be corrected.
+This method for correcting errors in the source code
+has two important disadvantages:
+\begin{itemize}
+\item The errors get reported one by one
+after repeatedly compiling and executing the code
+(instead of all of them being reported after a single compilation)
+\item Type errors will not be reported on execution branches
+which have never been taken (even after compiling and running the test cases).
+\end{itemize}
+
+
+\subsubsection{Type Safe Object Handles}
+\label{sec:type-safe-object-handles}
+
+As previously shown, having the same type (\verb=address=) for all object types
+provides no type safety and type errors will remain undetected at compile time.
+To overcome this issue, information about the particular type
+must be added to the handle.
+
+\ac{TTCN-3}'s powerful type definition mechanism
+can be used to solve this issue.
+The language uses \emph{type structure}
+to assert the equivalence of data types.
+More precisely the two types (\verb=rec1= and \verb=rec2=) defined
+in Listing \ref{prog:type-structure-equivalence} are equivalent
+in the sense that \emph{a variable of one type may successfully be used
+where the other type is required}.
+This example hints at the final solution:
+a structured (\verb=record=) type with fields for:
+\begin{description}
+\item[The type name] A \verb=charstring= representation of the Java type name
+\item[The handle] The previously mentioned key (of type \verb=address=)
+for the \emph{object registry} managed by the codec
+\end{description}
+
+\begin{program}
+\verbatimtabinput{./ttcn3/type-structure-equivalence.ttcn3}
+\caption{Type equivalence is based on type structure%
+	\label{prog:type-structure-equivalence}}
+\end{program}
+
+The final solution is shown in Listing \ref{prog:type-safe-record-type}.
+\ac{TTCN-3}'s type equivalence takes into account type structure
+including restrictions placed on \verb=field=s within a \verb=record=.
+By defining each handle type as a record with a different structure
+(more precisely with a different restriction on the values allowed
+for the \verb=typeName= field)
+a signature which expects an object handle of a particular type
+will determine a compile time error if a handle of the wrong type is supplied
+by the test developer --- and thus type safety is achieved.
+
+\begin{program}
+\verbatimtabinput{./ttcn3/type-safe-record-type.ttcn3}
+\caption{A type-safe handle type\label{prog:type-safe-record-type}}
+\end{program}
+
+
+\subsubsection{The type encoding variant}
+\label{sec:type-encoding-variant}
+
+The careful reader may have noticed the \verb=variant=
+following the handle type definition
+in Listing \ref{prog:type-safe-record-type}.
+This is an \emph{attribute} used to specify the \emph{encoding variant}.
+Such an attribute may be specified for a \ac{TTCN-3} module
+(and inherited by types defined within that module)
+or it may be specified for each type individually.
+The \verb=variant= attribute is needed because of the
+architecture of a \ac{TTCN-3} test system.
+
+Being designed for message exchanging between several parallel components,
+a \ac{TTCN-3} test system is designed
+to decode messages in the following manner:
+\begin{itemize}
+\item Messages arrive (encoded) as a string of bytes
+\item The codec is asked to decode the message knowing:
+	\begin{itemize}
+	\item The \emph{decoding hypothesis} --- the structure of the template
+	specified in a \verb=receive= operation
+	\item The \emph{encoding variant} of the received data
+	\end{itemize}
+\item The data (if successfully decoded using the given hypothesis)
+is matched against the expected \emph{receive template}.
+If it matches (by conforming to all restrictions) the message is dequeued,
+otherwise the next alternative is considered.
+\end{itemize}
+
+Because the \emph{decoding} operation is separate from the
+\emph{pattern matching} between the received data and the expected template,
+the codec only knows about the \emph{decoding hypothesis}
+(i.e.\ expected structure of the received message ---
+without knowing of any restrictions for field values)
+and the \emph{encoding variant}.
+The codec is only responsible for checking if the received message
+corresponds to the particular decoding hypothesis
+and (if it does) for decoding it (possibly according to the encoding variant).
+A \emph{pattern match} is then performed between the decoded data
+and the expected receive template
+(which may stand for a single return value or for a set of return values).
+If the restrictions imposed by the receive template hold for the received data
+this is considered a \emph{match}
+and the message is removed from the top of the receive queue.
+Otherwise a \emph{mismatch} occurs and the next alternative is considered.
+
+As will be shown in section \ref{sec:storage-codec}
+the codec's responsibility is to
+encode \ac{TTCN-3} values (both primitive values and handles)
+to Java (for selecting objects and passing arguments to method invocations)
+and to decode returned Java values to expected \ac{TTCN-3} types.
+Since a Java object may be assigned a handle for any of its super-types
+(classes extended or interfaces implemented by the object's type)
+the codec needs to know the target type of the decoding hypothesis
+(not just the type's structure) ---
+otherwise an incorrect pattern mismatch will occur immediately after decoding.
+This is especially useful when catching exceptions
+(as the programmer may use a handle of type \verb=Throwable=
+in order to catch any thrown Exceptions).
+For these purposes, the encoding variant is used
+to supply the codec with information about the target decoded type.
+This also allows the system to detect type errors as soon as possible
+(i.e.\ when assigning a handle of the wrong type
+to an object returned by a method call
+and not when that object is (incorrectly) used later).
+
+
+\subsubsection{Type casting of object Handles}
+\label{sec:type-casting}
+
+This solution for adding type safety introduces an inconvenient:
+\emph{Upcasting}.
+Java types form a (singly rooted) hierarchy.
+These types may be automatically \emph{upcast}
+i.e.\ an object of a derived type may be used
+whenever an object of a base type is required
+(as in other object oriented languages).
+If class \verb=Sparrow= is derived from class \verb=Bird=,
+Java allows the use of a \verb=Sparrow= object
+whenever a \verb=Bird= is expected.
+
+In Java, a \verb=Sparrow= \emph{is} a \verb=Bird=.
+In \ac{TTCN-3} this is not true, since the types have different structures
+and the type system is not object oriented
+(a Java class may also implement several \verb=interface=s).
+This inconvenient is overcome by generating a \texttt{casting template}
+as illustrated in Listing \ref{prog:casting-template}.
+As with explicit type casting in other programming languages,
+incorrect usage of the casting operator can only be detected at runtime.
+Upon usage of objects after casting, at runtime,
+all objects are checked to be of the correct type.
+
+\begin{program}
+\verbatimtabinput{./ttcn3/casting-template.ttcn3}
+\caption{The casting template for type \texttt{java.util.Map}%
+	\label{prog:casting-template}}
+\end{program}
+
+In order to allow casting from \emph{any} type to a particular type
+(in the example in Listing \ref{prog:casting-template} casting from any type
+to \texttt{java.util.Map} is allowed)
+the \texttt{casting template} must be allowed to take
+\emph{any} object handle as parameter.
+The type safety just discussed must be circumvented in this particular case.
+This has been accomplished with the use of a special, predefined handle type
+with the same structure as all other handles but without any restriction
+on the values assigned to the \verb=typeName= field.
+This special type has been called \verb=ObjectType=
+and its definition is shown in Listing \ref{prog:generic-object-type}.
+Since no restrictions are placed on the fields
+in the \verb=ObjectType= record type,
+a handle for any other type may be passed
+where an \verb=ObjectType= is required (e.g.\ to the casting operator).
+
+\begin{program}
+\verbatimtabinput{./ttcn3/generic-object-type.ttcn3}
+\caption{The generic (unrestricted) ObjectType\label{prog:generic-object-type}}
+\end{program}
+
+
+\subsection{Mapping Java Object Types}
+\label{sec:mapping-java-object-types}
+
+After having examined the task of mapping types between the two languages,
+a more detailed presentation follows.
+The previously mentioned elements are put together
+to show the structure of the code resulted after mapping a Java type.
+
+The \emph{mapping} operation (as defined and used in this project)
+treats a Java type as a translation unit.
+In other words the mapping operation receives a Java type as parameter.
+If several Java types need to be mapped
+(as might usually be the case for a test scenario)
+then the mapping is performed once for each type.
+
+Each Java type is mapped to a \ac{TTCN-3} module.
+Each generated module contains the following elements:
+
+\begin{description}
+
+\item[a Handle Type definition]
+for \ac{TTCN-3} references to objects of the mapped Java type.
+The name of this handle type can be based on the module name
+or customized by the test developer.
+\item[Method signatures]
+for all public methods of the Java type.
+These signatures are complete with return values and exception handling.
+Primitive Java types (for parameters and return values)
+are mapped to their \ac{TTCN-3} counterparts as detailed in
+section \ref{sec:type-mapping-primitive-types}.
+Object types (for parameters, return values and thrown exception types)
+are mapped to \ac{TTCN-3} record types which act as handle types,
+as shown in section \ref{sec:mapping-java-object-types}.
+For this reason, all types used in signatures need to be defined in the module
+(apart from the actual Java type for which the mapping is generated).
+In order to allow the user to handle \emph{unchecked exceptions},
+each method signature gets \texttt{java.lang.Throwable}
+added to its list of thrown exceptions.
+
+Signatures generated for instance methods require an extra first parameter:
+the handle of the object for which the method is to be invoked.
+Static methods (also called class methods) are mapped to signatures
+which require no such additional parameter.
+
+\item[Constructor signatures]
+for all public constructors present in the class.
+Constructor parameters and thrown exception types
+are treated in the same way as for method signatures.
+Constructor signatures always return the type
+for which the mapping (the whole module) has been generated.
+Constructors have no additional first parameter for an object handle.
+
+\item[Accessor signatures]
+are generated for all public fields found in the type
+(e.g.\ class, interface, enumeration).
+Since any code using this Java type is able to access public fields,
+the same functionality must be available to test developers.
+As a note, this functionality is needed
+in order to access Java enumeration constants
+which are actually \texttt{public static final} fields of their enclosing type.
+
+A \emph{getter} signature is generated for all public fields in the class.
+This signature's return type is the field type, and it throws no exceptions.
+
+A \emph{setter} signature is generated for public fields
+which are not \verb=final=.
+This signature requires a parameter
+(a primitive value or a handle for an object type)
+representing the new value for the field.
+It has no return value and throws no exceptions.
+
+Just like method signatures, accessor signatures have an extra parameter
+(the object handle) when they correspond to an instance field.
+This additional first parameter is not present
+for accessor signatures manipulating static fields.
+
+\item[a Casting Template]
+needed for casting to the mapped Java type.
+The Java programming language allows
+both explicit casting and automatic upcasting.
+These features may be needed in \ac{TTCN-3} test code
+and are provided by the generated template.
+This issue is explained in more detail in section \ref{sec:type-casting}.
+
+\item[a Port Type]
+for procedure oriented communication
+having all the above generated signatures added.
+This is a convenience for the user:
+instead of defining a port type and listing the needed signatures,
+the auto-generated one can be used directly.
+For test scenarios where many Java types are used,
+it may be convenient to have all signature calls through a single port.
+In such a case the test developer must define a port type
+and list the signatures of interest.
+
+\item[Handle types for all object types used]
+As previously explained, \ac{TTCN-3} signatures need specific handle types
+to assure type safety.
+For this reason all types used in the module need to be defined at the end.
+Test cases using multiple modules will not encounter errors
+due to redefinitions of the same type
+(e.g.\ \texttt{java.lang.Throwable}) in several modules.
+\ac{TTCN-3} allows importing types with the same name from several modules
+and requires fully qualified names for them (to avoid ambiguities).
+The user will mostly need the types that the mapping has been generated for
+(the handle for such types is at the start of the generated module)
+and these have custom names
+(which, being chosen by the test developer, should not cause clashes).
+In the case when a type imported from several modules needs to be used,
+the user may generate a short-named template
+or (s)he may use the fully qualified name (\texttt{moduleName.typeName}).
+
+\item[a module \texttt{variant} attribute]
+as described in section \ref{sec:type-encoding-variant}.
+Its role is to specify the Java type the mapping has been generated for.
+It is inherited by all module elements (e.g.\ record types, signatures)
+which don't have their own \texttt{variant} attribute defined.
+It is used by the codec for finding out the type that these elements belong to.
+
+\end{description}
+
+\subsubsection{An example mapping}
+
+As an example, the mapping for the Java class in Listing
+\ref{prog:example-mapping-java-class.java} will be presented.
+This is a simple class simulating a pocket calculator.
+It has two public \verb=field=s of type \verb=double=
+(for the result shown on its display and for the contents of its memory)
+and several methods for performing computations,
+storing the result in memory
+and some convenience methods returning an integer representation
+(of type \verb=long=)
+of the floating point values accesible through the public fields.
+
+\begin{program}
+\verbatimtabinput{./java/example-mapping-java-class.java}
+\caption{A Java class to be mapped%
+	\label{prog:example-mapping-java-class.java}}
+\end{program}
+
+Listing \ref{prog:example-mapping-java-class.java}
+shows only an overview of the Java class
+(code for the shorter methods has been included;
+comments for the longer methods
+should be sufficient to make their meaning clear)
+As stated in section \ref{sec:mapping-java-object-types}
+a Java type is a translation unit for the language mapping operation.
+An overview of the resulting mapping is shown in
+Listing \ref{prog:example-mapping-java-class.ttcn3}.
+The previously discussed \ac{TTCN-3} elements
+(e.g.\ signatures, record types, a casting template)
+are generated for all methods accessible in the Java class
+and for all types used (as arguments, return values or thrown exceptions).
+The listing is larger and
+only some significant elements have been chosen for inclusion here.
+
+\begin{program}
+\scriptsize
+\verbatimtabinput[4]{./ttcn3/example-mapping-java-class.ttcn3}
+\caption{The resulted mapping%
+	\label{prog:example-mapping-java-class.ttcn3}}
+\end{program}
+
+The mapping operation generates a \verb=module= for each Java type mapped.
+The first statement always \verb=import=s the \verb=JAVAAUX= module.
+This is a utility module needed by all generated code
+(please consult Appendix \ref{sec:javaaux-appendix}
+for the complete module listing).
+A (type safe) handle record type for the imported Java class is then defined.
+The next part consists of \verb=signature= definitions.
+These include all signatures available in the type
+(i.e.\ those defined by the type,
+by all its superclasses and by all implemented interfaces).
+Signatures for all public constructors are then defined
+followed by accessor signatures for all public fields.
+
+The casting template is also generated.
+As previously stated, \ac{TTCN-3} is not an object oriented language
+and type equivalence is asserted based on type structure.
+When testing Java code, it may be the case that an object of a different type
+may need to be supplied where a \verb=Calculator= is expected.
+If that type \emph{is} a \verb=Calculator= (i.e.\ it is a subclass)
+then the substition is valid in Java.
+In order to make this possible in \ac{TTCN-3} the handle must
+be manipulated (and the \verb=typeName= \verb=charstring= field changed).
+This is accomplished by using the provided \emph{casting template}.
+
+In order to call signatures or send messages in \ac{TTCN-3},
+component ports must be used.
+To call a \verb=signature=, a \verb=port= of type \verb=procedure=
+must be used, and the signature must be listed in the port definition.
+Test developers may define port types and list all signatures of interest
+(possibly from several generated or user defined modules).
+However, as a convenience,
+each generated module contains a port type definition
+for use with all the signatures from that module.
+
+The last part of the generated module contains
+\ac{TTCN-3} record type definitions for all Java types used in the module
+(as parameter or return value types).
+As an example, the inner class \verb=Operations= has been included in
+Listing \ref{prog:example-mapping-java-class.ttcn3}.
+The \verb=typeName= field is restricted to the binary name of the Java type,
+and each record has an \emph{encoding variant} with the binary name,
+needed by the codec.

@@ -1,0 +1,557 @@
+\section{Name mangling}
+\label{sec:name-mangling}
+
+A \ac{TTCN-3} module must be generated for each Java type used.
+Afterwards, the generated elements need to be mapped back to
+the Java methods and (exception) types.
+In order for this task to be successfully performed,
+a name translation scheme needs to be defined.
+Java names have several properties:
+
+\begin{itemize}
+\item User defined names are formed by letters, numbers
+and the underscore character (\verb|_|)
+\item Type names should be contained within a package
+and may be defined inside other types
+so that a fully qualified type name may look like:\\
+\texttt{package.name.OuterType.InnerType}\\
+in the source code, with the binary name:\\
+\texttt{package.name.OuterType\$InnerType}
+\item Types may be anonymous
+(in which case they receive a compiler-generated name ---
+which may look like \verb=package.OuterType$1=)
+\item They are case sensitive
+\item Binary names for \verb=Array= types consist of
+one or more `\verb=[=' characters specifying the depth of the array nesting
+followed by the encoding of the element type name which is defined in
+Table \ref{tab:array-binary-names}
+according to \citep{website:java-api}.\footnote{%
+\url{http://java.sun.com/javase/6/docs/api/java/lang/Class.html\#getName()}}
+\end{itemize}
+
+\begin{table}
+\centering
+\begin{tabular}{|l || c|}
+	\hline
+	\emph{Element Type}	& \emph{Encoding} \\
+	\hline
+	boolean			& Z \\
+	byte			& B \\
+	char			& C \\
+	class or interface	& L\emph{classname}; \\
+	double			& D \\
+	float			& F \\
+	int			& I \\
+	long			& J \\
+	short			& S \\
+	\hline
+\end{tabular}
+\caption{Java binary names for Array types\label{tab:array-binary-names}}
+\end{table}
+
+But crucial for the design of the naming scheme is the fact that:
+
+\begin{itemize}
+\item Java methods may be overloaded
+(i.e.\ several methods inside the same Java type may have the same name
+and different signatures)
+\end{itemize}
+
+Names used in \ac{TTCN-3} are also formed using
+letters, numbers and the underscore character (\verb=_=)
+and they are case sensitive.
+\ac{TTCN-3} does not allow overloaded signatures.
+Thus the challenges for the naming scheme are:
+
+\begin{itemize}
+\item To account for the special characters in Java type names
+(\verb=.= and \verb=$=)
+\item To guarantee that overloaded Java methods
+map to different \ac{TTCN-3} signatures
+and can be used without causing any conflicts
+\end{itemize}
+
+As previously mentioned in Section \ref{sec:project-objectives}
+another goal is to have a \emph{stable} naming scheme,
+i.e.\ one does not change name mappings when the Java types change
+(e.g.\ by adding an overloaded method to the type and mapping it again).
+
+
+\subsection{Treating special characters}
+\label{sec:special-characters}
+
+The special characters which need to be changed
+are the ones found in Java binary names
+but not allowed in \ac{TTCN-3} identifiers.
+These are the dot (\verb=.=), the dollar sign (\verb=$=)
+and the array nesting indicator (\verb=[=).
+
+These characters cannot simply be discarded because
+at runtime the Codec needs to perform a reverse name mapping
+and find out the Java type name
+(another reason is that several names may clash
+by simply discarding the special characters).
+This leads to the conclusion that information about the special characters
+needs to be kept in the mapped \ac{TTCN-3} name
+and the translation scheme needs to represent this information
+using legal characters.
+
+The dot (\verb=.=) and the dollar (\verb=$=) characters
+will be discussed first.
+Since the array depth character (\verb=[=)
+may only appear at the start of a binary type name
+a different (and simpler) translation scheme will be used for it.
+
+
+\subsubsection{Replacing with a valid string}
+
+The information about the special characters will be kept in the mapped names
+by replacing special characters with strings
+which may be part of \ac{TTCN-3} identifiers.
+If the replacement strings are called \emph{<rDot>} and \emph{<rDollar>}
+then the Java name\\
+\verb=package.Outer$Inner=\\
+will be mapped to\\
+\verb=package=\emph{<rDot>}\verb=Outer=\emph{<rDollar>}\verb=Inner=
+
+The strings chosen for replacement are shown in
+Table \ref{tab:replacement-strings}.
+They have been chosen because
+they are expected to rarely be part of user defined names
+(and the one most commonly used, ``\verb=_0_='' for replacing ``\verb=.='',
+bears a graphical resemblance to a dot,
+so that human examination of automatically generated types is intuitive).
+
+\begin{table}[htb]
+\centering
+\begin{tabular}{|r || l|}
+	\hline
+	\emph{Special character} & \emph{Replacement String} \\
+	\hline
+	\verb=.= & \verb=_0_= \\
+	\verb=$= & \verb=_1_= \\
+	\hline
+\end{tabular}
+\caption{Replacement strings for special characters%
+	\label{tab:replacement-strings}}
+\end{table}
+
+
+\subsubsection{Escaping the replacement string}
+
+Replacement strings for special characters have been chosen
+in an attempt to avoid any strings that may be part of user defined type names.
+While this assumption is expected to hold for the majority of use cases,
+it is of course legal to define Java type names which include
+these particular character strings (``\verb=_0_='' and ``\verb=_1_='').
+
+For example the type name \verb=com.My_0_Type=
+will be mapped to \verb=com_0_My_0_Type= in the automatically generated
+\ac{TTCN-3} module.
+At runtime, the codec will encounter this mapped name
+and will perform a reverse mapping to obtain the original Java name.
+The reverse mapping will provide \verb=com.My.Type= as result,
+which is incorrect.
+
+The previously presented mapping scheme may easily be altered
+so that it will be able to also handle this additional case.
+The solution is to \emph{escape} the special strings
+if they are found in the user defined names:
+Every string is \emph{doubled} (written twice)
+in the resulting mapped \ac{TTCN-3} name.
+
+This improved algorithm requires a different reverse mapping approach.
+The replacement strings introduced earlier (e.g.\ ``\verb=_0_='')
+must not be reverse mapped to the original character (e.g.\ ``\verb=.='')
+in a \emph{greedy} fashion.
+Instead, the reverse mapping operation needs to \emph{look ahead}
+when \emph{parsing} the generated \ac{TTCN-3} name.
+When a replacement string is found the algorithm will look ahead
+to check if this occurrence if immediately followed by another one.
+If so, both occurrences are \emph{consumed}
+and mapped to a single occurrence of the respective string.
+Otherwise the replacement string is reverse mapped to
+the original special character.
+The pseudocode is shown in Listing \ref{prog:unmangle-escaped-strings}.
+
+\begin{program}
+\verbatimtabinput{./pseudocode/unmangle-escaped-strings}
+\caption{Pseudocode for unmangling special characters %
+	and checking for escaped replacement strings%
+	\label{prog:unmangle-escaped-strings}}
+\end{program}
+
+In order to avoid any corner-case problems while reverse-mapping names,
+the direct mapping escapes first the \emph{dot replacement string} (\verb=_0_=)
+then the \emph{dollar replacement string} (\verb=_1_=)
+and the reverse mapping un-escapes them in reverse order.
+
+
+\subsubsection{Requirements for avoiding ambiguity}
+\label{sec:avoiding-ambiguity}
+
+The previously presented escaping mechanism introduces a subtle issue
+which will be presented by using an example.
+Table \ref{tab:mapping-ambiguity} shows two Java names which correspond
+to the same \ac{TTCN-3} generated name.
+We can easily check that both will determine the same mapped name
+to be automatically generated ---
+which is not a problem during the direct mapping,
+but becomes an important issue when reverse mapping
+(in order to find out the original Java name).
+
+\begin{table}[htb]
+\centering
+\begin{tabular}{|c || c|}
+	\hline
+	\emph{\ac{TTCN-3} generated name} & \emph{Java name} \\
+	\hline
+	\multirow{2}{*}{\texttt{package\_0\_\_0\_\_0\_Type}} &
+		\verb=package_0_.Type= \\
+	& \verb=package._0_Type= \\
+	\hline
+\end{tabular}
+\caption{Reverse mapping ambiguity\label{tab:mapping-ambiguity}}
+\end{table}
+
+In order to overcome this issue a restriction must be imposed
+on user defined names to be mapped.
+Either names aren't allowed to start with a replacement string,
+or they are not allowed to end with one.
+When reverse mapping a name with an uneven number of
+consecutive replacement strings
+the algorithm will replace either the last or the first occurrence
+with the escaped character.
+Since conventions used in the Java Programming language state that:
+\begin{itemize}
+\item Package names should be reverse domain names owned by the programmer
+and should be in lowercase
+\item Class names should start with a capital letter
+\end{itemize}
+the restriction imposed for mapped names is that:
+\emph{User defined Java names must not start with one of the strings
+replacing special characters (``\texttt{\_0\_}'' and ``\texttt{\_1\_}'')}.
+However user defined names may end with these strings.
+
+
+\subsubsection{Mapping the array depth character}
+
+The array depth specifier (\verb=[=) may only appear at the start
+of a binary Java name.
+All names in Java and \ac{TTCN-3} must not start with a digit
+(this is also true for most other programming languages).
+This allows for the following approach to mapping the name of an Array type:
+\begin{itemize}
+\item Start with a prefix
+\item Continue with a number specifying the array depth
+\item Use the mapped name of the element type
+(not the binary name of the array type
+which starts with ``\verb=[='' and ends with
+the encoding of the element type name from Table \ref{tab:array-binary-names})
+\end{itemize}
+
+Listing \ref{prog:mapping-array-depth} shows an example of how
+array types are mapped to \ac{TTCN-3} types.
+By starting with a number to specify the array depth
+and using the element type name
+(not the encoding from Table \ref{tab:array-binary-names})
+the generated names are more user friendly.
+The double underscore separator string (\verb=__=) ---
+appended at the end of the generated type name for a Java array ---
+will be explained in section \ref{sec:description-naming-conventions}.
+
+\begin{program}
+\verbatimtabinput{./ttcn3/mapping-array-depth.ttcn3}
+\caption{Mapping of the \texttt{String[][]} Java Array type%
+	\label{prog:mapping-array-depth}}
+\end{program}
+
+
+\subsection{Mangling (overloaded) method names}
+
+The task of mapping Java types to \ac{TTCN-3} types
+consists mainly of generating appropriate data structures
+and naming them similar to the original elements from Java.
+For the most part, the chosen names are the original ones
+with slight changes in order to avoid special characters
+not allowed in \ac{TTCN-3}
+(as detailed in section \ref{sec:special-characters}).
+
+However mapping \emph{method} names from Java to
+\ac{TTCN-3} \emph{signature}s is not as trivial.
+The \ac{TTCN-3} language does not allow \emph{overloaded signatures},
+but Java does.
+Overloaded methods belong to the same type (e.g.\ class, interface)
+and have the same name but different argument lists.
+For these reasons the mangling scheme
+needs to generate different names for such methods
+and must also be able to perform the reverse operation.
+
+Several options come to mind,
+each with advantages and disadvantages of its own.
+An overview of such methods is presented below
+and the chosen mangling scheme is detailed.
+
+
+\subsubsection{Avoiding unnecessary manglings}
+One option which comes to mind is to simply ignore the problem
+for non-overloaded functions, and when overloaded functions are encountered
+to use one of the approaches described below.
+A solution for overloaded methods would still be needed of course,
+but the goal would be to use friendlier (non-mangled) names
+for methods which are not overloaded.
+An important point to make is that this is not an option,
+since the generated mangling would not be \emph{stable}
+as required in section \ref{sec:project-objectives}.
+
+The mangling scheme will therefore be needed even for non-overloaded methods,
+as this is the only way to guarantee that a mangled name for a method
+will not change even if the type is extended
+(e.g.\ by overloading that method).
+
+
+\subsubsection{Counting the overloads}
+A first mangling attempt is to simply \emph{count} the signatures
+in the following manner:
+\begin{itemize}
+\item Sort the methods using some criteria
+(e.g.\ lexicographically according to the argument list,
+by parameter count and then lexicographically by argument types)
+\item Name the signatures by appending `\verb=_1=', `\verb=_2=' etc.
+at the end of the name.
+\end{itemize}
+The problem with this approach is that, no matter the sorting criteria chosen,
+a Java type may be extended with another overloaded signature
+which will end up `in the middle' of the previous sequence,
+thus breaking the stability.
+What is more, this method does not allow a user to know
+the mangled name for a method
+without knowing the final version of the type's interface.
+
+
+\subsubsection{Appending parameter type names to the signature name}
+This idea is also used in the Java to \ac{IDL} mapping for \ac{CORBA}
+as described in \citep[pg~10]{website:java2idl-mapping}.
+That mapping keeps the original names for methods without overloads
+and switches to this mangling scheme only for overloaded methods.
+As just shown above, a stable mangling scheme cannot leave
+any method names unmangled.
+With the small change of mangling everything,
+this is the naming scheme chosen for this project.
+
+The mangling scheme will concatenate the following elements
+to form a signature name:
+\begin{itemize}
+\item The Java method name
+\item The parameter count (optional)
+\item The (mapped) type names of the method parameters
+(as defined in section \ref{sec:type-mapping}).
+\end{itemize}
+
+The above mentioned elements are concatenated using a \emph{separator string}
+to form the mangled signature name.
+At runtime, when the signature name needs to be unmangled
+in order to obtain the original Java name,
+the name is `broken' into its elements
+(by splitting it around occurrences of the separator string).
+The chosen separator string in this case is ``\verb+__+''.
+
+The ambiguity problem described in section \ref{sec:avoiding-ambiguity}
+is also present here.
+If the concatenated elements mentioned above contain the separator string,
+it needs to be escaped.
+The unmangling algorithm will similarly need to look ahead
+and replace \emph{doubled} separators with a single occurrence,
+and split the string where single separators are encountered.
+The same problem discussed earlier arises
+when an uneven number of separators occur consecutively.
+The same convention will be used:
+\emph{User defined names may not begin with the separator string},
+but they may end with it.
+
+
+\subsubsection{Method mapping example}
+As an example,
+the mapping for the \verb=equals()= method in class \verb=java.lang.Object=
+is shown in Listing \ref{prog:signature-mapping-example}.
+This method, being part of the \verb=Object= interface ---
+the \emph{root} of the Java type system ---
+is generated when mapping any Java class.
+Because it is an instance method,
+the \ac{TTCN-3} signature takes an extra first parameter:
+the handle for a particular object instance.
+The type of this object corresponds to the Java type for which the mapping
+has been generated.
+For this example, the \verb=Object= class has been mapped.
+The following short analysis will explain
+the parts of the signature definition:
+
+\begin{program}
+\verbatimtabinput{./ttcn3/signature-equals.ttcn3}
+\caption{Method mapping example for \texttt{java.lang.Object.equals()}%
+	\label{prog:signature-mapping-example}}
+\end{program}
+
+\begin{description}
+\item[The signature name] consists of
+the \emph{method name} (\verb=equals=)
+followed by the \emph{parameter count} (\verb=1=)
+and then the mangled name of each parameter type.
+The different parts of the method signature are concatenated using
+the separator string ``\verb=__=''.
+\item[The object handle] is an extra first parameter
+of the type for which the module (mapping) has been generated.
+In this case it is \verb=Object=.
+\item[The signature parameters]
+are listed in the same order as for the Java method
+and are named p1, p2 etc.
+The reflection \ac{API} does not provide information
+about method parameter names, only about their types.
+\item[The return value] has a \ac{TTCN-3} type
+as described in section \ref{sec:type-mapping}.
+Primitive values are mapped directly between the two languages,
+and record types are created for Java \verb=Object= types.
+This method has a \verb=boolean= return value.
+\item[Thrown exceptions] listed for each signature
+include all exception types declared to be thrown by the Java method.
+These may be both \emph{checked} and \emph{unchecked}.
+As stated in \citep{website:java-tutorial-exceptions}\footnote{\raggedright%
+	\url{http://java.sun.com/docs/books/tutorial/%
+	essential/exceptions/catchOrDeclare.html}}
+the \emph{Catch or Specify requirement} states that
+checked exceptions must be caught or declared to be thrown.
+However unchecked exceptions not declared in the method definition
+may still be thrown, and test developers may need to catch those as well.
+For this reason, the \verb=Throwable= type is always added
+to the \emph{set} of exception types thrown by any method.
+\end{description}
+
+
+\subsection{Naming conventions for generated identifiers}
+\label{sec:description-naming-conventions}
+
+The previous sections have shown how names are mapped between the two languages
+(for types, methods and generated accessor signatures).
+The two main tasks are:
+\begin{itemize}
+\item Deciding which data structures to use for each mapped element
+\item Mangling the generated name,
+so that it contains only legal \ac{TTCN-3} characters
+and the language's lack of support for overloaded signatures is overcome
+\end{itemize}
+
+However another important issue is
+\emph{avoiding name-clashes between user-defined and generated identifiers},
+so the approach of using prefixes (and suffixes) has been used.
+
+
+\subsubsection{Marking generated identifiers}
+
+A generated module contains signatures
+(for methods, constructors and accessors for public fields)
+and type definitions.
+The methods from a Java type will be mapped to signatures with different names.
+But adding records for all the types used
+and signatures for constructors and accessors (which have no predefined name)
+may lead to name clashes.
+For this reason the signatures are normally generated,
+but all other names are marked to indicate that
+they do not represent Java method mappings.
+
+Because the separator string ``\verb+__+'' used to concatenate
+elements of a generated name
+is always escaped within those elements,
+it can be added at the end of generated names
+to mark the fact that they have been internally generated.
+
+Such \emph{problematic} names are those generated for
+\emph{constructor signatures}, \emph{accessor signatures}
+and \emph{record types}.
+By marking them as internally generated
+(meaning they are not direct mappings of Java methods)
+they will not clash with method manglings.
+The mark used is distinctive because it is un-escaped and found at the end.
+As an example, the mangled name `\verb=someName='
+becomes `\verb=someName__=' by using this mechanism.
+
+
+\subsubsection{Prefixes for generated types}
+
+In order to make the generated code more readable,
+prefixes are used when generating the mapping.
+These indicate the type of the element
+by simply reading the name (without looking at its structure or definition).
+A list of used prefixes follows:
+
+\begin{description}
+
+\item[Types] get the ``\verb=type_='' prefix and the ``\verb+__+'' suffix.
+After mangling, the type names become less easy to read
+and the prefix may aid in this respect.
+As an example, the generated type name for `\verb=java.lang.String=' is:\\
+`\verb=type_java_0_lang_0_String__='.
+
+\item[Method signatures] get no prefixes or suffixes.
+This will normally be readable as they start with the original name
+and include the parameter count and the concatenated type names.
+These can not clash with another generated name because they cannot end
+with an unescaped separator.
+The long generated names are not a problem since the test developer may easily
+define a \ac{TTCN-3} template with a short name.
+
+\item[Constructor signatures] get generated
+in the same manner as a normal method signature
+called ``\verb=construct='' and get a suffix (\verb+__+).
+The suffix is necessary to ensure against a name clash
+with another method called ``construct'', which may be present
+in the type being mapped.
+As an example, the no-arg constructor for ``\verb=java.lang.String=''
+is mapped to the following signature:\\
+\verb=signature construct__0__() return type_java_0_lang_0_String__=\\
+\verb=exception (type_java_0_lang_0_Throwable__);=
+
+\item[Accessor signatures] get generated
+in the same manner as a normal method signature called
+``\verb=get_fieldName='' (for getters)
+and ``\verb=set_fieldName='' (for setter signatures)
+and get the ``\verb=__='' suffix at the end to mark them as
+\emph{internally generated}.
+Listing \ref{prog:accessor-example} shows the accessor signatures
+generated for the \verb=memory= field of the \verb=Calculator= class in
+Listing \ref{prog:example-mapping-java-class.java}.
+
+\begin{program}
+\verbatimtabinput{./ttcn3/accessor-example.ttcn3}
+\caption{Example accessor signatures for the \texttt{Calculator.memory} field%
+	\label{prog:accessor-example}}
+\end{program}
+
+The getter returns the field value.
+The setter signature has no return value
+but an extra parameter for the new field value.
+In class \verb=Calculator=, \verb=memory= is an instance (non-static) field,
+so both methods take a first parameter for the object handle.
+
+\item[Port types] have the prefix ``\verb+port_+'' followed by
+the mapped type name and end with the ``\verb+__+'' suffix.
+Port types are not needed but are generated for convenience.
+The user may start calling signatures through this provided port type
+or may define his/her own, listing all signatures of interest
+(from several modules if needed).
+
+The port type defined when mapping the \verb=Calculator= class
+from Listing \ref{prog:example-mapping-java-class.java}
+is shown in Listing \ref{prog:port-type-example}.
+It is a procedure oriented port type and all signatures defined in the module
+are listed for usage in its definition.
+Only a few signatures have been included
+in Listing \ref{prog:port-type-example} to serve as an example.
+
+\begin{program}
+\verbatimtabinput{./ttcn3/port-type-example.ttcn3}
+\caption{The generated port type for the \texttt{Calculator} class%
+	\label{prog:port-type-example}}
+\end{program}
+
+\end{description}
+

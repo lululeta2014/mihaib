@@ -1,0 +1,6 @@
+signature makeString(in stringliteral strLiteral) return StringType__;
+signature eq(in ObjectType__ objId1, in ObjectType__ objId2)
+	return boolean;
+signature makeNull() return ObjectType__;
+signature deleteObject(in ObjectType__ objHandle);
+signature clearRegistry();

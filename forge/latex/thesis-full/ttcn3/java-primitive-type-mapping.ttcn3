@@ -1,0 +1,5 @@
+type integer byte (-128 .. 127);
+type integer short (-32768 .. 32767);
+type integer int (-2147483648 .. 2147483647);
+type integer long (-9223372036854775808 .. 9223372036854775807);
+type universal charstring jchar length(1);

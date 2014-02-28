@@ -1,0 +1,7 @@
+type port port_ro_0_pub_0_Calculator__ procedure {
+	inout construct__0__;
+	inout compute__2__ro_0_pub_0_Calculator_1_Operations__double;
+	inout reset__0;
+	inout get_memory__;
+	// all generated methods are listed here
+}

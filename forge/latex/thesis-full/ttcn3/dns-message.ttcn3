@@ -1,0 +1,11 @@
+type integer	Ident(0..65535);
+type enumerated	MessageKind {e_Question, e_Answer};
+type charstring	Question;
+type charstring	Answer;
+
+type record DNSMessage {
+	Ident		ident,
+	MessageKind	messageKind,
+	Question	question,
+	Answer		answer	optional
+}

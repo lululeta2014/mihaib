@@ -1,0 +1,9 @@
+type record rec1 {
+	charstring typeName,
+	address handle
+}
+
+type record rec2 {
+	charstring typeName,
+	address handle
+}

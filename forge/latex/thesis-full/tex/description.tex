@@ -1,0 +1,84 @@
+\chapter{Solution Description}
+\label{chap:description}
+
+This chapter will present the design and implementation of a solution
+for the problem stated in Chapter \ref{chap:motivation}.
+The solution has been designed according to the previously stated requirements.
+
+
+\section{Overview}
+From an architectural point of view
+the solution consists of the following components:
+\begin{description}
+\item[Name mangling]
+	This component is responsible for generating the \ac{TTCN-3} types
+	(e.g.\ signatures, object types, port types)
+	used in writing testcases.
+	At runtime it will perform a reverse mangling
+	between the types used in the abstract test suite
+	and the original Java types.
+\item[Codec]
+	This component implements the standard functionality of
+	encoding (and decoding) between
+	\ac{TTCN-3} types and the corresponding Java types.
+	In addition the Codec is responsible for storing the Java objects
+	(since they are stateful and must survive
+	between method invocations).
+	The Codec encodes/decodes all parameters for signature calls
+	(the parameters may be primitive values or object references)
+	as well as thrown exceptions.
+\item[Port Plugin]
+	A \ac{TTCN-3} test system consists of several parallel test components.
+	Each component may have several ports, and each port can be used
+	to send or receive certain types of messages
+	(or to make or receive calls for certain signatures).
+	The abstract communication model
+	requires ports to be connected to one another before being used.
+	In this project,
+	whenever a (generated) signature is called through a port,
+	the Port Plugin is asked to handle this call.
+	It receives the respective signature and the encoded parameters
+	and is responsible for invoking the actual Java method requested.
+	It also enqueues returned values or thrown exceptions
+	for processing by the testcase code.
+\end{description}
+
+The implementation language is Java.
+By using the \verb=reflection= package
+an examination of compiled code is made possible.
+This permits the automatic generation of corresponding \ac{TTCN-3} types
+for any compiled Java types (e.g.\ classes, interfaces, enumerations).
+The codec and port plugin implement standard test system interfaces.
+The whole project is compiled as a plugin for
+Testing Technologies' TTworkbench \citep{website:ttworkbench}
+(a test development and execution environment
+based on the Eclipse \citep{website:eclipse} \ac{IDE}).
+
+\input{./tex/description-type-mapping.tex}
+
+\input{./tex/description-name-mangling.tex}
+
+\input{./tex/description-codec.tex}
+
+\input{./tex/description-port-plugin.tex}
+
+\begin{comment}
+\begin{verbatimtab}
+General overview
+	TODO: add workflow diagram
+Type mapping
+	Primitive types
+	Using Java Objects from TTCN-3 code
+	Mapping Java Object Types
+		What output should look like
+
+Name mangling
+	Escaping special characters
+	Avoiding name-clashes for overloaded methods
+	Avoiding name-clashes between generated and user-defined identifiers
+Storage Codec
+	Registry architecture
+Port Plugin
+Limitations
+\end{verbatimtab}
+\end{comment}

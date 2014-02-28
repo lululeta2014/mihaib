@@ -1,0 +1,54 @@
+Spaces are normalized: multiple spaces and tabs, or a single line break,
+are treated as one space.
+An empty line (or several) ends a paragraph.
+
+Reserved characters:
+# $ % ^ & _ { } ~ \
+To enter them in text, escape them:
+\# \$ \% \^{} \& \_ \{ \} \~{} \textbackslash{}
+
+The sequence ‘\\’ is used for line breaking. Use \backslash in math mode.
+The commands \~ and \^ would place the diacritic over the next letter,
+e.g. \~n → ñ.
+You can also use \textasciitilde and \textasciicircum.
+If ‘<’ and ‘>’ don't print properly, use \textless and \textgreater.
+
+Group: defined by a pair of braces. The range of commands between them
+is limited to them. The \begingroup and \endgroup commands are equivalent to
+opening and closing brace. Example:
+{
+\bf This is bold.
+}
+This is no longer bold.
+
+Environment: similar to commands, can contain commands and nested environments.
+Internally, it defines a group, so its usage is safe
+(doesn't influence other parts of the document).
+\begin{environmentname}
+text to be influenced
+\end{environmentname}
+
+Commands: case sensitive, two formats:
+― Start with backslash \ and have a name consisting of letters only.
+The command name is terminated by a space or any other non-letter.
+― A backslash \ and exactly one non-letter.
+
+Some commands need an argument, given between curly braces {}
+after the command name. Some commands have optional parameters, given between
+square brackets [] after the command name.
+\commandname[option1,option2,…]{argument1}{argument2}…
+
+Most standard LaTeX commands have a ‘switch’ equivalent.
+Switches have no arguments but apply on the rest of the scope,
+i.e. the current group or environment.
+A switch should almost never be called outside of any scope,
+otherwise it will apply on the rest of the document.
+
+% \emph is a command with argument, \em is a switch.
+\emph{emphasized text}, this part is normal
+{\em emphasized text}, this part is normal
+
+Comments
+‘%’, the rest of the line, the line break, and all leading whitespace
+on the next line.
+See package verbatim and \begin{comment} for multi-line comments.

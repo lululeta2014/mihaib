@@ -1,0 +1,36 @@
+% xelatex file.tex
+\documentclass[a4paper,12pt]{article}
+
+% fontspec is needed for UTF-8 input
+\usepackage{fontspec}
+\usepackage{setspace}
+
+\begin{document}
+\begin{titlepage}
+
+\onehalfspacing
+
+\begin{center}
+
+% add more vertical space with ‘\\[5cm]’.
+\textsc{\Large MÅRS University}\\
+\textsc{\Large Knowledge Brings Fear}\\[5cm]
+
+\textbf
+{\Huge Title of My Thesis}\\[4cm]
+
+{\LARGE Student \textsc{Name}}\\[3cm]
+
+\textit{\large Coordinators:}\\
+{\Large {\large prof.\ dr.\ eng.\ }Name \textsc{Surname}}\\
+{\Large Other \textsc{Supervisor}}\\
+
+\vfill	% go to the bottom of the page
+
+% and if the bottom of the page is too low, we can still move up, e.g. 1.5cm
+{\Large \today}\\[1.5cm]
+
+\end{center}
+
+\end{titlepage}
+\end{document}

@@ -1,0 +1,86 @@
+\chapter{Evaluation}
+\label{chap:evaluation}
+
+The solution presented meets the goals stated
+in chapter \ref{chap:motivation}.
+It allows for unit testing Java code
+by using \ac{TTCN-3}'s standardized architecture
+and the language's powerful features.
+Method calls, constructor calls, reading and writing of public fields
+and exception handling can be performed by test developers.
+The \emph{stable} mangling scheme devised
+allows tests to be written during development,
+because extending the interface of the tested code
+does not impact existing test cases.
+
+An important challenge was \emph{mapping names} between the languages.
+The fact that \ac{TTCN-3} is not object oriented
+and its lack of support for overloaded signatures
+have led to the type safety considerations
+in section \ref{sec:using-java-objects-from-ttcn3}
+and to the name mangling scheme presented in section \ref{sec:name-mangling}.
+
+The generated names are long and difficult to use directly,
+but must be so in order to compensate for
+the lack of overloading support in \ac{TTCN-3}.
+However the language's powerful type semantics allow test developers
+to easily define \emph{aliases} with short names for the
+types and signatures they need.
+An example of such template definitions is presented in
+Listing \ref{prog:friendly-templates}.
+
+\begin{program}
+\verbatimtabinput{./ttcn3/friendly-templates.ttcn3}
+\caption{Defining templates with user-friendly names%
+	\label{prog:friendly-templates}}
+\end{program}
+
+
+\section{Limitations}
+
+An important limitation of this solution is its
+\emph{performance} when running very small unit tests.
+The \ac{TTCN-3} architecture is well suited for communication testing.
+But it requires unit tests to use
+the standard components and ports of a test system,
+adding a significant overhead for very small performance tests.
+
+As an example of such a test,
+Table \ref{tab:random-generation} presents the results
+of generating random numbers using the \verb=java.util.Random= class.
+Testing with \ac{TTCN-3} involves using the architecture described
+in section \ref{sec:test-system-arch}
+and creating a new thread for each Java invocation.
+
+\begin{table}[htb]
+\centering
+\begin{tabular}{r | c | r | c | r}
+ & \verb=nextInt= calls & time & \verb=nextGaussian= calls & time \\
+\hline
+from Java code & 10 million & 0.5 s & 10 million & 2.6 s \\
+from \ac{TTCN-3} & 1000 & 2 s & 1000 & 2.1 s \\
+\end{tabular}
+\caption{Performance critical testing\label{tab:random-generation}}
+\end{table}
+
+As the example shows,
+the difference in performance drops
+when the invoked methods take longer to complete.
+This may be the case in communication testing.
+What is more, if such large numbers of very short tests aren't required,
+the performance penalty should not pose a problem.
+
+Unit testing for any code can be performed using this solution,
+but its strengths are testing code which performs communication
+or integrating it with message-based tests
+(e.g.\ to set or verify the internal state of a system
+while also testing it as a black box, by sending messages to it).
+
+Another limitation of the current solution is that
+primitive \verb=long= values larger than a Java \verb=int= can not be used,
+because the standardized \ac{ETSI} interfaces (and their implementing classes)
+do not allow the use of such values.
+This is an external (and probably temporary) limitation imposed on the project.
+Its design and implementation handle this case correctly
+(by using the \verb=BigInteger= class
+expected by the standard interfaces in such cases).

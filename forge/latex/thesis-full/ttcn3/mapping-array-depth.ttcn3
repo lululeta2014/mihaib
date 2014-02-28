@@ -1,0 +1,4 @@
+type record type_2java_0_lang_0_String__ {
+	charstring typeName("[[Ljava.lang.String;"),
+	address handle
+} with { variant "[[Ljava.lang.String;" }

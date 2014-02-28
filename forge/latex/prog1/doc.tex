@@ -1,0 +1,28 @@
+% run xelatex twice
+\documentclass{report}
+
+\usepackage{fontspec}
+\usepackage{moreverb}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+
+\floatstyle{ruled}
+\newfloat{program}{htb}{lop}[chapter]
+\floatname{program}{Listing}
+
+\begin{document}
+
+\chapter{Some Chapter}
+
+Listing \ref{prog:hello-go} shows a ‘Hello World!’ program.
+
+\begin{program}
+	\verbatimtabinput{./src-code/hello.go}
+	\caption{The hello world Go program\label{prog:hello-go}}
+\end{program}
+
+\appendix
+
+\listof{program}{List of Programs}
+\end{document}

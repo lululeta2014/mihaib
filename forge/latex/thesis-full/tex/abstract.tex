@@ -1,0 +1,24 @@
+\begin{abstract}
+This paper presents a solution for
+adding Java unit testing functionality to \ac{TTCN-3} test systems.
+This is of particular interest in two situations:
+when testing a remote system by using a communication library
+--- and the methods invoked perform communication operations;
+when a system's internal state must be examined or changed
+while performing black box (message based) testing.
+
+Unit tests written in general purpose programming languages
+can not easily handle network behavior such as timeouts,
+asynchronous communication or pattern matching for received data.
+\ac{TTCN-3} is a standardized language specifically designed for
+the needs of testing entities which communicate by exchanging messages.
+
+This project provides a translation layer
+allowing the use of a \ac{TTCN-3} test system
+for Java unit testing.
+This project also serves as a proof of concept,
+extending the applicability of \ac{TTCN-3} technology
+to the area of unit testing,
+since it allows any Java code to be tested
+(not only code performing communication).
+\end{abstract}
