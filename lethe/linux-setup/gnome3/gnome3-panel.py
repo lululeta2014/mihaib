@@ -182,8 +182,7 @@ def add_launchers(obj_list):
     else:
         make_launcher(obj_list, 'gnome-disks', n)
         n += 1
-    make_launcher(obj_list,
-            'synaptic' if not on_debian else 'synaptic-debian', n)
+    make_launcher(obj_list, 'synaptic', n)
     n += 1
 
 

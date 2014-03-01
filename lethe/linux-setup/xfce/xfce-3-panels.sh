@@ -122,11 +122,7 @@ else
 fi
 
 i="$((i+1))"
-SYNAPTIC_LAUNCHER="synaptic.desktop"
-if [ "$MB_LSB_ID" == Debian ]; then
-	SYNAPTIC_LAUNCHER="synaptic-debian.desktop"
-fi
-setup_launcher $i $SYNAPTIC_LAUNCHER
+setup_launcher $i synaptic.desktop
 
 
 # top-left panel (default size is 30)
