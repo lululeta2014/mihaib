@@ -20,17 +20,16 @@ Debian multiarch [
 ]
 
 
-[Untested] [Debian] Graphics driver [
-This might not work anymore.
-
+[Debian] Graphics driver [
 http://wiki.debian.org/ATIProprietary
 
 http://wiki.debian.org/NvidiaGraphicsDrivers
-Boils down to:
-1) apt-get install nvidia-kernel-dkms nvidia-glx nvidia-xconfig
-2) generate xorg.conf
-	2a) copy paste the small content from that page
-	2b) nvidia-xconfig
+? nvidia-detect
+run nvidia-detect to see what driver version to install.
+On Castor: nvidia-legacy-304xx-kernel-dkms
+https://wiki.debian.org/NvidiaGraphicsDrivers#configure
+mkdir /etc/X11/xorg.conf.d
+echo -e 'Section "Device"\n\tIdentifier "My GPU"\n\tDriver "nvidia"\nEndSection' > /etc/X11/xorg.conf.d/20-nvidia.conf
 ]
 
 

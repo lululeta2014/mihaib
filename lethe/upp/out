@@ -64,7 +64,7 @@ xfce4 xfce4-goodies xfce4-power-manager-plugins scrot parole gtk3-engines-xfce c
 Optional packages:
 
 ?
-idle3 sun-java6-jdk sun-java6-plugin sun-java6-fonts git-doc mozilla-plugin-vlc ttf-xfree86-nonfree xz-utils tkdiff ghc6 lm-sensors hddtemp xchat ttf-lyx libpcre3-dev libssl-dev winbind ttf-dejavu fonts-droid bison gawk mercurial libboost-dev flex bison compizconfig-settings-manager compiz-fusion-plugins-extra lsb-cxx cuetools shntool hplip
+nvidia-detect idle3 sun-java6-jdk sun-java6-plugin sun-java6-fonts git-doc mozilla-plugin-vlc ttf-xfree86-nonfree xz-utils tkdiff ghc6 lm-sensors hddtemp xchat ttf-lyx libpcre3-dev libssl-dev winbind ttf-dejavu fonts-droid bison gawk mercurial libboost-dev flex bison compizconfig-settings-manager compiz-fusion-plugins-extra lsb-cxx cuetools shntool hplip
 
 ?debian-wheezy?
 ia32-libs-gtk
@@ -95,7 +95,7 @@ xfwm4-themes
 	Debian Graphics
 	Debian Unmanaged Wired Network
 	Debian multiarch
-	[Untested] [Debian] Graphics driver
+	[Debian] Graphics driver
 	ATI Graphics
 	Disable Guest Session
 	Fix Ubuntu (11.10 onwards) umask
@@ -237,17 +237,16 @@ Debian multiarch [
 ]
 
 
-[Untested] [Debian] Graphics driver [
-This might not work anymore.
-
+[Debian] Graphics driver [
 http://wiki.debian.org/ATIProprietary
 
 http://wiki.debian.org/NvidiaGraphicsDrivers
-Boils down to:
-1) apt-get install nvidia-kernel-dkms nvidia-glx nvidia-xconfig
-2) generate xorg.conf
-	2a) copy paste the small content from that page
-	2b) nvidia-xconfig
+? nvidia-detect
+run nvidia-detect to see what driver version to install.
+On Castor: nvidia-legacy-304xx-kernel-dkms
+https://wiki.debian.org/NvidiaGraphicsDrivers#configure
+mkdir /etc/X11/xorg.conf.d
+echo -e 'Section "Device"\n\tIdentifier "My GPU"\n\tDriver "nvidia"\nEndSection' > /etc/X11/xorg.conf.d/20-nvidia.conf
 ]
 
 
