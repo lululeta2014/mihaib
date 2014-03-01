@@ -148,6 +148,10 @@ Debian: http://wiki.debian.org/WiFi
 
 
 [Debian] Ugly buzzing sound [
+modprobe -r pcspkr
+To make it permanent:
+echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
+or:
 System → Preferences → Sound → Preferences → choose PC Beep to be displayed
 Mute PC Beep.
 or:
