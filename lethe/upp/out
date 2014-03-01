@@ -240,6 +240,7 @@ Debian multiarch [
 [Debian] Graphics driver [
 http://wiki.debian.org/ATIProprietary
 
+This causes problems. Do it in a separate OS install.
 http://wiki.debian.org/NvidiaGraphicsDrivers
 ? nvidia-detect
 run nvidia-detect to see what driver version to install.
