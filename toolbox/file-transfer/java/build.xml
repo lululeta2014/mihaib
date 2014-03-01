@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="File Transfer" default="jar" basedir=".">
+<project name="File Transfer" default="rebuild" basedir=".">
 
 	<property name="src.dir" value="src" />
 	<property name="lib.dir" value="lib" />

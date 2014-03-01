@@ -124,10 +124,6 @@ fi
 
 # http://audio-and-linux.blogspot.fi/2011/07/mp3-player-with-jack-output.html
 echo >>~/.bashrc "
-alias texttest='$MB_PRG_DIR/texttest/source/bin/texttest.py'
-alias dl='java -jar $MB_PRG_DIR/DiceLottery/dicelottery-*.jar'
-alias jec='java -jar $MB_PRG_DIR/JEncConv/jencconv-*.jar'
-alias pec='$MB_PRG_DIR/PyEncConv/pyencconv.py'
 alias u='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get clean'
 alias ur='sudo apt-get autoremove'
 alias ap='alsaplayer -o jack -d system:playback_1,system:playback_2'

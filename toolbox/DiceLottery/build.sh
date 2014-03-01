@@ -7,9 +7,11 @@ trap "echo $0 failed because a command in the script failed" ERR
 SCRIPT=`readlink -f "$0"`
 SCRIPT_DIR=`dirname "$SCRIPT"`
 
-download-kit \
-	--url http://sourceforge.net/projects/simpleswing/files/simpleswing-1.1.2.jar/download \
-	--file "$SCRIPT_DIR"/lib/simpleswing.jar \
-	--delete-pattern 'simpleswing*.jar'
+cp "$SCRIPT_DIR"/../simpleswing/dist/simpleswing.jar "$SCRIPT_DIR"/lib/
 
-ant -q -f "$SCRIPT_DIR"/build.xml rebuild-all
+DL_CACHE_DIR="$SCRIPT_DIR/../meta/download-cache"
+"$DL_CACHE_DIR"/download-junit.sh
+cp "$DL_CACHE_DIR"/junit-*.jar "$DL_CACHE_DIR"/hamcrest-core-*.jar \
+	"$SCRIPT_DIR"/test/lib
+
+ant -q -f "$SCRIPT_DIR"/build.xml

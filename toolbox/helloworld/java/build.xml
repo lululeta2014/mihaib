@@ -10,7 +10,7 @@
 	<property name="main.class" value="helloworld.HelloWorld"/>
 
 	<target name="all" depends="clean, jar, test, doc"
-		description="Clean then make JAR and docs"/>
+		description="Clean, make JAR, run tests and generate docs"/>
 
 	<target name="prepare">
 		<mkdir dir="${build.dir}"/>

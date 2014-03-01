@@ -13,8 +13,9 @@ echo '--- toolbox (bootstrap)'
 TOOLBOX_DIR="$MB_PRG_DIR"/toolbox
 TOOLBOX_DIR_TMP="$TOOLBOX_DIR"-tmp
 rm -rf "$TOOLBOX_DIR_TMP"
-git clone https://github.com/MihaiB/toolbox.git "$TOOLBOX_DIR_TMP"
+git clone https://github.com/MihaiB/mihaib.git "$TOOLBOX_DIR_TMP"
 rm -rf "$TOOLBOX_DIR"
-mv "$TOOLBOX_DIR_TMP" "$TOOLBOX_DIR"
+mv "$TOOLBOX_DIR_TMP"/toolbox "$TOOLBOX_DIR"
+rm -rf "$TOOLBOX_DIR_TMP"
 
 "$TOOLBOX_DIR"/build.py --bootstrap

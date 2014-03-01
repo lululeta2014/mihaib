@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="DiceLottery" default="jar" basedir=".">
+<project name="DiceLottery" default="rebuild-all" basedir=".">
 
 	<property name="src.dir" value="src" />
 	<property name="lib.dir" value="lib" />
@@ -98,10 +98,10 @@
 	</target>
 
 	<!-- Target to clean and then build the jar -->
-	<target name="rebuild" depends="clean, jar" description="Cleans, compiles and builds the JAR." />
+	<target name="rebuild" depends="clean, jar, test" description="Cleans, compiles, builds the JAR and runs tests." />
 
 	<!-- Target to clean and then build the jar and documentation -->
-	<target name="rebuild-all" depends="rebuild, doc" description="Cleans, compiles, builds the JAR and generates the documentation." />
+	<target name="rebuild-all" depends="rebuild, doc" description="Cleans, compiles, builds the JAR, runs the tests and generates the documentation." />
 
 
 	<!-- Test targets -->

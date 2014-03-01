@@ -16,15 +16,10 @@ check_sourceme_bash_or_exit(os.path.abspath(program_dir))
 
 REPOS_ROOT_DIR = os.getenv('MB_REPOS_DIR')
 repoNames = [
-        'DiceLottery',
-        'forge',
-        'JEncConv',
-        'jfilesync-mihaib',
-        'lethe',
-        'PyEncConv',
-        'pyroom-mihaib',
+        'fork-jfilesync',
+        'fork-pyroom',
+        'mihaib',
         'static-mihaib',
-        'toolbox',
         ]
 
 

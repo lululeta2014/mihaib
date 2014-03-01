@@ -7,6 +7,10 @@ All symlinks are created (to possibly non-exising targets), then the tools are
 built in order. While building a tool, tools which precede it in the build
 order are available, as well as tools which do not need to be built.
 
+A tool's build script should clean everything then build every possible thing
+from scratch (including tests and documentation). This ensures, on any routine
+build, that everything still works.
+
 § Project Structure
 build.py, build.json and meta/ build the toolbox.
 bin/ is created to hold symlinks to the tools.

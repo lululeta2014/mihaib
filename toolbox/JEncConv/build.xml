@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="JEncConv" default="plugins" basedir=".">
+<project name="JEncConv" default="rebuild-all" basedir=".">
 
 	<property name="src.dir" value="src" />
 	<property name="src.program" value="${src.dir}/program" />

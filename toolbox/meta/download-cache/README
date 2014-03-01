@@ -1,0 +1,3 @@
+Some files (e.g. JUnit .jars) need to be downloaded by multiple tools.
+If all tools use ‘download-kit’ for this directory, the files are only
+downloaded once.

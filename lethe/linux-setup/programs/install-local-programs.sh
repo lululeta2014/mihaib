@@ -24,9 +24,6 @@ which download-kit >/dev/null || "$SCRIPT_DIR"/bootstrap-toolbox.sh
 "$SCRIPT_DIR"/eclipse.sh
 "$SCRIPT_DIR"/texttest.sh
 "$SCRIPT_DIR"/lilypond.sh
-"$SCRIPT_DIR"/dicelottery.sh
-"$SCRIPT_DIR"/jencconv.sh
-"$SCRIPT_DIR"/pyencconv.sh
 "$SCRIPT_DIR"/appengine.sh
 "$SCRIPT_DIR"/adobe-reader.sh
 "$SCRIPT_DIR"/texlive.sh

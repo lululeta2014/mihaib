@@ -12,5 +12,6 @@ Here's why:
 – The test renames f2 to f2.bak; because f2 had the same timestamp as f2.bak,
 texttest thinks that f2.bak hasn't been changed (and doesn't collate it).
 
-A workaround is to ‘touch f2’ to ensure different timestamp from f2.bak.
-(same for f4).
+A workaround is to ‘touch’ f2 and f4 to ensure different timestamp from *.bak.
+touch Overwrite/ExistingBakFileForce/f2
+touch Overwrite/ExistingBakFileForce/f4

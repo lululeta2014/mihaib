@@ -9,7 +9,11 @@ SCRIPT_DIR=`dirname "$SCRIPT"`
 source "$SCRIPT_DIR/../sourceme.bash"
 
 
-# now we have Java, Go, etc installed and can build the whole toolbox
-"$SCRIPT_DIR"/toolbox.sh
-"$SCRIPT_DIR"/pyroom.sh
-"$SCRIPT_DIR"/jfilesync.sh
+echo '--- jfilesync (MihaiB fork)'
+JFS_DIR="$MB_PRG_DIR"/jfilesync
+JFS_DIR_TMP="$JFS_DIR"-tmp
+rm -rf "$JFS_DIR_TMP"
+git clone https://github.com/MihaiB/fork-jfilesync.git "$JFS_DIR_TMP"
+rm -rf "$JFS_DIR"
+mv "$JFS_DIR_TMP" "$JFS_DIR"
+ant -q -f "$JFS_DIR"/build.xml

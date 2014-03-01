@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="SimpleSwing" default="jar" basedir=".">
+<project name="SimpleSwing" default="rebuild-all" basedir=".">
 
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="build" />

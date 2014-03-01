@@ -19,7 +19,7 @@ if [ "$MB_PRIVATE_COMP" == "1" ]; then
 </jFileSync>'
 
 	echo >>~/.bashrc "
-alias jfs='java -jar $MB_PRG_DIR/jfilesync-mihaib/lib/jfs.jar \\
+alias jfs='java -jar $MB_PRG_DIR/jfilesync/lib/jfs.jar \\
 	-laf javax.swing.plaf.nimbus.NimbusLookAndFeel \\
 	-config ~/.mb-jfs-profile.xml'
 "

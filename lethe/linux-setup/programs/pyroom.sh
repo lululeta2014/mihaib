@@ -9,7 +9,10 @@ SCRIPT_DIR=`dirname "$SCRIPT"`
 source "$SCRIPT_DIR/../sourceme.bash"
 
 
-# now we have Java, Go, etc installed and can build the whole toolbox
-"$SCRIPT_DIR"/toolbox.sh
-"$SCRIPT_DIR"/pyroom.sh
-"$SCRIPT_DIR"/jfilesync.sh
+echo '--- pyroom (MihaiB fork)'
+PYROOM_DIR="$MB_PRG_DIR"/pyroom
+PYROOM_DIR_TMP="$PYROOM_DIR"-tmp
+rm -rf "$PYROOM_DIR_TMP"
+git clone https://github.com/MihaiB/fork-pyroom.git "$PYROOM_DIR_TMP"
+rm -rf "$PYROOM_DIR"
+mv "$PYROOM_DIR_TMP" "$PYROOM_DIR"
