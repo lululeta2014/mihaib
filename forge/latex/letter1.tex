@@ -1,0 +1,28 @@
+% xelatex «file».tex
+\documentclass{letter}
+\usepackage{fontspec}
+
+\signature{Brian Rusk}
+\address{23 Pond Street,\\
+	Castle Rock,\\
+Maine, USA}
+\date{Summer, 1991}
+
+% The closing line is indented to the right if the sender has an address.
+% This moves it back left, or changes the indentation (if we care about it):
+%\longindentation=0cm
+
+\begin{document}
+\begin{letter}{Sally Ratcliffe\\
+		Middle School,\\
+		12 Some Street,\\
+	Castle Rock}
+	\opening{Dear Miss Ratcliffe,}
+
+	I'm looking forward to our speech therapy class.
+
+	\closing{Sincerely,}
+
+	\ps{P.S.: I was also impressed by the piece of wood from Nora's Ark.}
+\end{letter}
+\end{document}
