@@ -34,6 +34,7 @@ text/html=firefox.desktop
 text/x-python=gedit.desktop
 text/x-patch=gedit.desktop
 application/javascript=gedit.desktop
+audio/x-wav=totem.desktop
 
 [Added Associations]
 application/pdf=evince.desktop;
@@ -70,4 +71,5 @@ text/html=firefox.desktop;
 text/x-python=gedit.desktop;
 text/x-patch=gedit.desktop;
 application/javascript=gedit.desktop;
+audio/x-wav=totem.desktop;
 
