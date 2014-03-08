@@ -75,10 +75,10 @@ xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Shift><Super>m' -
 xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Control><Super>m' -t string -n \
 	-s "$MB_TOOLS_DEST/browser-drive/firefox-gmail.py"
 
-#xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Control><Shift><Super>m' -t string -n \
-#	-s "$MB_TOOLS_DEST/checkgmail.py"
 xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Alt><Super>m' -t string -n \
 	-s "$MB_TOOLS_DEST/checkgmail.py"
+xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Shift><Alt><Super>m' -t string -n \
+	-s "pkill --full checkgmail-gnome-keyring.pl"
 
 xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/<Super>o' -t string -n \
 	-s "$MB_PRG_DIR/opera/opera -pd $MB_OPERA_REG_PROF_PATH"

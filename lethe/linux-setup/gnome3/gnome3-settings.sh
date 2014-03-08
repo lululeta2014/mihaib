@@ -416,8 +416,13 @@ else
 	dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/name "'checkgmail'"
 	dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/command \
 		"'$MB_TOOLS_DEST/checkgmail.py'"
-	#dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/binding "'<Primary><Shift><Super>m'"
 	dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/binding "'<Alt><Super>m'"
+
+	custom_count="$((custom_count+1))"
+	dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/name "'kill checkgmail'"
+	dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/command \
+		"'pkill -f checkgmail-gnome-keyring.pl'"
+	dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/binding "'<Alt><Shift><Super>m'"
 
 	custom_count="$((custom_count+1))"
 	dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/name "'Opera'"
