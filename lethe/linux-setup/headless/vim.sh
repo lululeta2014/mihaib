@@ -26,7 +26,7 @@ cp "$DIR/vimrc" ~/.vimrc
 # before ~/.vim/ftplugin/lilypond.vim which does "setlocal noshowmatch"
 echo >>~/.vimrc \
 "filetype off
-execute 'set runtimepath=$MB_PRG_DIR/lilypond/lilypond/usr/share/lilypond/current/vim,'.&runtimepath
+set runtimepath+=$MB_PRG_DIR/lilypond/lilypond/usr/share/lilypond/current/vim
 filetype on
 "
 
