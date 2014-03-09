@@ -2,7 +2,7 @@ LaTeX notes
 
 Use XeLaTex and the fontspec (and maybe xunicode) packages and UTF-8 input.
 
-thesis-full/	A complete thesis.
+thesis-ttcn3/	A complete thesis.
 
 syntax		Basic syntax. Groups, environments, commands, comments, spaces.
 structure	Document structure
