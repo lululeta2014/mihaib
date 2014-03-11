@@ -194,13 +194,12 @@ diff_program:meld'
 if [ $MB_PRIVATE_COMP == "1" ]
 then
 	BOOKMARKS=\
-"file:///mnt/haven/
+"file:///mnt/haven
 file:///mnt/haven/box/music
-file://$MB_BYHAND_PRG_DIR
 file:///mnt/eph/bt"
 else
 	BOOKMARKS=\
-"file://$MB_BYHAND_PRG_DIR"
+"file:///mnt/haven"
 fi
 echo >~/.gtk-bookmarks "$BOOKMARKS"
 mkdir -p ~/.config/gtk-3.0
