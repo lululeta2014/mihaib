@@ -1,5 +1,7 @@
 Transfer files between two computers
 
+Please use the Java implementation, it is the best one.
+
 Run the same program on both computers:
 - in 'server mode' (listening on a port) on one computer
 - in 'client mode' (connecting to the first computer's IP and port) on another

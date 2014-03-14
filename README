@@ -1,3 +1,91 @@
-toolbox – useful tools and project examples; build and add them to your $PATH
-forge – a collection of programs and notes
-lethe – configuration
+Mihai's collection of tools and projects.
+Many of the nested subdirectories contain a tool or project.
+Below is an overview of the root structure followed by a short selection of
+items which may be of interest to a visitor.
+
+toolbox	Useful tools and project examples which try to use good practices
+	for development and testing. See the project's README for how to build
+	the tools (one by one or all at once), particularly how to allow the
+	tools to use each other at build time or runtime. These dependencies
+	are present to allow composition and reuse, but avoid strong coupling.
+forge	A collection of programs and notes
+lethe	Configuration
+
+
+A few items which may be of interest:
+
+toolbox/JEncConv/	http://jencconv.sf.net
+	Convert the encoding of text files, optionally transforming the text,
+	from either a GUI or the command-line.
+	It can help you find the correct encoding for a file by detecting
+	possible encodings and letting you preview the file with each one.
+	It can also transform the text in any way (e.g. remove diacritics,
+	replace some symbols, alter spacing or line endings) via plug-ins.
+	Plug-ins are trivial to write and add to the already compiled program
+	(the website has a complete example).
+	See the project's website above for details.
+
+toolbox/PyEncConv/	http://pyencconv.sf.net
+	Python project, similar to the Java JEncConv above.
+
+toolbox/DiceLottery/	http://dicelottery.sf.net
+	Map (random) events between two domains, in a verifiable and fair
+	(unbiased) way. For example:
+	― use the National Lottery result to choose which of your friends gets
+	a prize
+	― if you're a teacher, look at the wall clock (e.g. its second or
+	minute hand) to select which student to examine next
+	― if you want to play the lottery but don't know which numbers to
+	choose, you can toss a coin several times (or throw a pair of dice, or
+	draw playing cards from a deck, i.e. use any available source of random
+	events) and convert them to lottery numbers to play
+	See the project's website above for details.
+
+toolbox/book-pub/	Format a book for publishing as PDF and EPUB (html).
+	You provide the book as plain text (UTF-8) files.
+
+toolbox/file-transfer/	Copy files between two computers, across the network.
+	Without administrator privileges, without enabling any (e.g. network,
+	sharing) services, regardless of which operating system each of the
+	computers is running.
+	The project describes a network protocol and implements it in a
+	platform-independent program. Please use the Java implementation.
+
+toolbox/money-trail/	Simple finance management
+	A simple but effective model for finance management, with several ways
+	to generate reports from the data.
+	Implemented as a Go webserver storing data in SQLite.
+	Users can enter and edit data from a dynamic web UI which uses
+	JavaScript and Go templates.
+
+toolbox/textproc/	Go text-processing library.
+	Defines a Go interface for ‘text filters’ which transform text.
+	These can be chained, with the output of one filter feeding the next.
+	The uses for this (e.g. counting character or word frequencies,
+	formatting text) are only limited by our imagination.
+	You can view the formatted docs and click through to the source code
+	e.g. here: http://godoc.org/github.com/MihaiB/mihaib/toolbox/textproc
+	The following command-line tool makes this library available for use.
+
+toolbox/textproc/cmd/	Command-line tool making available the above Go
+	text-processing library (toolbox/textproc/).
+	Some examples are simple text formatting and calculating frequencies
+	(most common characters or words, or groups of characters or words).
+
+forge/tcp-forward/	Program which listens on a local port and forwards
+	all TCP connections to a specific IP and port. It can also introduce
+	delays before and during the data transfer, to simulate a slow network.
+
+forge/eclipse-test/	Automated runner for Eclipse JUnit run configurations.
+	Consists of 3 decoupled tools (a test runner, a webserver to examine
+	the test results, and an email notifier with new test failures).
+	The tools all work with JUnit's XML format but don't know about each
+	other, so each can be improved or replaced independently of the others.
+
+forge/movewater/	Solve problems involving moving liquids between vessels
+	(e.g. you start with an 8 liter vessel filled with water, and two
+	empty vessels of 3 and 5 liter capacities. You want to obtain 4 liters
+	of water in one vessel). Has both a GUI and a command-line interface,
+	and a few options to solve a slightly more general class of problems.
+
+forge/unblock/	Solve the popular ‘Unblock Me’ game found on smartphones.
