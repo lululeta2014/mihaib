@@ -11,11 +11,11 @@ source "$SCRIPT_DIR/../sourceme.bash"
 
 echo '--- Google App Engine'
 
-LATEST=appengine-java-sdk-1.8.9.zip
+LATEST=appengine-java-sdk-1.9.0.zip
 PATTERN=appengine-java-sdk-*.zip
 download-kit \
 	--file "$MB_KITS_DIR"/"$LATEST" \
-	--url https://googleappengine.googlecode.com/files/"$LATEST" \
+	--url https://commondatastorage.googleapis.com/appengine-sdks/featured/"$LATEST" \
 	--delete-pattern "$PATTERN"
 
 GAE_DIR="$MB_PRG_DIR"/appengine-java-sdk
