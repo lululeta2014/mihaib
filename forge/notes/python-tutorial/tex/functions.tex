@@ -1,0 +1,103 @@
+\section{Functions}
+
+\verb=def= introduces a function definition.
+Its first statement can be a string literal, its \emph{docstring}.
+
+The execution of a function introduces a new symbol table
+used for the local variables of the function.
+All variable assignments in a function
+store the value in the local symbol table.
+Variable references first look in the local symbol table,
+the in the local symbol tables of enclosing functions,
+then in the global symbol table, and finally in the table of built-in names.
+Thus, global variables cannot be directly assigned a value within a function
+(unless named in a \verb=global= statement), although they may be referenced.
+
+The actual parameters (arguments) to a function call
+are introduced in the local symbol table of the called function
+when it is called.
+When a function calls another function,
+a new local symbol table is created for that call.
+
+A function definition introduces the function name in the current symbol table.
+The value of the function name has a type
+that is recognized by the interpreter as a user-defined function.
+This value can be assigned to another name
+which can then also be used as a function.
+
+\verb=return= without an expression argument returns \verb=None=.
+Falling off the end of a function also returns \verb=None=.
+
+\subsection{Default Argument Values}
+
+The default values are evaluated at the point of function definition
+in the defining scope.
+Listing \ref{func:default-arg-eval-point} prints \verb=5=.
+
+\begin{program}
+\verbatimtabinput{./py/func-default-arg-eval-point.py}
+\caption{Default arg values are evaluated at the point of function definition%
+\label{func:default-arg-eval-point}}
+\end{program}
+
+The default value is evaluated only once!
+This matters when the default is a mutable object.
+Listing \ref{func:default-val-eval-once} will print
+\verb=[1]=, \verb=[1, 2]= then \verb=[1, 2, 3]=.
+
+\begin{program}
+\verbatimtabinput{./py/func-default-val-eval-once.py}
+\caption{Default arg values are evaluated only once%
+\label{func:default-val-eval-once}}
+\end{program}
+
+\subsection{Keyword Arguments}
+
+A function call must have any positional arguments
+followed by any keyword arguments,
+no argument may receive a value more than once.
+
+When a final formal parameter of the form \verb=**name= is present,
+it receives a dictionary containing all keyword arguments
+except for those corresponding to a formal parameter.\\
+This may be combined with a formal parameter of the form \verb=*name=
+(described in the next section)
+which receives a tuple containing
+the positional arguments beyond the formal parameter list.
+(\verb=*name= must occur before \verb=**name=).
+
+\subsection{Arbitrary Argument Lists}
+
+Listing \ref{func:arbitrary-arg-list} specifies
+that the function can be called with an arbitrary number of arguments.
+These will be wrapped up in a tuple.
+Before the variable number of arguments,
+zero or more normal arguments may occur.
+Normally, these variadic arguments
+will be last in the list of formal parameters
+because they scoop up all remaining input arguments passed to the function.
+Any formal parameters which occur after the \verb=*args= parameter
+are keyword-only arguments (they can't be used as positional arguments).
+
+\begin{program}
+\verbatimtabinput{./py/func-arbitrary-arg-list.py}
+\caption{Arbitrary argument list\label{func:arbitrary-arg-list}}
+\end{program}
+
+\subsection{Unpacking Argument Lists}
+The reverse situation occurs when the arguments are already in a list or tuple
+but need to be unpacked
+for a function call requiring separate positional arguments.
+Write the function call with the \verb=*=-operator
+to unpack the arguments out of a list or tuple.
+In the same fasion, dictionaries can deliver keyword arguments
+with the \verb=**=-operator.
+
+\subsection{Lambda Forms}
+
+With the \verb=lambda= keyword, small anonymous functions can be created.
+Lambda forms are syntactically restricted to a single expression
+and can be used wherever function objects are required.
+Semantically, they're syntactic sugar for a normal function definition.
+Like nested function definitions,
+they can reference variables from the containing scope.

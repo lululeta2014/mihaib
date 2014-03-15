@@ -1,0 +1,22 @@
+\section{Setup}
+
+\subsection{Interpreter}
+
+\verb=python -c command [arg] ...= executes the statements in \emph{command}.\\
+\verb=python -m module [arg] ...= executes the source file for \emph{module}.\\
+To run a script and enter interactive mode afterwards,
+pass \verb=-i= before the script.
+
+\verb=sys.argv= has length at least 1.
+When no script and no args are given, \verb=sys.argv[0]= is an empty string.
+When the script name is given as \verb='-'= (meaning standard input),
+\verb=sys.argv[0]= is set to \verb='-'=.
+When \verb=-c command= is used, \verb=sys.argv[0]= is set to \verb='-c'=.
+When \verb=-m module= is used,
+\verb=sys.argv[0]= is set to the full name of the located module.
+Additional options are left in \verb=sys.argv=
+for the command or module to handle.
+
+\subsection{Executable scripts}
+
+\verb=#! /usr/bin/env python3=

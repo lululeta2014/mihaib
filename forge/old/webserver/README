@@ -1,0 +1,19 @@
+Simple HTTP file server
+
+$ ant run
+Starts the webserver serving from ./wwwroot
+
+Point your browser to:
+http://localhost:8000/file.html
+http://localhost:8000/hello.txt
+
+Close with Ctrl-C.
+
+
+Implements only GET requests.
+Doesn't generate directory listings
+(you must type the full path to a file, works for UTF-8 filenames).
+.html, .txt files open in your browser.
+For other files (e.g. .css) your browser should show a download window.
+To open (not download) files with other extensions, add them to the config file.
+Change the listen port (default 8000) in the config file.

@@ -1,0 +1,22 @@
+\ProvidesPackage{mystyle}
+
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+
+%\usepackage[top=2.54cm,bottom=2.54cm,left=2.54cm,right=2.54cm]{geometry}
+\usepackage{float}
+\usepackage{moreverb}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+
+% Level values may jump. A \subsubsection may follow a \chapter
+\usepackage{bookmark}
+
+\setcounter{tocdepth}{4}
+
+\floatstyle{ruled}
+\newfloat{program}{htb}{lop}[section]
+\floatname{program}{Listing}
+
+\hypersetup{colorlinks=true}

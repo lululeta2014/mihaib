@@ -1,0 +1,67 @@
+\section{Quick Tour}
+
+\subsection{Arithmetic Expressions Pattern}
+
+A series of rules, one for each operator precedence level,
+and one for the lowest level describing atoms.
+Start with rule \verb=expr= representing a complete expression
+which matches operators with the weakest precedence
+and refers to a rule that matches subexpressions
+for operators with the next highest precedence.
+
+\begin{program}
+\verbatimtabinput{./g/arithm-expr-pattern.g}
+\caption{Arithmetic expressions pattern\label{tour:arithm-expr-pattern}}
+\end{program}
+
+
+\subsection{Using Syntax to Drive Action Execution}
+Syntax drives the ealuation of actions in the parser.
+To execute actions for a particular construct,
+place them in the appropriate grammar alternative.
+
+
+\subsection{Evaluating Expressions using an AST}
+
+Build a tree, then walk it with a tree parser and execute actions.
+AST $\neq$ Parse Tree
+(a parse tree is the sequence of rule invocations to match an input stream).
+To build an AST with a grammar, add AST construction rules to the grammar:\\
+\verb!options { output = AST; ASTLabelType = CommonTree; }!\\
+Now all rules return a node or a subtree;
+the starting rule gives us the complete AST.
+
+
+\subsection{Tree Grammars}
+
+ANTLR encodes 2D tree structure in a 1D stream of tree nodes
+using additional imaginary nodes: UP and DOWN.
+A depth first traversal of the AST for the expression \verb=3 + 4 * 5= is:
+\verb=+ DOWN 3 * DOWN 4 5 UP UP=.
+Copy-paste the rewrite rules from the parser grammar
+and use them to recognize the AST structure in the tree grammar.
+
+\begin{program}
+\verbatimtabinput{./g/tree-grammar-header.g}
+\caption{Tree grammar header\label{tour:tree-grammar-header}}
+\end{program}
+
+
+\subsection{Note about \$ in actions}
+
+Label assignments from a grammar alternative, e.g.\ \verb+e=multExpr+,
+are replaced with \verb+e=multExpr();+ in the generated (e.g.\ parser) code.
+Grammar actions involving labels, e.g.\ \verb=$e.value=,
+are replaced in the generated code
+with \verb=e= (for rules with a single return value)
+or \verb=e.value= (for rules with multiple return values).
+
+The \verb=$= sign tells ANTLR to interpret what follows it
+and replace that appropriately when generating (e.g.\ parser) code.
+Parts of a grammar action with no \verb=$= sign
+are inserted unchanged in the generated code.
+This is why we sometimes \emph{get away with}
+writing \verb=e= instead of \verb=$e.value= in a grammar action
+(for rules with a single return value).
+It just happens to be the destination code that ANTLR would have generated.
+The explicit \verb=$= form should always be used.

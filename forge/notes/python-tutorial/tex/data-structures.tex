@@ -1,0 +1,65 @@
+\section{Data Structures}
+
+\verb=collections.deque=\\
+List comprehensions provide a concise way to create lists from sequences.
+
+\subsection{The del statement}
+
+\verb=del= can be used to remove an item from a list given its index
+(\verb=del a[0]=),
+to remove slices from a list (\verb=del a[2:4]=)
+or to clear the entire list (\verb=del a[:]=).\\
+It can also be used to delete entire variables: \verb=del a=
+(referencing the name \verb=a= after this is an error).
+
+\subsection{Tuples and sequences}
+
+Sequence types: str, bytes, bytearray, list, tuple, range.\\
+Tuples, like strings, are immutable
+(but they may contain mutable objects, such as lists).
+Empty tuple is \verb=()=, single-item tuple has trailing comma \verb='hello',=.
+Multiple assignment is a combination of tuple packing and sequence unpacking.
+
+\subsection{Dictionaries}
+
+Dictionary keys can be any immutable type
+(strings and numbers can always be keys).
+Tuples can be used as keys if they contain only strings, numbers, or tuples;
+if a tuple contains any mutable object either directly or indirectly,
+it can not be used as a key.
+
+The \verb=dict()= constructor builds dictionaries
+directly from sequences of key-value pairs (e.g.\ a list of tuples);
+when the keys are simple strings,
+you can specify pairs using keyword arguments.
+
+\subsection{Looping Techniques}
+
+When looping through dictionaries,
+the key and corresponding value can be retrieved at the same time
+using the \verb=items()= method.\\
+When looping through a sequence,
+the position index and corresponding value can be retrieved at the same time
+using the \verb=enumerate()= function.\\
+To loop over two or more sequences at the same time,
+the entries can be paired with the \verb=zip()= function.\\
+To loop over a sequence in reverse, use the \verb=reversed()= function.\\
+To loop over a sequence in sorted order, use the \verb=sorted()= function
+which returns a new sorted list while leaving the source unaltered.
+
+\subsection{Conditions}
+
+Operators \verb=in= and \verb=not in=
+check whether a value occurs in a sequence.
+Operators \verb=is= and \verb=is not=
+compare whether two objects are really the same object.
+
+Operators \verb=and= and \verb=or= are short-circuit.
+They return the value of the last evaluated argument.
+
+\subsection{Comparing Sequences and Other Types}
+
+Sequence objects may be compared to other objects with the same sequence type.
+The comparison uses lexicographical ordering.\\
+Comparing objects of different types with \verb=<= or \verb=>= is legal
+provided that the objects have the appropriate comparison methods.

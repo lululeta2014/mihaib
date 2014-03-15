@@ -1,0 +1,10 @@
+switch (lookahead tokens) {
+	case first_token_which_predicts_alt1:
+	...
+	case last_token_which_predicts_alt1:
+		match alt1;
+		break;
+	// same for alt2 .. altN
+	default:
+		throw Exception;
+}

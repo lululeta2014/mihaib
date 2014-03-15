@@ -1,0 +1,244 @@
+\section{Trees}
+
+Many problems cannot be solved with a single pass over the input.
+Rather than repeatedly rescanning the characters
+and reparsing the token stream,
+construct and walk a condensed version of the input.
+This is called an \emph{intermediate form}
+and is usually a tree data structure.
+ASTs are not parse trees
+(ASTs contain only the nodes associated with input symbols).
+
+
+\subsection{Proper AST Structure}
+
+\begin{itemize}
+\item
+Record the meaningful input tokens (and only the meaningful ones).
+
+\item
+Encode, in the 2D tree, the grammatical structure used by the parser
+(but not the rule names themselves).
+
+\item
+Be easy for the computer to recognize and navigate.
+\end{itemize}
+
+Computers deal with programs most naturally as simple instruction streams.
+Trees are much more convenient to examine and manipulate
+than low-level machine code.
+
+Encoding arithmetic expressions as a tree is straightforward.
+But for more abstract language constructs
+we can invent some high-level pseudomachine instructions.
+Each subtree should be like an imperative command in English
+with a verb and object:\\
+int i; $\rightarrow$ \verb|^(VARDEF int i)|\\
+array indexing $\rightarrow$ \verb=^(INDEX a i)=\\
+function call $\rightarrow$ \verb=^(CALL a i)=\\
+Fortran uses \verb=a(i)= for both array indexing and function calls,
+so the parser grammar will need semantic predicates
+before building the AST nodes.
+An \verb=EXPR= node can be added on top of all expressions:
+computation results and other information can be stored there.
+
+
+\subsection{Default AST construction}
+
+To create ASTs, set option \verb=output= to \verb=AST=.
+By default ANTLR builds a flat tree (a linked list)
+with pointers to all the input tokens.
+
+
+\subsection{Constructing ASTs using Operators}
+
+\verb=expr: INT ('+'^ INT)*;=
+
+\begin{description}
+\item[!]
+Do not include node or subtree (if referencing a rule) in rule's tree.
+\item[\textasciicircum]
+Make node root of subtree created for entire enclosing rule.
+If the suffixed element is a rule reference,
+that rule must return a single node, not a subtree.
+The result must become a root node.
+\end{description}
+
+AST construction operators work great for left-associative operators
+such as plus and multiply.
+To handle right-associative arithmetic operators
+use tail recursion to the enclosing rule
+(see pg.\ 275 in the book for Arithmetic Expression Grammars):\\
+\verb=pow: INT ('^'^ pow)?;=
+
+
+\subsection{Constructing ASTs with Rewrite Rules}
+
+\begin{verbatimtab}
+rule	: «alt1» -> «build-this-from-alt1»
+	| «alt2» -> «build-this-from-alt2»
+	...
+	| «altN» -> «build-this-from-altN»
+	;
+\end{verbatimtab}
+
+Each rule returns a single AST (available as a predefined attribute)
+that you can set zero or more times using the \verb=->= operator;
+generally you will use the rewrite operator once per rule invocation.\\
+\verb=r: e {System.out.println($e.tree);};=
+
+Parser grammars specify how to recognize input tokens.
+Rewrite rules are generational grammars that specify how to generate trees.
+Rewrite rules may omit input elements, reorder them
+or make some elements the root of others:\\
+\verb=decl: 'var' ID ':' type -> ^('var' type ID);=
+
+To create an imaginary node in the AST, refer to its token type.
+ANTLR will create a Token object with that token type
+and make it the payload of the new tree node.
+An imaginary token reference is a token reference
+with no corresponding token reference
+on the left side of the \verb=->= operator:\\
+\verb=decl: type ID ';' -> ^(VARDEF type ID);=
+
+\paragraph{Collecting input elements and emitting together}
+\begin{verbatimtab}
+list: ID (',' ID)* -> ID+;
+decl: 'int' ID (',' ID)* -> ^('int' ID+);
+\end{verbatimtab}
+
+\paragraph{Duplicating nodes and trees}
+ANTLR will make duplicates
+(otherwise, \verb=^(ID ID)= would create a cycle in the tree):\\
+\verb=// duplicate tree returned from type=\\
+\verb=decl: type ID (',' ID)* -> ^(type ID)+;=
+
+\paragraph{Choosing between tree structures at runtime}
+List the multiple rewrite rules with a semantic predicate in front.
+The predicates are tested in the order specified.
+The rewrite rule of the first true predicate generates the rule's return tree.
+You may specify a default rewrite as the last unpredicated rewrite.
+\begin{verbatimtab}
+varDef	: modifiers type ID ('=' expr)? ';'
+	-> {inMethod}?	^(VARIABLE ID modifier* type expr?)
+	->		^(FIELD ID modifier* type expr?)
+	;
+\end{verbatimtab}
+
+\paragraph{Referring to labels in rewrite rules}
+Using \verb=ID+= in the rewrite rule yields a list of all \verb=ID= tokens
+matched on the left side.
+To mark the first method as the main one:\\
+\verb|prog: main=method others+=method* -> ^(MAIN $main) $others*;|
+
+\paragraph{Creating nodes with arbitrary actions}
+Cannot be suffixed with \verb=+= and \verb=*=,
+can access trees created elsewhere in a grammar.\\
+\verb=a: INT->{new CommonTree(new CommonToken(FLOAT, $INT.text+".0"));};=\\
+\verb=typeDefinition: modifiers! classDefinition[$modifiers.tree];=\\
+\verb=classDefinition [CommonTree mod]=\\
+\verb=    : ... -> ^('class' ID {$mod} ...);=
+
+\paragraph{Rewrite rule element cardinality}
+If an operator (like \verb=+=) suffixes a tree,
+and at least one element has cardinality \verb=n= greater than 1,
+then \verb=n= trees are generated.
+All elements with cardinality greater than 1
+must have exactly the same cardinality.
+The elements with cardinality 1 are duplicated as the parser creates the tree.
+Imaginary nodes do not force tree construction.
+At least one real element within the tree must have cardinality greater than 0.
+\\
+\verb=initValue: expr? -> ^(EXPR expr)?;=\\
+\verb=^(EXPR expr)?= yields no tree when \verb=expr= on the left side
+returns no tree,
+while \verb=^(EXPR expr?)= always yields at least an \verb=EXPR= node.
+
+\paragraph{Rewrite Rules in Subrules}
+Even when a rewrite rule is not at the outermost level in a rule,
+it still sets the rule's result AST:
+\begin{verbatimtab}
+decl	: type
+	(ID '=' INT	-> ^(DECL_WITH_INIT type ID INT)
+	|ID		-> ^(DECL type ID)
+	);
+\end{verbatimtab}
+
+\paragraph{Referencing previous rule ASTs in rewrite rules}
+Sometimes, executing a single rewrite after the parser has matched everything
+is insufficient.
+We may need to iteratively build up the AST.
+To reference the previous value of the current rule's AST,
+use \verb=$r= within a rewrite rule where \verb=r= is the enclosing rule:
+\begin{verbatimtab}
+expr: INT ('+'^ INT)*;
+// is equivalent to
+expr: (INT -> INT) ('+' i=INT -> ^('+' $expr $i))*;
+\end{verbatimtab}
+
+\paragraph{Deriving imaginary nodes from real Tokens}
+Imaginary nodes, by default, have no line and column information
+or token index.
+ANTLR allows creating imaginary nodes with a constructor-like syntax,
+to derive them from existing tokens.\\
+\verb|compoundStat: lc='{' stat* '}' -> ^(SLIST[$lc] stat*);|\\
+The \verb=SLIST= node gets line and column information
+from the left curly's information.
+We can also set the text to something more appropriate:\\
+\verb=SLIST[$lc, "statements"]=
+
+\begin{verbatimtab}
+Imaginary Node Constr.	Tree Adapter Invocation
+T			adaptor.create(T, "T")
+T[]			adaptor.create(T, "T")
+T[token-ref]		adaptor.create(T, token-ref)
+T[token-ref, "text"]	adaptor.create(T, token-ref, "text")
+\end{verbatimtab}
+
+\paragraph{Automatic AST construction}
+By default, \verb-output=AST- causes each parser rule to build up a list
+of the nodes and subtrees created by its elements.
+Rewrite rules turn this off.
+In may cases, we might want to combine the approaches:
+\begin{verbatimtab}
+primary	: INT
+	| FLOAT
+	| '(' expression ')' -> expression
+	;
+\end{verbatimtab}
+
+
+\subsection{Tree Grammars}
+
+Build a tree grammar by copy-pasting the parser grammar,
+leaving only its rewrite rules.
+Parser rules that have AST rewrite rules within subrules also translate easily,
+because rewrite rules always set the rule's result tree.
+If the parser rule decides at runtime which structure to build
+using a semantic predicate,
+the tree grammar lists all alternatives.
+The AST construction operators are trickier.
+
+\begin{verbatimtab}
+tree grammar treeGrammarName;
+
+options {
+	tokenVocab = parserGrammarName;
+	ASTLabelType = CommonTree;
+}
+
+CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
+// nodes.setTokenStream(tokens);
+treeGrammarName walker = new treeGrammarName(nodes);
+walker.start_symbol();
+\end{verbatimtab}
+
+All expression rules from the parser grammar
+collapse into a single recursive rule in the tree grammar.
+\begin{verbatimtab}
+expr	: ^('+' expr expr)
+	| ^('*' expr expr)
+	| ID
+	| INT
+	;
+\end{verbatimtab}

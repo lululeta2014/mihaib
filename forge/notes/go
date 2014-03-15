@@ -1,0 +1,35 @@
+Types
+=====
+
+Each type T has an underlying type:
+If T is a predeclared type or a type literal,
+the corresponding underlying type is T itself.
+Otherwise, T's underlying type is the underlying type
+of the type to which T refers in its type declaration.
+
+   type T1 string
+   type T2 T1
+   type T3 []T1
+   type T4 T3
+
+The underlying type of string, T1, and T2 is string.
+The underlying type of []T1, T3, and T4 is []T1.
+
+
+A type may have a method set associated with it.
+The method set of an interface type is its interface.
+The method set of any other named type T
+consists of all methods with receiver type T.
+The method set of the corresponding pointer type *T
+is the set of all methods with receiver *T or T
+(that is, it also contains the method set of T).
+Any other type has an empty method set.
+In a method set, each method must have a unique name.
+
+The static type (or just type) of a variable
+is the type defined by its declaration.
+Variables of interface type also have a distinct dynamic type,
+which is the actual type of the value stored in the variable at run-time.
+The dynamic type may vary during execution
+but is always assignable to the static type of the interface variable.
+For non-interface types, the dynamic type is always the static type.

@@ -1,0 +1,7 @@
+These are utility programs used by the main program.
+E.g. the gnomekeyring module isn't present in Python3, so a Python2 program
+in this directory is used for the gnome keyring.
+
+download gdata-*.tar.gz from
+http://code.google.com/p/gdata-python-client/downloads/list
+and put atom/ and gdata/ in this dir.

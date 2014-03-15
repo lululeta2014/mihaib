@@ -1,0 +1,15 @@
+http://pdfedit.petricek.net/en/documentation.html
+
+document – variable of type PDF, the currently loaded document
+print(document.getPageCount());
+
+To remove logos from a particular pdf (after delinearizing):
+
+for (i = 1; i <= document.getPageCount(); i++) {
+	crtStream = document.getPage(i).getContentStream(0);
+	crtStream.getLastOperator().remove();
+	crtStream.getLastOperator().remove();
+	crtStream.getLastOperator().remove();
+	crtStream.getLastOperator().remove();
+	crtStream.getLastOperator().remove();
+}

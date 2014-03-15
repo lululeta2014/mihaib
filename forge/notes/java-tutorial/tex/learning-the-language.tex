@@ -1,0 +1,162 @@
+\section{Getting Started}
+
+byte: 8 bit, signed, [-128, 127]
+short: 16 bit, int: 32 bit [-2 billion, 2 billion], long: 64 bit
+float: 32 bit, double: 64 bit, char: 16 bit unicode character
+\verb='\u0000'..'\uffff'=,
+boolean: undefined size.\\
+String – immutable; special language support via literals.\\
+Underscores in numeric literals: \verb=123_456_789L;=
+any number of underscores, anywhere between digits.
+
+Arrays:\\
+\verb=type[] my array; //discouraged: type array[];=\\
+The array size is not part of the type.
+Array literal: \verb={1, 2, 3, 4, 5};=.
+Multi-dimensional jagged arrays; built-in \verb=.length=.
+
+Null:\\
+\verb=null= is not an \verb=instanceof= anything.\\
+\verb=null= in \verb=switch= statement condition
+throws \verb=NullPointerException=.
+
+\begin{description}
+\item[Parameters] list of variables in a method declaration.
+\item[Arguments] the values passed in at invocation.
+\end{description}
+
+Parameters \emph{shadow} fields with the same name.\\
+Primitives are passed by value.\\
+Reference parameters are also passed by value; after the method returns,
+the passed in reference still references the same object.
+
+\begin{description}
+\item[Covariant return type]
+overriding a method and making it return a subclass
+of the original method's return type.
+\end{description}
+
+\verb=this(args)= invokes another constructor from within a constructor.
+
+A constant (\verb|static final int x = 3;|) of primitive or \verb=String= type
+might be replaced by the compiler with its value everywhere it's used.
+If you change its value, you must recompile all classes that use it.
+
+A class can have any number of \emph{static initialization blocks}.
+They are all called in order.
+You can have \emph{non-static initializer blocks}.
+The compiler copies them into every constructor.
+You can share a block of code between multiple constructors this way.
+
+Use asserts.
+
+Nested classes:\\
+\emph{static}: static nested classes\\
+\emph{non-static}: inner classes
+
+Non-static nested classes (inner classes) have access to other members
+of the enclosing class, even if they're declared private.
+Static nested classes don't have access to other members
+of the enclosing class.
+
+An inner class is associated with an instance of its enclosing class
+and has direct access to that object's methods and fields.
+Because it's associated with an instance,
+it can't define any static members itself.
+
+Static nested class: \verb=new OuterClass.StaticNestedClass();=\\
+Inner class: \verb=outerObject.new InnerClass();=\\
+local inner class: declared within the body of a method\\
+anonymous inner class: local inner class without name
+
+ENUM: a type whose fields consist of a fixed set of constants.
+\begin{verbatimtab}
+public enum CompassDir {
+	NORTH, SOUTH, WEST, EAST
+}
+\end{verbatimtab}
+Enums can contain methods and other fields.
+Compiler-added \verb=values()= method returns an array with all enum values.
+
+Annotations
+
+Interfaces: can contain only constants, method signatures and nested types.
+All methods are implicitly public.
+All constant values are implicitly public, static and final.
+
+\paragraph{Generics}
+\verb=Box<T>=;
+during compilation, all generic information (\verb=T=) is removed entirely.\\
+The diamond \verb=<>=: you can replace the type args for the constructor
+with an empty set of type params as long as the compiler can infer them
+from the context.
+
+Generic Methods and Constructors:
+type params in method/constructor signatures.
+\begin{verbatim}
+public <U> void f(U u) { ... }
+MyClass.f("Hello"); MyClass.<String>f("Hello");
+\end{verbatim}
+
+\paragraph{Type Inference}
+\begin{verbatimtab}
+class MyClass <X> {
+	<T> MyClass(T t) {
+		// ...
+	}
+}
+\end{verbatimtab}
+\verb=new MyClass<Integer>("");= ---
+\verb=X=--\verb=Integer=, specified; \verb=T=--\verb=String=, inferred.\\
+\verb|MyClass<Integer> myObject = new MyClass<>("");| ---
+\verb=X=--\verb=Integer=, inferred; \verb=T=--\verb=String=, inferred.\\
+\verb|MyClass<Integer> myObject = new <String>MyClass<>("");| ---
+\verb=X=--\verb=Integer=, inferred; \verb=T=--\verb=String=, explicit.
+
+\paragraph{Bounded Type Params}
+\verb=<U extends Number>= --- use \verb=&= for additional interfaces.\\
+\verb=<U extends Number & MyInterface>=
+
+\paragraph{Subtyping}
+\begin{verbatimtab}
+public void boxText(Box<Number> n) {
+	...
+}
+\end{verbatimtab}
+Cannot pass in \verb=Box<Integer>= or \verb=Box<Double>= to that method.
+\verb=Box<Integer>= is not a subtype of \verb=Box<Number>=.
+
+\paragraph{Wildcards}
+\begin{description}
+\item[upper bound]
+\verb=<? extends Animal>=\\
+\verb=<?>= is the same as \verb=<? extends Object>=
+\item[lower bound]
+\verb=<? super Animal>=
+\end{description}
+
+\verb=Cage<Lion>= is not a subtype of \verb=Cage<Animal>=,
+but it is a subtype of\\
+\verb=Cage<? extends Animal>=.
+
+\paragraph{Type Erasure}
+The compiler removes all info related to type params and type args.
+This enables binary compatibility with pre-generic Java code.\\
+\verb=Box<String>= is translated to \verb=Box= --- called the raw type.
+
+Most parameterized types, such as \verb=ArrayList<Number>= and
+\verb=List<String>= are non-reifiable types:
+they're not completely available at runtime.
+
+\paragraph{Packages}
+The compiler auto-imports:
+\begin{itemize}
+\item the package with no name
+\item the \verb=java.lang= package
+\item the current package (the package for the current file)
+\end{itemize}
+
+\begin{verbatim}
+import static java.lang.Math.PI;
+import static java.lang.Math.*;
+\end{verbatim}

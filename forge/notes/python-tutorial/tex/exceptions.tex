@@ -1,0 +1,28 @@
+\section{Exceptions}
+
+An \verb=except= clause may name multiple exceptions as a paranthesized tuple.
+The last except clause may omit the exception name to serve as a wildcard.
+The optional \verb=else= clause is executed
+if the \verb=try= clause does not raise an exception.
+
+An exception may have an associated value,
+known as the exception \emph{argument}.
+The arguments are stored in \verb=instance.args=.
+For convenience, the exception instance defines \verb=__str__()=
+so the arguments can be printed directly
+(so printing an exception only prints the arguments, not the exception name).
+If an exception has arguments, they are printed as the last part (‘detail’)
+of the message for unhandled exceptions.
+
+\verb=raise= by itself in an \verb=except= clause re-raises the exception.
+
+When creating a module that can raise several distinct errors,
+a common practice is to create a base class
+for exceptions defined by that module,
+and subclass that to specific exception classes for different error conditions.
+
+\subsection{Predefined Clean-up Actions}
+
+Some objects, like files, provide predefined cleanup actions.
+The \verb=with= statement allows objects like files to be used
+in a way that ensures they are always cleaned up promptly and correctly.

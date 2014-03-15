@@ -1,0 +1,152 @@
+\section{Parsing}
+
+
+\subsection{Recursive-Descent Parsers}
+
+Don't need to actually build parse trees ---
+can trace them out implicitly via a function call sequence (a call tree).
+Each function executes code to match its children.
+To match a substructure (subtree) it calls the function for that subtree.
+To match token children, it calls \verb=match("+")=, \verb=match("return")=.
+Four classic parsing patterns follow.
+
+LL(1) --- Top-Down Parser with 1 lookahead token.
+The first `L' stands for \emph{read input from left to right}.
+The second for \emph{descend into parse tree children from left to right}.
+
+Substructures in the parse tree $\approx$ functions in parser
+$\approx$ rules in grammar.
+
+
+\subsection{P1 Mapping grammars to recursive descent recognizers}
+
+Problems: left recursion and nondeterminisms (doesn't know which path to take).
+From a grammar $\rightarrow$ make a class with a method for each rule.
+Rule references become method calls: rule \verb=r= $\rightarrow$ \verb=r()=.
+Token references for token \verb=T= $\rightarrow$ \verb=match(T)=
+(throws Exception for mismatch).\\
+Subrules: \verb=(alt1 | alt2 | .. | altN)= see Listing \ref{parse:subrules-if}.
+
+\begin{program}
+\verbatimtabinput{./code/parsing/subrules-if}
+\caption{Subrules translated to if statements\label{parse:subrules-if}}
+\end{program}
+
+We may use switch statements (each alternative is predicted by some tokens).
+See Listing \ref{parse:subrules-switch}.
+If \verb=alt1= has something like \verb=(A|B|C)=
+we may put them in a Set instead of many \verb=case= statements.
+
+\begin{program}
+\verbatimtabinput{./code/parsing/subrules-switch}
+\caption{Implementing subrules with switch\label{parse:subrules-switch}}
+\end{program}
+
+The nature of the lookahead prediction expressions
+dictates the strength of the strategy.
+P2 and P3 are LL(1) $\rightarrow$ they test 1 symbol of lookahead.
+P4 is LL(k) $\rightarrow$ tests k symbols of lookahead.
+P5 (Backtracking) and P7 (Predicated) augment LL(k) decisions
+with arbitrary amount of lookahead and arbitrary user defined runtime tests,
+respectively.
+
+Converting subrule operators: \verb=?=, \verb=+=, \verb=*=.
+\begin{description}
+\item[?]
+Remove the error clause
+(\verb=else= or \verb=default= from the previous Listings).
+
+\item[+]
+Put the code in a do-while block:
+\verbatimtabinput{./code/parsing/plus-do-while}
+
+\item[*]
+Put the code in a while loop:
+\verbatimtabinput{./code/parsing/star-while}
+
+\end{description}
+
+
+\subsection{P2 LL(1) Recursive Descent Lexer}
+
+Emits a sequence of tokens. Each token has 2 attributes:
+token type and associated text.
+Follow pattern 1 to write code for lexer rules.
+To make the lexer look like a sequence of tokens, define \verb=nextToken()=.
+\verb=nextToken()= uses the lookahead character to route control flow
+to the appropriate recognition method.
+Very similar to P3 (both are generated using P1).
+
+
+\subsection{P3 LL(1) Recursive Descent Parser}
+
+Analyze syntactic structure of the token sequence of a phrase
+using a single lookahead token.
+Each alternative has a set of tokens that can begin it $\rightarrow$
+lookahead set.
+The parser tests the current lookahead token
+against the alternatives' lookahead sets.
+
+\paragraph{Computing Lookahead Sets}
+Formally, FIRST and FOLLOW are used.
+If an alternative begins with a token reference,
+that token is the lookahead set.
+If an alternative begins with a rule reference,
+the lookahead set is whatever begins any alternative of that rule.
+
+Things get complicated with empty alternatives.
+For empty alternatives, the lookahead set is FOLLOW.
+We need to see where the current rule is used in other rules,
+and figure out what tokens can follow it.
+
+We need lookahead sets predicting alternatives to be disjoint.
+See Listing \ref{parse:left-factor-LL1}.
+
+\begin{program}
+\verbatimtabinput{./code/parsing/left-factor-LL1}
+\caption{Left factoring to obtain LL(1) grammar\label{parse:left-factor-LL1}}
+\end{program}
+
+
+\subsection{P4 LL(k) Recursive Descent Parser}
+
+
+\subsection{P5 Backtracking Parser}
+
+For arbitrary lookahead, we need infrastructure to support backtracking.
+Backtracking also gives us a way to specify
+precedence of ambiguous alternatives.
+Backtracking parsers, by definition, try the alternatives in order.
+
+\verbatimtabinput{./code/parsing/backtracking-code}
+
+Exceptions are used to guide the parse.
+Next we'll see how to avoid unnecessary reparsing
+by recording partial parsing results.
+
+
+\subsection{P6 Memoizing Parser}
+
+Records partial parsing results during backtracking
+to guarantee linear parsing performance
+at the cost of a small amount of memory.
+Memoization only helps us
+if we invoke the same rule at the same input position more than once.
+
+A rule can avoid parsing if it succeeded the last time at that position.
+Just pretend to parse by skipping ahead and returning.
+It can also avoid parsing if it failed the last time.
+
+
+\subsection{P7 Predicated Parser}
+Augments any top-down parser with arbitrary boolean expressions
+that help make parsing decisions.
+Semantic predicates.
+Predicates that evaluate to false turn off a parser decision path.
+Just like converting subrules in P1,
+with the boolean test after the lookahead test:
+
+\verbatimtabinput{./code/parsing/predicated-code}
+
+Predicated loop decisions for \verb=(..)+= and \verb=(..)*= look like:
+\verbatimtabinput{./code/parsing/predicated-plus-star}

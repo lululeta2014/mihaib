@@ -1,0 +1,5 @@
+if (lookahead predicts alt1) {match alt1;}
+else if (lookahead predicts alt2) {match alt2;}
+...
+else if (lookahead predicts altN) {match altN;}
+else throw Exception;

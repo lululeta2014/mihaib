@@ -1,0 +1,68 @@
+\section{Basics}
+
+
+\subsection{Strings}
+
+\begin{itemize}
+\item
+Enclosed in \verb='single'= or \verb="double"= quotes.
+Can span multiple lines by ending the line with a backslash (\verb=\=).
+
+\item
+Surrounded by a pair of triple quotes
+(\verb='''single'''= or \verb="""double"""=).
+Can span multiple lines, newlines are included in the string.
+Ending a line with a backslash (\verb=\=)
+will not include that newline in the string.
+
+\item
+\verb=r'Raw'= strings.
+No escape sequences are interpreted.
+They contain exactly what you type.
+\end{itemize}
+
+Two string literals next to each other are automatically concatenated.
+Concatenate with \verb='hello '+'world'= and repeat with \verb='hi'*5=.
+
+Strings are immutable.
+Strings can be indexed and sliced.
+There is no separate character type (just strings of size 1).
+Degenerate slice indices (e.g.\ upper too large, upper < lower)
+are handled gracefully.
+Negative indices count from the right.\\
+See: sequence types, string methods, string formatting
+linked from the tutorial.
+
+
+\subsection{Lists}
+
+Concatenate with \verb=[2,3]+[7]=, repeat with \verb=3*[5,4]=.
+All slice operations return a new list.
+Assignment to slices is possible: can change the list's size or even clear it.
+
+
+\subsection{Control Flow}
+
+\verb=if ... elif ... elif ... else ...=\\
+substitutes \verb=switch=, \verb=case= from other languages.
+
+\verb=for= iterates over any sequence.
+It's not safe to modify the sequence being iterated over.
+\verb=range()= returns an object that is \emph{iterable}, but not a list.
+The \verb=for= statement and the \verb=list()= function are \emph{iterators}.
+
+\verb=break= and \verb=continue= work like in C.\\
+\verb=else= clauses on loops
+are executed when the loop wasn't terminated by a \verb=break=.
+
+\subsection{Documentation Strings}
+
+The first line should be a short, concise summary of the object's purpose,
+not explicitly stating the object's name or type
+(unless the name is a verb describing a function's operation).
+This line should begin with a capital letter and end with a period.
+If there are more lines, the second should be blank.
+
+\subsection{Coding Style}
+\verb=CamelCase= for classes
+and \verb=lower_case_with_underscores= for functions and methods.

@@ -1,0 +1,83 @@
+The new keyring will be ~/.gnome2/keyrings/my-kr.keyring
+Use seahorse to see all info in keyrings.
+
+# apt-get install libgnome-keyring-dev python-dev
+
+
+-------- unlockKeyring.c --------
+
+#include <Python.h>
+#include <gnome-keyring.h>
+
+static PyObject* py_unlockKeyring(PyObject* self, PyObject* args)
+{
+	int err = gnome_keyring_unlock_sync("my-kr", NULL);
+	return Py_BuildValue("i", err);
+}
+
+static PyMethodDef unlockKeyring_methods[] = {
+	{"unlockKeyring", py_unlockKeyring, METH_NOARGS},
+	{NULL, NULL}
+};
+
+void initunlockKeyring()
+{
+	(void) Py_InitModule("unlockKeyring", unlockKeyring_methods);
+}
+
+-------- unlockKeyring.c --------
+
+
+This is needed because the Python bindings
+don't allow calling gnome_keyring_unlock_sync with a NULL password.
+
+gcc -fPIC -shared -I/usr/include/python2.6/ \
+	-I/usr/include/glib-2.0 -I/usr/include/gnome-keyring-1 \
+	-I/usr/lib/glib-2.0/include \
+	`pkg-config --libs glib-2.0 gnome-keyring-1` \
+	-lpython2.6 -o unlockKeyring.so unlockKeyring.c
+
+
+-------- my-passes.py --------
+
+#!/usr/bin/env python
+
+#import pygtk
+#pygtk.require('2.0')
+#import gtk # sets app name
+import gnomekeyring
+import getpass
+import unlockKeyring
+
+if __name__ == '__main__':
+    keyrings = gnomekeyring.list_keyring_names_sync()
+    if not ("my-kr" in keyrings):
+        storePass = getpass.getpass("Enter password for new my-kr keyring: ")
+        gnomekeyring.create_sync("my-kr", storePass)
+    else:
+        err = unlockKeyring.unlockKeyring()
+        if (err):
+            print("Error unlocking keyring: gnome-keyring error code", err)
+            exit(1)
+
+    itemIds = gnomekeyring.list_item_ids_sync("my-kr")
+    itemNames = set(
+            gnomekeyring.item_get_info_sync("my-kr", id).get_display_name()
+            for id in itemIds)
+
+    if not ("secret-password" in itemNames):
+        sPass = getpass.getpass("Enter secret password: ")
+        gnomekeyring.item_create_sync("my-kr",
+                gnomekeyring.ITEM_GENERIC_SECRET, "secret-password",
+                {'myproperty':'myval1'}, sPass, True)
+
+    sPass = ""
+
+    for id in gnomekeyring.list_item_ids_sync("my-kr"):
+        item = gnomekeyring.item_get_info_sync("my-kr", id)
+        if item.get_display_name() == "secret-password":
+            sPass = item.get_secret()
+
+    print(sPass)
+
+-------- my-passes.py --------

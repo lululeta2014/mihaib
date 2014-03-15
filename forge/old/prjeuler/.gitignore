@@ -1,0 +1,11 @@
+*.pyc
+/p22-names.txt
+/p42-words.txt
+/p59-cipher1.txt
+/p67-triangle.txt
+/p81-matrix.txt
+/p82-matrix.txt
+/p83-matrix.txt
+/p89-roman.txt
+/p99-base-exp.txt
+*.class

@@ -1,0 +1,3 @@
+resultType(type1, op, type2)
+resultType(char, "+", int) == int
+resultType(boolean, "<", boolean) == void

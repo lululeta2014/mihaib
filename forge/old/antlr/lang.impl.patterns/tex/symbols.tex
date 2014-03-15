@@ -1,0 +1,561 @@
+\section{Symbols}
+
+
+\subsection{Tracking and Identifying Program Symbols}
+
+\paragraph{Collecting Information about Program Entities}
+\begin{itemize}
+\item Name
+\item Category (e.g.\ class, method, variable, label)
+\item Type
+\end{itemize}
+
+A symbol table implements each symbol category with a separate class,
+holding \verb=name= and \verb=type= properties.
+Common \verb=Symbol= superclass and the simplest program entity category,
+\verb=VariableSymbol=:
+
+\begin{verbatimtab}
+public class Symbol {
+	public String name;
+	public String type;
+}
+
+public class VariableSymbol extends Symbol {
+	public VariableSymbol(String name, Type type) {
+		super(name, type);
+	}
+}
+\end{verbatimtab}
+
+User-defined types like classes and structs can be represented,
+for consistency, like any other program symbol.
+We can derive \verb=BuiltinTypeSymbol= and \verb=ClassSymbol=
+from \verb=Symbol= (though they don't need the \verb=type= field).
+To distinguish them from other program symbols,
+it's a good idea to tag types with a \verb=Type= interface.
+Here's a class representing built-in types like \verb=int= and \verb=float=:
+
+\begin{verbatimtab}
+public class BuiltinTypeSymbol extends Symbol implements Type {
+	public BuiltinTypeSymbol(String name) { super(name); }
+}
+\end{verbatimtab}
+
+The \verb=Type= interface is used as a tag (a role that classes can play).
+All categories would subclass \verb=Symbol=,
+and some would implement \verb=Type=.\\
+\verb=public interface Type { public String getName(); }=
+
+\paragraph{Grouping Symbols into Scopes}
+To represent scopes we'll use an interface
+so we can tag entities like functions and classes as scopes.
+Scopes have pointers to their enclosing scopes.
+Scopes don't need to track their code region;
+instead the AST for the code region points to the scope:
+because we'll look up symbols in scopes based on what we find in the AST nodes.
+
+\begin{verbatimtab}
+public interface Scope {
+	public String getScopeName();
+	public String getEnclosingScope();
+	public void define(Symbol sym);
+	public Symbol resolve(String name);
+}
+\end{verbatimtab}
+
+\paragraph{Monolithic Scopes}
+If we have a single global scope,
+we can use a dictionary that maps names to Symbol objects.
+
+\paragraph{Multiple and Nested Scopes}
+To track nested scopes, we push and pop them onto a scope stack.
+To keep everything around, we'll use a \emph{scope tree} (a tree of scopes)
+that can function like a collection of stacks.
+Instead of pushing a scope onto a stack,
+we're going to add a child to a scope tree.
+Building a scope tree means executing a sequence of
+\verb=push=, \verb=pop= and \verb=def= operations:
+
+\begin{description}
+\item[push]
+At the start of a scope, push a new scope on the scope stack.
+More like an \emph{addChild()} tree operation.\\
+\verb+currentScope = new LocalScope(currentScope);+
+
+\item[pop]
+At the end of a scope, pop it off the stack.
+Moves the current scope pointer up one level in the tree.\\
+\verb+currentScope = currentScope.getEnclosingScope();+
+
+\item[def]
+Define a symbol in the current scope:\\
+\verb+Symbol s = «some-new-symbol»;+\\
+\verb+currentScope.define(s);+
+\end{description}
+
+\paragraph{Resolving Symbols}
+
+\begin{description}
+\item[Semantic context] means a reference's scope stack
+(from its enclosing scope to the root of the scope tree).
+\end{description}
+
+\begin{verbatimtab}
+public Symbol resolve(String name) {
+	Symbol s = members.get(name);
+	if (s != null) return s;
+	if (enclosingScope != null)
+		return enclosingScope.resolve(name);
+	return null;
+}
+\end{verbatimtab}
+
+Rather than making a clever algorithm that implements all of the lookup rules,
+we assemble a handy data structure that encodes them.
+Four key abstract operations:
+\verb=push=, \verb=pop= and \verb=def= to construct scope trees
+and \verb=ref= to resolve references in the scope tree.
+
+
+\subsection{P16 Symbol Table for Monolithic Scope}
+
+Suitable for simple programming languages (without functions),
+configuration files, other small DSLs.
+We don't need to push and pop scopes,
+but we'll do so for consistency with other patterns.
+
+\begin{description}
+\item[Start of file]
+\verb=push= a GlobalScope.
+\verb=def= BuiltinType objects for any built-in types.
+
+\item[Declaration x]
+\verb=ref= x's type (if any). \verb=def= x in the current scope.
+
+\item[Reference x]
+\verb=ref= x starting in the current scope.
+
+\item[End of file]
+\verb=pop= the GlobalScope.
+\end{description}
+
+Example:
+\begin{verbatimtab}
+		push global scope, def int, def float
+int i = 9;	ref int, def i
+float j;	ref float, def j
+int k = i + 2;	ref int, def k, ref i
+		pop global scope
+\end{verbatimtab}
+
+
+\subsection{P17 Symbol Table for Nested Scopes}
+
+MethodSymbol is both a Symbol and a Scope.
+Methods have two scopes: one for parameters (the MethodSymbol)
+and one for local variables (a LocalScope whose parent is the MethodSymbol).
+A LocalScope is also used for nested code blocks.
+
+\begin{description}
+\item[Start of file]
+\verb=push= a GlobalScope. \verb=def= BuiltinType objects for int, float, void.
+
+\item[Variable declaration x]
+\verb=ref= x's type. \verb=def= x in the current scope.
+
+\item[Method declaration f]
+\verb=ref= f's return type.
+\verb=def= f in the current scope and \verb=push= it as the current scope.
+
+\item[\{]
+\verb=push= a LocalScope as the new current scope.
+
+\item[\}]
+\verb=pop=, revealing previous scope as the current scope
+
+\item[End of method]
+\verb=pop= the MethodSymbol scope (the parameters).
+
+\item[Reference x]
+\verb=ref= x starting in the current scope.
+If not found, look in the immediately enclosing scope, if any.
+
+\item[End of file]
+\verb=pop= the GlobalScope.
+\end{description}
+
+Build an AST and do pattern matching:
+push scopes on the way down and pop them on the way up.
+
+\begin{verbatimtab}
+enterBlock:	BLOCK {crtScope = new LocalScope(crtScope);};
+exitBlock:	BLOCK {crtScope = crtScope.getEnclosingScope();};
+\end{verbatimtab}
+
+The rules match the same \verb=BLOCK= but we execute one on the way down and the other on the way up:
+
+\begin{verbatimtab}
+topdown:	enterBlock | enterMethod | .. ;
+bottomup:	exitBlock | exitMethod | .. ;
+\end{verbatimtab}
+
+Resolving references (a preview of what we'll do later):
+\begin{verbatimtab}
+idref:	{$start.hasAncestor(EXPR)}? ID
+	{Symbol s = currentScope.resolve($ID.text);}
+;
+\end{verbatimtab}
+
+
+\subsection{Managing Symbol Tables for Data Aggregates}
+
+A \emph{data aggregate scope}, like any other scope,
+contains symbols and has a place within the scope tree.
+Code outside this scope can access its members
+with an expression like \verb=user.name=.
+
+\verb=struct=s and calsses are similar:
+they are simultaneously symbols, user-defined types and scopes.
+Class scopes have a superclass scope as well as the usual enclosing scope:
+forward references require an extra AST pass.
+
+
+\subsubsection{Building Scope Trees for Structs}
+
+\verb=struct= scopes are just another node in the scope tree.
+From within it we resolve symbols by scanning upward in the scope tree,
+like any other nested scope.
+
+\verb=struct=s have no executable statements
+so the only symbols to look up are type names.
+
+We must also resolve symbols within struct scopes from the outside.
+The general (recursive) rule for resolving \verb=«expr».x=
+is to determine the type of \verb=«expr»=
+and then look up \verb=x= in that scope.
+For \verb=a.b.y= in Listing \ref{symbols:struct-example}
+we look up \verb=a= and find its type to be \verb=A=.
+Looking up \verb=b= in \verb=A= yields scope \verb=B=.
+Finally we look up field \verb=y= in \verb=B=.
+
+\begin{program}
+\verbatimtabinput{./code/symbols/struct-example.c}
+\caption{Struct example\label{symbols:struct-example}}
+\end{program}
+
+Member access expressions are like scope overrides:
+they say exactly in which scope to look for a field.
+We must not look in the struct's enclosing scope (e.g. for \verb=a.b.x=).
+We need two different resolve methods:
+one for looking up isolated symbols (like \verb=a=)
+and one for resolving member access expressions (like \verb=a.x=).
+
+
+\subsubsection{Building Scope Trees for Classes}
+
+Classes can inherit members from the superclass.
+They have two parent scopes:
+the usual enclosing (lexical) scope and a superclass scope.
+To resolve symbols, we sometimes chase the enclosing scope pointer
+and sometimes the superclass pointer.
+The language definition dictates which stack to use:
+usually check the superclass before the enclosing scope.
+
+If we don't find an isolated symbol (\verb=x=)
+in the class or its superclasses,
+look it up in the global scope.
+When referring to members from outside that class (\verb=a.x=)
+we shouldn't see global variables.
+
+
+\subsubsection{Forward References}
+
+We want to allow forward references for class members
+in Listing \ref{symbols:class-fwd-ref}.
+We can make two passes over the input (AST):
+one to define symbols and one to resolve them.
+
+\begin{program}
+\verbatimtabinput{./code/symbols/class-fwd-ref.cpp}
+\caption{Forward references for class members\label{symbols:class-fwd-ref}}
+\end{program}
+
+But we don't want to allow this outside of classes
+(as our language Cymbol is a C++ subset).
+We can use a trick involving token indexes:
+if a symbol reference resolves to a local or global symbol,
+the reference's token index must come after the definition's token index.
+
+
+\subsection{P18 Symbol Table for Data Aggregates}
+
+Like P17 but with different symbol resolution. We need a StructSymbol class.
+Rules for building the scope tree:
+
+\begin{description}
+\item[Start of file]
+\verb=push= a GlobalScope, \verb=def= BuiltinType objects for int, float, void.
+
+\item[Var declaration x]
+\verb=ref= x's type.
+\verb=def= x as a VariableSymbol object in the current scope.
+This works for globals, struct fields, parameters and locals.
+
+\item[struct declaration S]
+\verb=def= S as a StructSymbol object in the current scope
+and \verb=push= it as the current scope.
+
+\item[Method declaration f]
+\verb=ref= f's return type.
+\verb=def= f as a MethodSymbol object in the current scope
+and \verb=push= it as the current scope.
+
+\item[\{]
+\verb=push= a LocalScope as the new current scope.
+
+\item[\}]
+\verb=pop=, revealing the previous scope as the current scope.
+This works for struct, methods and local scopes.
+
+\item[Variable reference x]
+\verb=ref= x starting in the current scope.
+If not found, look in the immediately enclosing scope if any.
+
+\item[Member access «expr».x]
+Compute the type of «expr» using the previous rule and this one recursively.
+\verb=ref= x only in that type's scope, not in any enclosing scopes.
+
+\item[End of file]
+\verb=pop= the GlobalScope.
+\end{description}
+
+
+\subsection{P19 Symbol Table for Classes}
+
+Tracks symbols and builds a scope tree
+for non-nested classes with single inheritance.
+We'll replace StructSymbol with ClassSymbol.
+They'll point at their superclasses as well as their enclosing scopes.
+To support forward references, we'll make two passes:
+first define them then resolve references.
+
+We need to pass information between the phases.
+We'll stash it in the AST.
+A \verb='{'= node records the associated LocalScope.
+As we define symbols, record them in the AST.
+As we resolve symbol references, store that in the AST as well
+(for future phases).
+
+During the definition phase,
+when defining a variable we make its ID node point to a new VariableSymbol
+(which also has a back pointer \verb=def= to the ID node).
+
+This phase also sets a \verb=scope= field for some AST nodes
+(e.g.\ a variable definition's type node (\verb=int=, \verb=A=),
+variable references (\verb=x=)).
+The resolution phase needs the scope in order to resolve those symbols.
+The resolution phase updates e.g.\ the \verb=symbol= field of AST nodes,
+the \verb=type= field of VariableSymbols.
+
+To check for illegal forward references,
+we use the \verb=def= field of VariableSymbol.
+Rules for the definition phase:
+
+\begin{description}
+\item[Start of file]
+\verb=push= a GlobalScope, \verb=def= BuiltinType objects for int, float, void.
+
+\item[Identifier reference x]
+Set x's \verb=scope= field to the current scope.
+
+\item[Variable declaration x]
+\verb=def= x as a VariableSymbol, \verb=sym=, in the current scope.
+Works for globals, class fields, parameters, locals.
+Set \verb=sym.def= to x's ID AST node.
+Set \verb=ID.symbol= to \verb=sym=.
+Set the \verb=scope= field of x's type AST node (e.g.\ \verb=int=, \verb=A=)
+to the current scope.
+
+\item[Class declaration C]
+\verb=def= C as a ClassSymbol object \verb=sym= in the current scope.
+Set \verb=sym.def= to the class name's ID AST node.
+Set that ID node's \verb=symbol= to \verb=sym=.
+Set the \verb=scope= field of C's superclass AST node to the current scope.
+\verb=push= \verb=sym= as the current scope.
+
+\item[Method declaration f]
+\verb=def= f as a MethodSymbol object, \verb=sym=, in the current scope.
+Set \verb=sym.def= to the function name's ID AST node.
+Set that ID node's \verb=symbol= to \verb=sym=.
+Set the \verb=scope= field of f's return type AST node to the current scope.
+\verb=push= \verb=sym= as the current scope.
+
+\item[\{]
+\verb=push= a LocalScope as the new current scope.
+
+\item[\}]
+\verb=pop=, revealing previous scope as current scope.
+
+\item[End of file]
+\verb=pop= the GlobalScope.
+\end{description}
+
+Resolution phase rules:
+
+\begin{description}
+\item[Variable declaration x]
+Let \verb=t= be the ID node for x's type (e.g.\ \verb=int=, \verb=myclass=).
+\verb=ref= \verb=t=, yielding \verb=sym=.
+Set \verb-t.symbol=sym-. \verb=x.symbol= is a VariableSymbol.
+Set \verb+x.symbol.type=sym+.
+
+\item[Class declaration C]
+Let \verb=t= be the ID node for C's superclass.
+\verb=ref t=, yielding \verb=sym=.
+Set \verb=t.symbol= to \verb=sym=.
+Set C's \verb=superclass= field to \verb=sym=.
+
+\item[Method declaration f]
+Let \verb=t= be the ID node for f's return type.
+\verb=ref t=, yielding \verb=sym=.
+Set \verb=t.symbol= to \verb=sym=.
+Set the \verb=type= field of the MethodSymbol for f to \verb=sym=.
+
+\item[Variable reference x]
+\verb=ref x=, yielding \verb=sym=. Set \verb=x.symbol= to \verb=sym=.
+
+\item[this]
+Resolve to the surrounding class scope.
+Set the symbol field of \verb=this='s ID node to the surrounding class scope.
+
+\item[Member access «expr».x]
+Resolve «expr» to a particular type symbol, \verb=esym=, using these rules.
+\verb=ref x= within \verb=esym='s scope, yielding \verb=sym=.
+Set \verb=x.symbol= (\verb=x='s ID node) to \verb=sym=.
+\end{description}
+
+Resolving members (\verb=«expr».x=) only looks in the class hierarchy
+(doesn't continue to global scope).
+Algorithm for resolving symbol references:
+
+\begin{description}
+\item[x in method]
+Look in enclosing local scope, then method scope, then enclosing class scope.
+If not found look up in the class hierarchy.
+If not found look in global scope.
+
+\item[x in field definition init expression]
+Look in surrounding class scope.
+If not found, look up the class hierarchy.
+If not found, look in global scope.
+
+\item[x in global scope]
+Look in surrounding global scope.
+\end{description}
+
+
+\subsection{P20 Computing Static Expression Types}
+
+Make an AST and walk it twice:
+first to define symbols, then to resolve symbols and compute expression types.
+We can't just match pattern `\verb=ID=', we need some context information;
+but we don't need a full tree grammar.
+We can use a pattern matcher to look for \verb=EXPR= root nodes,
+then invoke a type computation rule to traverse the expression subtree.
+Listing \ref{symbols:expr-pattern-matching}.
+See page 202 for all the details.
+
+\begin{program}
+\verbatimtabinput{./code/symbols/expr-pattern-match.g}
+\caption{\label{symbols:expr-pattern-matching}}
+\end{program}
+
+
+\subsection{P21 Automatic Type Promotion}
+
+Describes how to automatically and safely promote arithmetic operand types.
+We can automatically convert between types
+as long as we don't lose information.
+We call this \emph{promotion}
+(we can safely \emph{widen} types but not \emph{narrow} them in general).
+
+There is a simple formula to express valid type-to-type promotions.
+First order and number the arithmetic types from narrowest to widest.
+Then we can automatically promote
+\emph{type\textsubscript{i}} to \emph{type\textsubscript{j}}
+as long as $i < j$.
+For Cymbol, the ordered arithmetic type list is: char, int, float.
+
+Compiler semantic analyzers typically modify an IR tree
+to incorporate value promotion nodes.
+Translators can usually get away with just annotating the tree
+and checking for promotions later during code generation.
+
+Besides expressions, static type analyzers have to promote values
+in assignments, return statements, function call arguments,
+and array index expressions.\\
+E.g.\ \verb-float f=1;-, \verb=a['z']=.
+
+To implement arithmetic type promotion, we need two functions.
+The first returns the result type given an operator and two operand types.
+See Listing \ref{symbols:result-type}.
+A result type of \verb=void= indicates the operation is illegal,
+which we'll exploit in P22, Enforcing Static Type Safety.
+
+\begin{program}
+\verbatimtabinput{./code/symbols/result-type}
+\caption{resultType() function\label{symbols:result-type}}
+\end{program}
+
+The second tells us whether we need to promote an operand
+for a particular operator and destination type.
+See Listing \ref{symbols:promote-from-to}.
+A promotion result of \verb=null= means \emph{no promotion necessary}
+(not \emph{invalid promotion}).
+To store the results of these functions, annotate AST nodes using two fields:
+\verb=evalType= and \verb=promoteToType=.
+See page 210 for a diagram.
+
+\begin{program}
+\verbatimtabinput{./code/symbols/promote-from-to}
+\caption{promoteFromTo() function\label{symbols:promote-from-to}}
+\end{program}
+
+Computing the result type can be done with a table
+(using operand types as indexes).
+For each operator, make a table
+showing how to map any two operand types to a result type.
+The promotion table is similar.
+(for Cymbol semantics we can get away with a single promotion table).
+
+
+\subsection{P22 Enforcing Static Type Safety}
+
+Adds type compatibility checks to P21.
+An operation must be defined for the operand types it's applied to:\\
+\verb-resultType(opType1, op, opType2) != void-\\
+If looking for a value of type \verb=t=,
+the value's type must be \verb=t= or promotable to \verb=t=:\\
+\verb+value-type == dest-type || value-promoted-type == dest-type+\\
+This computation is called \verb=canAssignTo=.
+
+Symbol category rules:
+\begin{itemize}
+\item in \verb=x.y=, \verb=x= must be a \verb=struct=
+\item in \verb=f()=, \verb=f= must be a function symbol
+\item in \verb=a[]=, \verb=a= must be an array symbol
+\end{itemize}
+
+Type compatibility rules for Cymbol:
+\begin{itemize}
+\item \verb=if= conditionals must evaluate to a \verb=boolean= value
+\item array reference indexes must be integers
+\item the left and right sides of an assignment must have compatible types
+\item function call arguments and formal function declarations
+must have compatible types
+\item \verb=return= expressions and function return types must be compatible
+\item the two operands of a binary arithmetic operation
+must have compatible types
+\item the operand of unary operators must have an appropriate type
+\end{itemize}

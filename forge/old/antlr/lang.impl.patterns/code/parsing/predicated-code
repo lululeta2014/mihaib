@@ -1,0 +1,7 @@
+void rule() throws RecognitionException {
+	if (lookahead_predicts_alt1 && pred1) { match alt 1 }
+	else if (lookahead_predicts_alt2 && pred2) { match alt 2 }
+	...
+	else if (lookahead_predicts_altn && predn) { match alt n }
+	else throw new NoViableException("expecting rule");
+}

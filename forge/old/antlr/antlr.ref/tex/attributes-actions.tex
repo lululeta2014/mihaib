@@ -1,0 +1,264 @@
+\section{Attributes and Actions}
+
+Token and rule references have predefined attributes.
+Use labels if there is more than one reference to a rule element.
+Operator \verb-+=- adds elements to a list.
+See Listings \ref{aa:label-attr-simple} and \ref{aa:dynam-scope-simple}.
+
+\begin{program}
+\verbatimtabinput{./g/aa/label-attr-simple.g}
+\caption{Labels and attributes\label{aa:label-attr-simple}}
+\end{program}
+
+\begin{program}
+\verbatimtabinput{./g/aa/dynam-scope-simple.g}
+\caption{Dynamic attribute scope example\label{aa:dynam-scope-simple}}
+\end{program}
+
+
+\subsection{Token Attributes}
+
+We can also label literals;
+that is, we can access the tokens matched for literals:\\
+\verb%stat: r='return' expr ';' {System.out.println($r.line);};%\\
+Note: in lexer rules, labels on elements are sometimes characters (if length=1)
+not Tokens, and evaluate to type int:\\
+\verb%R: a='c' b='hi' c=. {$a, $b.text, $c};%
+
+\subsubsection{Predefined Token and Lexer Rule Attributes}
+\label{subsub:predef-token-lexer-attr}
+
+\begin{description}
+\item[text] \verb=String=.
+The text matched for the token; translates to a call to \verb=getText()=.
+
+\item[type] \verb=int=.
+The token type (\verb=int > 0=) --- \verb=getType()=
+
+\item[line] \verb=int=.
+The line number, counting from 1 --- \verb=getLine()=
+
+\item[pos] \verb=int=.
+Character position within the line, counting from 0,
+of the Token's first character --- \verb=getCharPositionInLine()=
+
+\item[index] \verb=int=.
+Overall index in the Token stream, counting from 0.\\\verb=getTokenIndex()=.
+
+\item[channel] \verb=int=.
+The token's channel number
+
+\item[tree] \verb=Object=.
+When building trees, the tree node created for the token.
+Local variable reference that points to the tree node.
+\end{description}
+
+
+\subsection{Rule Attributes}
+
+The predefined attributes of the currently executing rule are also available:\\
+\verb=$attribute= or \verb=$enclosingRuleName.attribute=\\
+Predefined attributes are automatically computed
+and you should not try to change them.
+Exception: the \verb=after= action can set attributes \verb=tree= and \verb=st=
+when generating ASTs or templates.
+
+In Lexer rules, a rule that refers to other lexer rules
+can access the portion of the overall token that is matched by other rules:\\
+\verb|PREPROC_CMD: '#' ID {System.out.println("cmd=" + $ID.text);} ;|\\
+The attributes of a lexer rule reference
+are the same as a Token reference in a parser grammar,
+with the exception that \verb=index= is undefined.
+
+\subsubsection{Predefined Parser Rule Attributes}
+\label{subsub:predef-parser-rule-attr}
+
+\begin{description}
+\item[text] \verb=String=.
+The text matched from the start of the rule
+up until the point of the \verb=$text= expression evaluation.
+
+\item[start] \verb=Token=.
+The first token to be potentially matched by the rule,
+that is on the main token channel.
+
+\item[stop] \verb=Token=.
+The last nonhidden channel token to be matched by the rule.
+When referring to the current rule,
+this attribute is available only to the \verb=after= action.
+
+\item[tree] \verb=Object=.
+The AST computed for this rule.
+When referring to the current rule, available only to the \verb=after= action.
+
+\item[st] \verb=StringTemplate=.
+The template computed for this rule;
+for the current rule, only available to the \verb=after= action.
+\end{description}
+
+\subsubsection{Lexer Rule Attributes available to expressions}
+
+These attributes are available to attribute expressions
+referring to the surrounding rule.
+
+\begin{description}
+\item[text] \verb=String=.
+The text matched thus far from the start of the token
+at the outermost rule nesting level; translated to \verb=getText()=.
+
+\item[type] \verb=int=.
+The token type of the surrounding rule,
+even if it does not emit a token (because it is invoked from another rule).
+
+\item[line] \verb=int=.
+The line number, counting from 1, of this rule's first character.
+
+\item[pos] \verb=int=.
+The character position in the line, counting from 0,
+of this rule's first character.
+
+\item[channel] \verb=int=.
+The default channel number, 0, unless you set it in an action in this rule.
+\end{description}
+
+\subsubsection{Predefined Tree Grammar Rule Attributes}
+
+The same as for parser grammar rules
+except that input symbols are tree nodes instead of tokens
+and \verb=stop= is not defined.
+\verb=$ID= refers to the tree node matched for token \verb=ID=,
+not to a Token object.
+
+\begin{description}
+\item[text] \verb=String=.
+The text derived from the first node matched by this rule.
+When referring to the current rule, available in any action.
+Note: not well defined for rules like \verb=slist: stat+;=
+because \verb=stat= is not a single node or rooted with a single node.
+\verb=$slist.text= gets only the first \verb=stat= tree.
+
+\item[start] \verb=Object=.
+The first tree node to be potentially matched by the rule.
+When referring to the crt rule, available to any action.
+
+\item[st] \verb=StringTemplate=.
+The template computed for this rule.
+When referring to the current rule,
+this attribute is available only to the \verb=after= action.
+\end{description}
+
+\subsubsection{Rule Parameters}
+Visible to the entire rule.
+In lexers, only fragment rules can have parameters
+bacause they are the only rules you can explicitly invoke in the lexer
+(non-fragment rules are implicitly invoked from \verb=nextToken()=).
+
+
+\subsection{Dynamic Attribute Scopes for Interrule Communication}
+\label{subsec:dynam-attrib-scopes}
+
+\subsubsection{Rule Scopes}
+
+\begin{program}
+\verbatimtabinput{./g/aa/rule-scopes.g}
+\caption{Rule scopes\label{aa:rule-scopes}}
+\end{program}
+
+Consider nested blocks of code.
+Rule \verb=block= has a dynamic scope with attribute \verb=List symbols;=.
+If \verb=block= is invoked recursively (perhaps indirectly),
+each invocation pushes a new copy of the attributes on a stack (of scopes).
+To access elements other than the top
+of the dynamically scoped attribute stack, use syntax \verb=$x[i]::y=
+where \verb=x= --- scope name, \verb=y= --- attribute name and
+\verb=i= --- absolute index into the stack (0 is bottom).
+Expression \verb=$x.size()-1= is the index of the top of the stack.
+
+\subsubsection{Global Scopes}
+
+Each rule defining a dynamic attribute scope has a separate attribute stack.
+The previous example had only one place where variables could be defined:
+(nested) code blocks.
+So the grammar had a single rule, \verb=block=, with a dynamic attribute scope.
+If we think of a C-like language with variable declarations
+at the topmost level, in functions, and in nested code blocks in functions,
+then we have several rules (\verb=prog=, \verb=func=, \verb=block=)
+where variables can be defined.
+
+If we'd define a dynamic scope in each rule we'd end up with 3 stacks.
+But we need a single stack to properly resolve variable references.
+
+\begin{program}
+\verbatimtabinput{./g/aa/global-scopes.g}
+\caption{Global scopes\label{aa:global-scopes}}
+\end{program}
+
+In general, though, a more sophisticated symbol table is required
+(which must persist beyond parser completion).
+
+
+\subsection{References to Attributes within Actions}
+
+\begin{description}
+\item[\$tokenRef]
+An expression of type Token,
+also useful to test whether a token was matched in an optional subrule:\\
+\verb|ID {$ID} (ELSE stat)? {if ($ELSE != null) ..}|
+
+\item[\$tokenRef.attr]
+See section \ref{subsub:predef-token-lexer-attr}
+for the list of valid attributes.
+
+\item[\$listLabel]
+Expression that evaluates to type \verb=List=.
+Is a flat list of elements collected thus far by the listLabel.
+Only within a parser or tree grammar:\\
+\verb|ids+=ID (',' ids+=ID)* {$ids}|
+
+\item[\$ruleRef]
+Isolated \verb|$rulename| not allowed in parser or tree grammar unless
+the rule has a dynamic scope and there is no reference to \verb=rulename=
+in the enclosing alternative, whoch would be amgibuous.
+The expression is of type \verb=Stack=. Example:
+\verb|$block.size()| checks imbrication level.
+
+\item[\$ruleRef.attr]
+Predefined or user-defined attribute of the referenced rule.
+See section \ref{subsub:predef-parser-rule-attr}
+for the list of available rule attributes.
+
+\item[\$lexerRuleRef]
+Within a lexer, expression of type \verb=Token=
+containing all predefined properties except \verb=index=.
+Can be label or reference to a rule mentioned within this rule.
+
+\item[\$attr]
+Return value, parameter or predefined rule property of enclosing rule.
+
+\item[\$enclosingRule.attr]
+Fully qualified name of return value, parameter or predefined property.
+
+\item[\$globalScopeName]
+Isolated global dynamic scope reference. Example:\\
+\verb=$symbols.size()= checks stack size.
+
+\item[\$x::y]
+Refer to attribute \verb=y= within the dynamic scope identified by \verb=x=,
+which can be a rule scope or a global scope.
+The scope prefix is always required.
+
+\item[\$x{[-1]}::y]
+Attribute \verb=y= (just under top of stack) of the previous \verb=x= scope.
+
+\item[\$x{[-i]}::y]
+Attribute \verb=y= of a previous scope of \verb=x=;
+\verb=i= down from the top of stack.
+Minus sign \verb=must= be present (not just have a negative \verb=i=).
+
+\item[\$x{[i]}::y]
+Attribute \verb=y= of scope \verb=x=, \verb=i= up from bottom of stack;
+\verb=i= in \verb=0..size-i=.
+
+\item[\$x{[0]}::y]
+Attribute \verb=y= of bottommost scope of \verb=x=.
+\end{description}

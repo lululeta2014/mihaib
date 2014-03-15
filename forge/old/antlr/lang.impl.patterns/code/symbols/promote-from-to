@@ -1,0 +1,3 @@
+promoteFromTo(type, op, destination-type)
+promoteFromTo(char, "+", int) == int
+promoteFromTo(int, "+", int) == null

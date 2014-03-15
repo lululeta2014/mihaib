@@ -1,0 +1,3 @@
+do {
+	code-matching-alternatives
+} while (lookahead-predicts-an-alternative-of-subrule);

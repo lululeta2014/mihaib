@@ -1,0 +1,136 @@
+\section{Modules}
+
+A module is a file containing Python definitions and statements.
+The file name is the module name with the suffix \verb=.py= appended.
+Within a module, the module's name (as a string)
+is available as the value of the global variable \verb=__name__=.
+A script executed at the top level, and calculator mode,
+run in the \emph{main} module.
+
+Create the file \verb=fibo.py= with some functions.
+The command \verb=import fibo= only enters the module name \verb=fibo=
+in the current symbol table.
+The functions can be accessed as: \verb=fibo.fib(10)=.
+They can also be assigned a local name: \verb|fib = fibo.fib|.
+
+A module can contain executable statements as well as function definitions
+(function definitions are also statements that are executed:
+the execution of a module-level function definition
+enters the function name in the module's global symbol table).
+These statements are intended to initialize the module.
+They are executed only the first time the module is imported somewhere.
+
+Each module has its own private symbol table,
+which is used as the global symbol table
+by all functions defined in the module.
+Thus, the author of a module can use global variables in the module
+without worrying about accidental clashes with a user's global variables.
+You can touch a module's global variables
+with the same notation used to refer to its functions, \verb=modname.itemname=.
+
+Modules can import other modules.
+It is customary but not required to place all \verb=import= statements
+at the beginning of a module (or script).
+The imported module names are placed
+in the importing module's global symbol table.
+
+A variant of the \verb=import= statement imports names from a module
+directly into the importing module's symbol table:
+\verb=from fibo import fib, fib2=.
+This does not introduce the module name from which the imports are taken
+in the local symbol table (i.e.\ \verb=fibo= is not defined).
+The variant \verb=from fibo import *= imports all names
+(except those beginning with an underscore \verb=_=).
+
+When you run a Python module with \verb=python fibo.py <args>=
+the code in the module will be executed, just as if you imported it,
+but with the \verb=__name__= set to \verb="__main__"=.
+
+\subsection{Module Search Path}
+
+When a module named \verb=spam= is imported,
+the interpreter searches for a file named \verb=spam.py=
+in the current directory, then in a list of directories
+specified by the environment variable \verb=PYTHONPATH=,
+then in an installation-dependent default path.
+
+Actually modules are searched in the list of directories given by the variable
+\verb=sys.path= which is initialized from the above sources.
+
+The built-in \verb=dir()= function is used to find out
+which names a module defines: \verb=dir(fibo)=.
+It returns a sorted list of strings.
+Without arguments, it lists the names you have defined currently.
+It does not list the names of built-in functions and variables.
+They're defined in the standard module \verb=builtins=.
+To get a list of those: \verb=import builtins; dir(builtins)=.
+
+\subsection{Packages}
+
+\verb=A.B= designates a submodule named \verb=B= in a package named \verb=A=.
+
+When importing the package,
+Python searches through the directories on \verb=sys.path=
+looking for the package subdirectory.
+The \verb=__init__.py= files are required
+to make Python treat the directories as containing packages.
+It can be an empty file,
+but it can also execute initialization code for the package
+or set the \verb=__all__= variable, described later.
+
+Users of the package can import individual modules from the package:\\
+\verb=import sound.effects.echo=\\
+loads the submodule \verb=sound.effects.echo=
+which must be referenced with its full name.\\
+\verb=from sound.effects import echo=\\
+also loads the submodule \verb=echo=,
+but makes it available without its package prefix.\\
+You can also import the desired function or variable directly:\\
+\verb=from sound.effects.echo import echofilter=\\
+This loads the submodule \verb=echo=
+but makes its function \verb=echofilter()= directly available.
+
+When using \verb=from package import item=
+the item can be either a submodule (or subpackage) of the package,
+or some other name defined in the package,
+like a function, class or variable.
+The \verb=import= statement
+first tests whether the item is defined in the package;
+if not, it assumes it is a module and attempts to load it.
+If it fails to find it, an \verb=ImportError= exception is raised.
+
+When using \verb=import item.subitem.subsubitem=,
+each item except for the last must be a package;
+the last item can be a module or a package
+but can't be a class or function or variable defined in the previous item.
+
+\subsection{Importing * from a Package}
+
+\verb=from package import *=
+
+If a package's \verb=__init__.py= defines a list named \verb=__all__=,
+it is taken to be the list of module names that should be imported
+when \verb=from package import *= is encountered.
+
+If \verb=__all__= is not defined, the statement \verb=from package import *=
+only ensures that the package has been imported
+(possibly running any initialization code in \verb=__init__.py=)
+and then imports whatever names are defined in the package.
+This includes any names defined (and submodules explicitly loaded)
+by \verb=__init__.py=.
+It also includes any submodules of the package that were explicitly loaded
+by previous \verb=import= statements
+(e.g.\ \verb=import package.module=).
+
+\subsection{Intra-package References}
+
+You can use absolute imports to refer to submodules of siblings packages.
+
+You can also use relative imports
+with the \verb=from module import name= form of the statement.
+Leading dots are used to indicate the current and parent packages.
+See \url{http://docs.python.org/py3k/tutorial/modules.html}.
+
+Relative imports are based on the name of the current module.
+Since the name of the main module is always \verb="__main__"=,
+the main module must always use absolute imports.

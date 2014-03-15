@@ -1,0 +1,19 @@
+void rule() throws RecognitionException {
+	if (speculate_<alt1>()) { <match_alt1> }
+	else if (speculate_<alt2>()) { <match_alt2> }
+	...
+	else if (speculate_<altn>()) { <match_altn> }
+	else throw new NoViableException("expecting <rule>");
+}
+// speculate method ~ syntactic predicate
+public boolean speculate_<alt>() {
+	boolean success = true;
+	mark();
+	try {
+		<match-alt>
+	} catch (RecognitionExc e) {
+		success = false;
+	}
+	release();
+	return success;
+}

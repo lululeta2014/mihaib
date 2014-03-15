@@ -1,0 +1,3 @@
+stat	:	(decl) => decl ';'
+	|	expr ';'
+	;

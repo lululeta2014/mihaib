@@ -1,0 +1,15 @@
+\ProvidesPackage{mystyle}
+
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+
+\usepackage{float}
+% provides verbatimtabinput
+\usepackage{moreverb}
+% creates Index (with no extra command) and probably enables refs/links
+\usepackage{hyperref}
+
+\floatstyle{ruled}
+\newfloat{program}{htb}{lop}[section]
+\floatname{program}{Listing}

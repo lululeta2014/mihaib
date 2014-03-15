@@ -1,0 +1,78 @@
+\section{Building Interpreters}
+
+
+\subsection{Building High-Level Interpreters}
+
+High-level interpreters directly execute source code instructions
+or the AST equivalent.
+Low-level interpreters execute bytecodes close to CPU machine instructions.
+These high-level patterns are better suited to DSLs
+rather than general-purpose programming languages.
+Usually DSLs need simplicity and low-cost implementation
+more than execution efficiency.
+We'll focus on simple implementations and use dynamically typed languages.
+
+\subsubsection{Designing High-Level Interpreter Memory Systems}
+High-level interpreters store values according to variable names
+not memory addresses (like low-level interpreters and CPUs do).
+Three kinds of memory spaces for most programming languages:
+\begin{itemize}
+\item global memory
+\item function spaces (params and locals)
+\item data aggregate instances (structs or objects)
+\end{itemize}
+
+For simplicity we can normalize all of them by treating them as dictionaries.
+Fields are variables stored within the instance's space.
+A memory space is the run-time analog of a scope from static analysis.
+
+Interpreters have one global memory space but multiple function spaces.
+Function spaces are kept on a stack.
+We store references to aggregate instances just like any other variable.
+To handle class instances instead of structs,
+the easiest thing to do is pack all fields (inherited and direct)
+into a single instance space.
+
+Function spaces can point at their function definition symbols,
+and instances at their class definition symbols.
+
+\subsubsection{Tracking Symbols in High-Level interpreters}
+
+\subsubsection{Processing instructions}
+The basic idea is the \emph{fetch-decode-execute} cycle.
+
+
+\subsection{P24 Syntax-Directed Interpreter}
+
+Directly executes source code without building an IR.
+Only two key components:
+\begin{itemize}
+\item the source code parser recognizes input constructs
+and immediately triggers actions.
+\item the interpreter maintains state
+and houses instruction implementation methods.
+\end{itemize}
+
+Only suitable to a narrow range of languages.
+Interpreting \verb=if= statements, loops, functions and classes
+is extremely awkward.
+
+
+\subsection{P25 Tree-Based Interpreter}
+Executes programs by constructing an AST from the source code
+and walking the tree.
+Builds a complete scope tree before executing a program.
+Can support both statically typed and dynamically typed languages.
+It can resolve all symbols statically before execution.
+
+The biggest difference from P24
+is that we don't drive the interpreter with the parser.
+We build an AST with the parser
+and then drive the interpreter with a tree visitor.
+Thus:
+\begin{itemize}
+\item we can separate symbol definition from symbol resolution;
+this allows forward references
+\item tree based interpreters are more flexible ---
+we can do substitutions in the AST, rewrite it for optimizations and so on.
+\end{itemize}

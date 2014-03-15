@@ -1,0 +1,369 @@
+\section{Grammars}
+
+ANTLR generates recognizers which apply structure to a stream of input symbols
+which can be characters, tokens or tree nodes.
+There are four kinds of grammars (with the same syntax):
+lexer, parser, tree and combined lexer and parser (no modifier).
+
+The following files are generated from grammar file \verb=T.g=:
+\verb=TLexer.java=, \verb=TParser.java=, \verb=T.java= (for tree grammars).
+For combined grammars \verb=T__.g= is also generated,
+an intermediate temporary file containing the lexer specification
+extracted from the combined grammar.
+The vocabulary file \verb=T.tokens= is always generated.
+It is used by other grammars to keep their token types in sync with \verb=T=.
+
+
+\subsection{Comments}
+Single-line, multi-line and javadoc-style.
+
+
+\subsection{Literals}
+Encosed in single quotes, never contain regular expressions.
+For non-ascii characters use unicode escape sequences \verb='\u00E8'=.
+
+
+\subsection{Action syntax}
+Arbitrary text in the target language surrounded by \verb={}=.
+To get the \verb=}= character escape it with a \verb=\=:
+\verb={System.out.println("\}");}=.
+
+
+\subsection{Labels}
+
+\verb|e=expr|, \verb|n=INT|, \verb|l='const'|, \verb|l+=ID|,
+\verb|(',' l+=ID)* ';'|\\
+We may collect Tokens in a List using \verb|l+=ID|.
+To do the same for parser rules,
+we must use the grammar \verb=output= option (\verb|{output=AST;}|).
+In this case \verb|l+=expr| will collect parser rule ASTs
+and will be a List of tree nodes (CommonTree) instead of a List of Tokens.
+However, we may collect rule return values
+without using the \verb=output= option like this:
+\verb|(l=expr {$myList.add($l.val);})+|,
+where \verb=mylist= can be a local variable or the current rule's return value.
+
+
+\subsection{Dot wildcard}
+
+\verb=.= Matches a single token in a parser, any single character in a lexer.
+In a tree parser, matches \emph{an entire subtree}.
+Example: matching a function without parsing the body:
+\verb|func: ^(FUNC ID ARGS .);|.
+The wildcard skips the entire last child (the body subtree).
+
+
+\subsection{Subrules}
+
+Allow all the rule-level options and have the syntax:\\
+\verb|(options{«option-assignments»}: «subrule-alternatives»)|\\
+The only addition is the \verb=greedy= option, useful for nondeterminisms
+between subrule alternatives and the subrule exit branch.
+They occur when the parser can't decide which path to take
+because an input symbol predicts taking multiple paths.
+\emph{Greedy} means: match as much input as possible.
+\emph{Nongreedy} means the parser exits
+as soon as it sees input consistent with what follows the subrule.
+
+The default is to always be greedy.
+The only exceptions are \verb|.*| and \verb|.+|
+which are non-greedy by default.
+
+
+\subsection{Actions Embedded within Rules}
+
+To execute actions before anything else in a rule and define local variables,
+use an \verb=@init= action.
+To execute something after any alternative has been executed
+and right before the rule returns,
+use an \verb=@after= action.
+
+\begin{program}
+\verbatimtabinput{./g/action-init-after.g}
+\caption{Actions @init and @after\label{gram:action-init-after}}
+\end{program}
+
+
+\subsection{Rule Arguments and Return Values}
+
+ANTLR parser and tree parser rules can have arguments and return values.
+Lexer rules can't have return values,
+and only fragment lexer rules can have parameters.
+Rules may return multiple values.
+
+\begin{program}
+\verbatimtabinput{./g/rule-args-retvals.g}
+\caption{Rule arguments and return values\label{gram:rule-args-retvals}}
+\end{program}
+
+
+\subsection{Dynamic Rule Attribute Scopes}
+
+Besides predefined rule attributes, rules can define scopes of attributes
+that are visible to all rules invoked by a rule.
+Down in a deeply nested \verb=expr= rule,
+we can directly access the method's name
+without having to pass it all the way down to that rule from \verb=method=.
+If the language has nested method definitions,
+each method definition gets its own name.
+Upon entry to \verb=method=, the old name is pushed onto a stack;
+upon exit, it's popped off.
+
+\begin{program}
+\verbatimtabinput{./g/dynamic-rule-attr-scope.g}
+\caption{Dynamic rule attribute scopes\label{gram:dynamic-rule-attr-scope}}
+\end{program}
+
+
+\subsection{Rewrite Rules}
+
+ANTLR parsers can generate ASTs or StringTemplate templates.
+Specify the \verb=output= option \verb=AST= or \verb=template=.
+If so, all rules have an implied return value
+that is set manually in an action or in a rewrite rule.
+Every alternative, whether in a subrule or at the outermost rule level,
+can have a rewrite rule.
+Regardless of location,
+the rewrite rule \emph{always} sets the return object for the entire rule.\\
+\verb_unaryID: '-' ID -> ^('-' ID);_
+
+
+\subsection{Rule exception handling}
+ANTLR catches the exception, reports the error, attempts to recover,
+then returns from the rule.
+To disable ANTLR's catch clause and write your own,
+see Listing \ref{gram:rule-exception-handling}.
+
+\begin{program}
+\verbatimtabinput{./g/rule-exception-handling.g}
+\caption{Rule exception handling\label{gram:rule-exception-handling}}
+\end{program}
+
+
+\subsection{Syntactic Predicates}
+
+Indicate the syntactic context that must be satisfied
+if an alternative is to match.
+Amounts to specifying the lookahead language for an alternative.
+In general a parser needs to backtrack
+over the elements within a syntactic predicate
+to properly test the predicate against the input stream.
+Alternatives predicated with syntactic predicates
+are attempted in the order specified.
+The first alternative that matches wins.
+
+\begin{program}
+\verbatimtabinput{./g/syn-pred-simple.g}
+\caption{Simple syntactic predicate\label{gram:syn-pred-simple}}
+\end{program}
+
+The last alternative in a series of predicated alternatives
+does not need a predicate,
+because it's assumed to be the default if nothing else before it matches.
+Alternatives which are not mutually ambiguous do not need syntactic predicates.
+We can add some more alternatives to \verb=stat=, and both ways of writing it
+shown in Listing \ref{gram:syn-pred-non-ambig-any-order} are good.
+
+\begin{program}
+\verbatimtabinput{./g/syn-pred-non-ambig-any-order.g}
+\caption{Alternatives not mutually ambiguous %
+do not need syntactic predicates and may be given in any order%
+\label{gram:syn-pred-non-ambig-any-order}}
+\end{program}
+
+As a convenience and to promote clean looking grammars,
+there is the \verb=backtrack= option.
+It tells ANTLR to automatically insert syntactic predicates where necessary
+to disambiguate decisions that are not LL(*).
+An equivalent version of stat is in Listing \ref{gram:rule-backtrack-option}.
+
+\begin{program}
+\verbatimtabinput{./g/rule-backtrack-option.g}
+\caption{An equivalent version of `stat' using the rule's backtrack option%
+\label{gram:rule-backtrack-option}}
+\end{program}
+
+
+\subsection{Lexical Rules}
+
+To distinguish between token type definitions
+and methods generated from lexer rules,
+generated methods are prefixed with `m'.
+Lexer rule \verb-ID- generates method \verb-mID()-.
+Unlike a parser grammar, there is no start symbol.
+
+\subsubsection{Fragment Lexer Rules}
+
+ANTLR assumes all lexer rules are valid tokens.
+A \verb=fragment= rule can only be called by other rules;
+it will not yield a token to the parser.
+
+\begin{description}
+\item[Token definition rules]
+may have no parameters or return values.
+They aren't invoked explicitly in general,
+just implicitly by \verb=nextToken()=.
+
+\item[fragment rules]
+are never implicitly invoked.
+Other lexer rules must explicitly invoke them.
+They can define parameters, but not return values
+(lexer rules always return \verb=Token= objects).
+\end{description}
+
+\begin{program}
+\verbatimtabinput{./g/fragment-lexer-param.g}
+\caption{Fragment lexer rule with parameter\label{gram:fragment-lexer-param}}
+\end{program}
+
+\subsubsection{Recursive Lexer Rules}
+
+ANTLR supports recursive lexer rules.
+Lexer rules can call other lexer rules,
+but that doesn't change the token type of the invoking rule.
+When lexer rule \verb=T= calls another lexer rule or fragment rule,
+the return type for \verb.T. is still \verb.T.
+(not the token type of the other lexer rule).
+
+\subsubsection{Ignoring Whitespace and Comments}
+
+See Listing \ref{gram:ignore-whitespace}.
+
+\begin{program}
+\verbatimtabinput{./g/ignore-whitespace.g}
+\caption{Ignoring whitespace\label{gram:ignore-whitespace}}
+\end{program}
+
+\subsubsection{Emitting More Than One Token per Lexer Rule}
+In the Lexer, the current char position within the current line
+is always available via \verb=getCharPositionInLine()=.
+When parsing Python code,
+we need to emit additional imaginary \verb=INDENT= and \verb=DEDENT= tokens.
+See pg.\ 109 in the book for a short discussion.
+
+
+\subsection{Tree Matching Rules}
+
+Syntax: \verb_^(root child1 child2 .. childn)_\\
+Tree grammars look like parser grammars
+with the addition of a few tree expressions.
+A tree grammar reduces to a parser grammar when the input is a flat tree
+(linked list).
+Tree grammar rules can have parameter and return values
+just like parser grammar rules.
+Actions can contain attribute references.
+The difference is that \verb=$T= yields pointers to the tree node matched.
+
+\begin{program}
+\verbatimtabinput{./g/tree-rule-simple.g}
+\caption{Tree matching rule example\label{gram:tree-rule-simple}}
+\end{program}
+
+
+\subsection{Rule Options}
+
+\verb=backtrack=, \verb=memoize=, \verb=k=\\
+These can be specified for each rule.
+The default is to use the grammar's
+\verb=backtrack=, \verb=memoize=, \verb=k= options.
+
+
+\subsection{Tokens Specification}
+
+Introduce imaginary tokens or give better names to token literals.
+See Listings \ref{gram:tokens-specification} and \ref{gram:tokens-simple}.
+
+\begin{program}
+\verbatimtabinput{./g/tokens-specification.g}
+\caption{Tokens specification\label{gram:tokens-specification}}
+\end{program}
+
+\begin{program}
+\verbatimtabinput{./g/tokens-simple.g}
+\caption{Imaginary token example\label{gram:tokens-simple}}
+\end{program}
+
+
+\subsection{Global Dynamic Attribute Scopes}
+
+ANTLR lets you define global attribute scopes.
+These are visible to all actions in all rules.
+Their syntax is shown in Listing \ref{gram:glob-scope-syntax}.
+The recognizer pushes a new entry onto a stack of scopes
+upon entry to each method that declares scope \verb=SymbolScope=.
+See Subsection \ref{subsec:dynam-attrib-scopes}
+for more about dynamic attribute scopes.
+
+\begin{program}
+\verbatimtabinput{./g/glob-scope-syntax.g}
+\caption{Global dynamic attribute scopes\label{gram:glob-scope-syntax}}
+\end{program}
+
+
+\subsection{Grammar Actions}
+
+ANTLR generates a method for each rule;
+all methods are wrapped in a class definition (for OO target languages).
+ANTLR provides named actions so you can insert fields and instance methods
+in the generated class definition.
+The syntax is shown in Listing \ref{gram:grammar-actions-syntax}.
+The \emph{action-name} can be \verb=header= or \verb=members=.
+The \emph{action-scope-name} can be
+\verb=lexer=, \verb=parser= or \verb=treeparser=.
+In a combined grammar,
+\verb=@header= is a shorthand for \verb=@parser::header=.
+
+\begin{program}
+\verbatimtabinput{./g/grammar-actions-syntax.g}
+\caption{Grammar actions\label{gram:grammar-actions-syntax}}
+\end{program}
+
+
+\subsection{Grammar-Level Options}
+
+These options affect all the elements in the grammar,
+unless you override them in a rule.
+The syntax is shown in Listing \ref{gram:grammar-options-syntax}.
+Specify lexer rules in order of priority if two rules can match the same input.
+
+\begin{program}
+\verbatimtabinput{./g/grammar-options-syntax.g}
+\caption{Grammar options\label{gram:grammar-options-syntax}}
+\end{program}
+
+\begin{description}
+\item[language]
+Target language in which recognizer should be generated
+\item[output]
+\verb=template= or \verb=AST=; for combined, parser and tree grammars.
+The default is to generate nothing.
+\item[backtrack]
+false by default
+\item[memoize]
+false by default
+\item[tokenVocab]
+needed when one grammar uses the token types of another
+\item[rewrite]
+when output is very similar to input, modify the input buffer in place;
+works in conjunction with \verb|output=template|.
+When \verb_rewrite=true_, the recognizer replaces the input matched by the rule
+with the template. The default is \verb-false-.
+\item[superClass]
+default \verb=Lexer=, \verb=Parser= or \verb=TreeParser=.
+\item[filter]
+lexer only, useful for \emph{fuzzy parsing}
+(matching only those constructs of interest).
+All lexer rules are tried in the order specified, looking for a match.
+Upon finding a match, \verb=nextToken()= returns that rule's Token object.
+If no rule matches,
+the lexer consumes a single character and again looks for a matching rule.
+The default is \verb=false= (do not filter).
+\item[ASTLabelType]
+default is \verb=Object=.
+\item[TokenLabelType]
+Set type for all token labels and all token valued expressions.
+Default is \verb=Token=.
+\item[k]
+turn off LL(*) in favor of LL(k);
+default value is \verb=*= to engage LL(*).
+\end{description}

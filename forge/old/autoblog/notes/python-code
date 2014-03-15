@@ -1,0 +1,6 @@
+import urllib.request
+req = urllib.request.Request('http://whatever')
+# can set this to something custom or an empty string, but can't delete it
+req.add_header('User-agent', 'Firefox')
+req.add_header('Referer', 'http://whatever')
+urllib.request.urlopen(req)

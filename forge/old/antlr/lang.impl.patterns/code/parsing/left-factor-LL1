@@ -1,0 +1,6 @@
+expr	: ID '++'
+	| ID '--'
+	;
+
+// left factor to
+expr	: ID ('++' | '--');

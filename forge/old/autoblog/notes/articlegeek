@@ -1,0 +1,11 @@
+articlegeek.com
+Each article has an URL and a link to /scripts/publish.php
+Open that link and send the header:
+Referer: original-article-url
+
+The response is nicely formatted for our purpose:
+1. discard everything up to the line containing «name='ArticleTEXT'»
+2. the next line is the title
+3. the next line is the author (By: author name)
+4. the following lines are the article
+5. discard everything from the line containing </textarea>

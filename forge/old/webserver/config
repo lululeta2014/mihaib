@@ -1,0 +1,5 @@
+# UTF-8 properties file
+port=8000
+threads=10
+.html=text/html
+.txt=text/plain
