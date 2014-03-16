@@ -12,11 +12,12 @@ source "$SCRIPT_DIR/../sourceme.bash"
 echo '--- selenium for this repository'
 # http://seleniumhq.org/download/
 
-LATEST=selenium-java-2.39.0.zip
+VERSION=2.40
+LATEST=selenium-java-"$VERSION".0.zip
 PATTERN=selenium-java-*.zip
 download-kit \
 	--file "$MB_KITS_DIR"/"$LATEST" \
-	--url https://selenium.googlecode.com/files/"$LATEST" \
+	--url http://selenium-release.storage.googleapis.com/"$VERSION"/"$LATEST" \
 	--delete-pattern "$PATTERN"
 
 (

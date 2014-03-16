@@ -12,7 +12,7 @@ source "$SCRIPT_DIR/../sourceme.bash"
 echo '--- chromedriver'
 
 # http://code.google.com/p/chromedriver/downloads/list
-VERSION=2.7
+VERSION=2.9
 LATEST=chromedriver_linux64_"$VERSION".zip
 PATTERN='chromedriver_linux64_*.zip'
 download-kit \
