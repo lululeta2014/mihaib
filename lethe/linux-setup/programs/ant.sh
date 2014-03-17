@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/../sourceme.bash"
 
 echo '--- ant'
 
-LATEST=apache-ant-1.9.2-bin.tar.bz2
+LATEST=apache-ant-1.9.3-bin.tar.bz2
 PATTERN=apache-ant-*-bin.tar.bz2
 download-kit \
 	--file "$MB_KITS_DIR"/"$LATEST" \
