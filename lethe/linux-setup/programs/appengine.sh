@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/../sourceme.bash"
 
 echo '--- Google App Engine'
 
-LATEST=appengine-java-sdk-1.9.0.zip
+LATEST=appengine-java-sdk-1.9.1.zip
 PATTERN=appengine-java-sdk-*.zip
 download-kit \
 	--file "$MB_KITS_DIR"/"$LATEST" \
