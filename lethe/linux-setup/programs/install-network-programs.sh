@@ -13,3 +13,4 @@ source "$SCRIPT_DIR/../sourceme.bash"
 "$SCRIPT_DIR"/toolbox.sh
 "$SCRIPT_DIR"/pyroom.sh
 "$SCRIPT_DIR"/jfilesync.sh
+"$SCRIPT_DIR"/bower.sh

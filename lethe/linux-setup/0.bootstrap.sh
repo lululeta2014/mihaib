@@ -41,6 +41,7 @@ echo >>~/.profile "
 add_to_path_end /sbin	# useful on Debian, e.g. /sbin/ifconfig
 add_to_path_end $MB_PRG_DIR/chromedriver
 add_to_path_end $MB_PRG_DIR/texttest/source/bin
+add_to_path_start $MB_PRG_DIR/node/bin
 add_to_path_start $MB_PRG_DIR/adobe-reader/Adobe/Reader9/bin
 add_to_path_start $MB_PRG_DIR/pyroom
 add_to_path_start $MB_PRG_DIR/texlive/bin/x86_64-linux
