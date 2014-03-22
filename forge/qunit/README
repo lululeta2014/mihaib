@@ -1,0 +1,16 @@
+QUnit JavaScript unit tests
+
+Write simple, independent tests as separate .html files (each may alter the DOM
+or change global state). Then make one ‘composite’ file which simply references
+all of them. Loading this file runs all the tests.
+
+This compositing can be done on multiple levels:
+― Each subproject can have several independent tests and one test runner which
+references all of them. E.g. nested-test/ is a subproject with 2 simple
+test suites and 1 runner which references them.
+― A project's test runner can reference the composite test runner from each
+of its subprojects. E.g. on the top level we have /test-runner.html which
+references the runner in the nested-test/ subproject and also the simple
+top-level /test1.html.
+
+Load these ‘test runners’ from a webserver, not using the file:// protocol.
