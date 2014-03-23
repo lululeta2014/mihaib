@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Disable autostart because tests are registered later</title>
+  <link rel="stylesheet" href="../lib/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="../lib/qunit.js"></script>
+  <script>
+    // see ../basic/no-auto-start.html for an explanation about ‘autostart’.
+    QUnit.config.autostart = false;
+    setTimeout(function() {
+        scheduleTests();
+        QUnit.start();
+    }, 2000);
+
+    function scheduleTests() {
+      test('simple later test', function() {
+          ok(1, 'ok 1(int)');
+      });
+      asyncTest('simple later asyncTest', function() {
+          setTimeout(function() {
+            ok(true, 'ok true');
+            start();
+          }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>

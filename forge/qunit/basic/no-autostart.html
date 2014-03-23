@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>QUnit no autostart</title>
+  <link rel="stylesheet" href="../lib/qunit.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="../lib/qunit.js"></script>
+  <script>
+    /*
+       On page load (I think) QUnit starts running all tests you've registered,
+       then says ‘tests completed in X millis’, even if there were 0 tests,
+       and fires its done() callback(s).
+       If you register tests later (e.g. because you're waiting for the
+       ‘polymer-ready’ event) they will run, increase the ‘X millis’ printed
+       and fire the done() callback(s) again.
+
+       This is fine when you open your test.html directly, but when you
+       reference it from qunit-composite there must be a single done() ‘event’
+       after all tests have run.
+
+       QUnit.config.autostart and QUnit.start() achieve this.
+       http://api.qunitjs.com/QUnit.config/
+       This page will stay pending until all tests have run, then show
+       ‘tests completed’ and fire a single done() ‘event’.
+     */
+
+    QUnit.config.autostart = false;
+    QUnit.done(function() {
+        console.log('DONE callback fired!');
+    });
+    QUnit.done(function() {
+        console.log('We can register multiple callbacks, they all fire once');
+    });
+
+    setTimeout(function() {
+        scheduleTests();
+        QUnit.start();
+    }, 2000);
+
+    function scheduleTests() {
+      test('simple test', function() {
+          ok(true, 'ok true');
+      });
+
+      asyncTest('async test', function() {
+          setTimeout(function() {
+            ok(true, 'ok async');
+            start();
+          }, 300);
+      });
+    }
+  </script>
+</body>
+</html>

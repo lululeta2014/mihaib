@@ -1,0 +1,17 @@
+Write simple, independent tests as separate .html files (which may alter the
+DOM or change global state). Then reference them all from one ‘master’ file
+which runs all of them, using jquery-composite.
+This ‘compositing’ may be hierarchical, as shown in the example below.
+
+Load these ‘test runners’ from a webserver, not using the file:// protocol.
+
+master.html	Runs all tests, by including test-autostart.html,
+		test-no-autostart.html and nested/master.html.
+test-autostart.html	Simple test suite
+test-no-autostart.html	Registers its tests later, so disables QUnit autostart
+			for ‘compositing’ (see ../basic/no-auto-start.html)
+nested/		A subproject, with its own individual tests and ‘master’ runner
+nested/master.html	Runs all tests for the subproject, by referencing
+			test-autostart.html and test-no-autostart.html
+nested/test-autostart.html	Simple test suite
+nested/test-no-autostart.html	Registers tests later, disables QUnit autostart

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Nested Composite Test Runner</title>
+  <link rel="stylesheet" href="../../lib/qunit.css">
+  <link rel="stylesheet" href="../../lib/qunit-composite.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="../../lib/qunit.js"></script>
+  <script src="../../lib/qunit-composite.js"></script>
+  <script>
+    QUnit.testSuites([
+        "test-autostart.html",
+        "test-no-autostart.html",
+    ]);
+  </script>
+</body>
+</html>

@@ -7,7 +7,7 @@ trap "echo $0 failed because a command in the script failed" ERR
 SCRIPT=`readlink -f "$0"`
 DIR=`dirname "$SCRIPT"`
 
-TARGET_DIR="$DIR/res"
+TARGET_DIR="$DIR/lib"
 mkdir -p "$TARGET_DIR"
 
 VER=1.14.0
