@@ -1,0 +1,15 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="full-name" attributes="first last full">
+  <template>
+    <label for="firstInput">First name:</label>
+    <input id="firstInput" type="text" value="{{first}}" placeholder="First…">
+    <br>
+    <label for="lastInput">Last name:</label>
+    <input id="lastInput" type="text" value="{{last}}" placeholder="Last…">
+    <br>
+    Full Name: {{full}}
+  </template>
+  <!-- If we inline the script, chromium warns it has non-latin characters. -->
+  <script src="full-name.js"></script>
+</polymer-element>

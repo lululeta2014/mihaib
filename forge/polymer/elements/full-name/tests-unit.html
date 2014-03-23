@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Composite Test Runner</title>
+  <link rel="stylesheet" href="../../qunit/qunit.css">
+  <link rel="stylesheet" href="../../qunit/qunit-composite.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="../../qunit/qunit.js"></script>
+  <script src="../../qunit/qunit-composite.js"></script>
+  <script>
+    QUnit.testSuites([
+        'tests-unit/test-empty.html',
+        'tests-unit/test-attr.html',
+    ]);
+  </script>
+</body>
+</html>

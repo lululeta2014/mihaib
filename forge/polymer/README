@@ -1,0 +1,5 @@
+Examples using the http://www.polymer-project.org/ HTML/JS library
+
+Notes:
+http://www.polymer-project.org/docs/polymer/polymer.html#published-properties
+Different ways to publish properties, property⇔attribute reflection.
