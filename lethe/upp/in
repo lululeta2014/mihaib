@@ -874,6 +874,15 @@ NTP [
 ]
 
 
+Inspect RAM Memory Type and Amount [
+The commands might incorrectly report the DDR* type, but you can look up the
+model number/code.
+
+sudo dmidecode --type 16,17
+sudo lshw -C memory
+]
+
+
 -- other
 
 
