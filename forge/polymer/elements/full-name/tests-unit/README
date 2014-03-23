@@ -1,0 +1,3 @@
+Run a webserver at the ancestor polymer/ dir, and load ‘tests.html’.
+
+Running ./test.py from this directory starts the webserver and browser.

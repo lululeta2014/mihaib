@@ -1,0 +1,6 @@
+Run a webserver on port 8082 at the ancestor polymer/ dir, then ./webdriver.js.
+
+Or run ./test.py which does this for you.
+
+The test currently does nothing. Browsers must first support the Shadow DOM
+and have a way to select the nested elements from their dev tools.
