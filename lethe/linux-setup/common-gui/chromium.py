@@ -375,6 +375,29 @@ class ProfileV32(Profile):
         setMultiDeep(self.prefs, prefs)
         setMultiDeep(self.localState, localState)
 
+    def writeSqlite(self):
+        """This is really fragile.
+
+        Comment it out if it breaks.
+        """
+        sqlitefile = os.path.join(self.userDataDir, 'Default', 'Local Storage',
+                'chrome-devtools_devtools_0.localstorage')
+        # ensure the sqlite file exists
+        subprocess.check_call([
+            os.path.join(program_dir, '../tools/browser-drive/run.sh'),
+            'chromiumdevtools', self.userDataDir])
+        p = subprocess.Popen(['sqlite3', sqlitefile], stdin=subprocess.PIPE)
+        command='''INSERT INTO ItemTable values('cacheDisabled', 'true');'''
+        p.communicate(bytes(command, 'utf-8'))
+        p.stdin.close()
+        if p.wait():
+            print('Error setting ‘Disable cache while DevTools are open’',
+                    'via sqlite3', file=sys.stdout)
+
+    def write(self):
+        super().write()
+        self.writeSqlite()
+
 
 def getChromiumVersion(chromiumBin):
     out = subprocess.check_output([chromiumBin, '--version']).decode('utf-8')

@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import browserdrive.chromium.Chromium;
+import browserdrive.chromiumdevtools.ChromiumDevTools;
 import browserdrive.chromiumgmail.ChromiumGmail;
 import browserdrive.firefox.Firefox;
 import browserdrive.firefoxgmail.FirefoxGmail;
@@ -124,6 +125,10 @@ public class Main {
 		Chromium.printUsage(System.out);
 
 		System.out.println();
+		System.out.print(ChromiumDevTools.nameArg + " ");
+		ChromiumDevTools.printUsage(System.out);
+
+		System.out.println();
 		System.out.print(ChromiumGmail.nameArg + " ");
 		ChromiumGmail.printUsage(System.out);
 
@@ -148,6 +153,9 @@ public class Main {
 		switch (first) {
 		case Chromium.nameArg:
 			Chromium.run(rest);
+			break;
+		case ChromiumDevTools.nameArg:
+			ChromiumDevTools.run(rest);
 			break;
 		case ChromiumGmail.nameArg:
 			ChromiumGmail.run(rest);
