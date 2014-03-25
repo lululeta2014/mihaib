@@ -3,3 +3,7 @@ Examples using the http://www.polymer-project.org/ HTML/JS library
 Notes:
 http://www.polymer-project.org/docs/polymer/polymer.html#published-properties
 Different ways to publish properties, property⇔attribute reflection.
+
+ws.sh	start webserver on http://localhost:8000/ rooted here. Use this to
+	load the URLs of most subprojects & examples.
+basic/	basic polymer tests & examples

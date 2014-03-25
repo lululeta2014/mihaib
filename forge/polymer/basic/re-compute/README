@@ -1,0 +1,10 @@
+Currently (Mar 2014) templates seem to be continuously re-rendered.
+Even if they weren't, we have X, Y, product(=X×Y) and a ‘whatever’ field
+(i.e. many other ‘whatever’ fields that the user keeps editing in a large app).
+We shouldn't re-compute the product every time we change unrelated fields
+and render the template.
+
+Test an expensive computation on every template rendering or,
+with more effort, only when its dependencies change.
+
+http://localhost:8000/basic/re-compute/demo.html
