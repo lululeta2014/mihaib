@@ -170,6 +170,7 @@ xfwm4-themes
 	Remove old kernels
 	GRUB2 Dedicated Partition
 	GRUB Legacy Dedicated Partition
+	Disk Encryption (Encrypt entire partition)
 	Add user
 	Change CPU Frequency Scaling without password
 	cron
@@ -180,7 +181,6 @@ xfwm4-themes
 	SSH Keep Alive
 	SSH Multiple keys
 	NTP
-	Inspect RAM Memory Type and Amount
 -- other
 	[Debian] Gnome2 Remove icons from Desktop
 	[Gnome2] Add applets and launchers to panel from the command line
@@ -204,6 +204,7 @@ xfwm4-themes
 	phpsh
 	Split FLAC EAC tracks
 	HP printer
+	Inspect RAM Memory Type and Amount
 -- Ubuntu Studio
 	Network
 	Volume control icon in tray
@@ -744,6 +745,79 @@ To generate menu.lst:
 ]
 
 
+Disk Encryption (Encrypt entire partition) [
+Overview:
+========
+Shared partitions (/mnt/my-data, swap) are encrypted only once (e.g. when you
+install the first OS).
+Each OS has its own /boot and / (root) partitions, and /boot is not encrypted.
+When you install an OS, it knows only about its own /boot and / (root) and
+nothing else (not even swap, or you'll have to type the encryption password
+multiple times at each boot).
+Afterwards, boot into the new OS and tell it about the shared encrypted
+partitions (/mnt/my-data, swap).
+
+OS Install:
+==========
+Create 2 partitions: /boot (small, e.g. 100 MB) and / (root).
+
+If there's an old, leftover unencrypted swap partition, mark it as ‘not used’
+(because it's automatically marked as used for swap). Later on the partitioner
+won't let you proceed if you have encrypted volumes & decrypted swap.
+When you finish the partitioning step confirm you want to proceed without swap.
+
+Ubuntu:
+In the graphical partitioner, for the / (root) partition select:
+Change…→physical volume for encryption
+After this, a new partition will appear at the top of the list under:
+/dev/mapper/sda999_crypt
+Set its filesystem and mount point (/) there.
+
+Treat the new unencrypted /boot partition normally,
+from its normal place in the list.
+
+Debian:
+In the partitioner, for the / (root) partition select:
+use as → physical volume for encryption
+Leave all options to their defaults, but you may set ‘Erase data’ to ‘no’
+to avoid waiting for a very long disk wiping.
+
+NOTE: If this is the first time you're installing an OS on this computer,
+also mark the shared partitions (/mnt/my-data, swap) the same way for
+encryption. See above for ‘shared partitions are encrypted only once’.
+
+From above the list of partitions (scroll up) select the entry:
+Configure encrypted volumes
+Might ask to write existing partition changes to disk, confirm it.
+Select: Finish
+You'll get one password dialog box for each volume you're encrypting.
+
+Now you're back to the partitioning tool and the newly encrypted volumes are
+at the top as /dev/mapper/sda999_crypt each with a partition under it.
+Set the filesystem and mountpoint here.
+
+Mounting the shared partitions and swap:
+=======================================
+Boot into the new system. You must type the encryption password of the / (root)
+partition. If we'd have told the installer about a swap partition, we'd always
+have to type the password twice (once for / (root) and once for swap, no matter
+what we do).
+
+/etc/crypttab will have this line:
+sda999_crypt	UUID=…	none	luks
+Add one line for each encrypted partition (or volume). To avoid typing the
+password repeatedly on every boot for each volume you'll add, write the
+password in a file, without a trailing newline, and use it instead of ‘none’.
+But leave the existing line in crypttab unchanged (for the / (root) partition).
+sda888_crypt	/dev/sda888	/home/enc-pass-file	luks
+sda777_crypt	/dev/sda777	/home/enc-pass-file	luks,swap
+
+Add these partitions to /etc/fstab:
+/dev/mapper/sda888_crypt	/mnt/my-data	ext4	defaults	0	2
+/dev/mapper/sda777_crypt	none	swap	sw	0	0
+]
+
+
 Add user [
 # adduser -u UID name
 Use System->Administration->Users and Groups to give/manage privileges
@@ -849,15 +923,6 @@ Host friendly-domain-name
 
 Use ‘friendly-domain-name’ instead of example.com in commands,
 e.g. ‘github.com.mb-mihaib’.
-]
-
-
-Inspect RAM Memory Type and Amount [
-The commands might incorrectly report the DDR* type, but you can look up the
-model number/code.
-
-sudo dmidecode --type 16,17
-sudo lshw -C memory
 ]
 
 
@@ -1337,6 +1402,15 @@ http://hplipopensource.com
 http://hplipopensource.com/hplip-web/tech_docs/man_pages/index.html
 hp-clean – clean cartridges
 hp-levels – show ink levels
+]
+
+
+Inspect RAM Memory Type and Amount [
+The commands might incorrectly report the DDR* type, but you can look up the
+model number/code.
+
+sudo dmidecode --type 16,17
+sudo lshw -C memory
 ]
 
 
