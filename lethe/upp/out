@@ -759,7 +759,11 @@ partitions (/mnt/my-data, swap).
 
 OS Install:
 ==========
-Create 2 partitions: /boot (small, e.g. 100 MB) and / (root).
+Create 2 partitions:
+― /boot (e.g. 200 MB or more, not just 100 MB, because this isn't a ‘dummy’
+/boot with only the 10MB for grub, but each kernel version's initrd&co. files
+need >20MB)
+― / (root)
 
 If there's an old, leftover unencrypted swap partition, mark it as ‘not used’
 (because it's automatically marked as used for swap). Later on the partitioner
