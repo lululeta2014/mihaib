@@ -9,5 +9,47 @@
   <body>
     <!-- 3. Declare the element by its tag. -->
     <full-name typedFirst="Elmer J." typedLast="Fudd"></full-name>
+
+    <!-- A demo element to show binding to other elements -->
+    <link rel="import" href="../../bower_components/polymer/polymer.html">
+    <polymer-element name="demo-elem">
+      <template>
+        This demo shows binding the full-name fields to other elements.
+        Two ways of binding work: $.id.field and {{'{{'}}field-from-parent}}.
+        <br>
+        The typed first name: <input value="{{$.fn1.typedFirst}}" type="text">
+        <br>
+        The typed last name: <input value="{{lastRaw}}" type="text">
+        <br>
+        The ‘pretty’ names (only use these read-only):
+        <span style="white-space: pre">{{$.fn1.prettyFirst}}</span>,
+        <span style="white-space: pre">{{$.fn2.prettyLast}}</span> and
+        <span style="white-space: pre">{{$.fn1.prettyFull}}</span>.
+
+        <table>
+          <tr>
+            <td>
+              <full-name id="fn1"
+                typedFirst="{{$.fn2.typedFirst}}" typedLast="{{lastRaw}}">
+              </full-name>
+            </td>
+            <td>
+              <full-name id="fn2"
+                typedFirst="{{firstRaw}}" typedLast="{{lastRaw}}">
+              </full-name>
+            </td>
+          </tr>
+        </table>
+      </template>
+      <script>
+        Polymer('demo-elem', {
+            firstRaw: 'Edgar Allan',
+            lastRaw: 'Poe'
+        });
+      </script>
+    </polymer-element>
+
+    <hr>
+    <demo-elem></demo-elem>
   </body>
 </html>
