@@ -1,52 +1,32 @@
 Polymer('full-name', {
     observe: {
-        _first: 'computeFull',
-        _last: 'computeFull',
-        firstTxt: 'computeFirst',
-        lastTxt: 'computeLast'
+        typedFirst: 'computeFirst',
+        typedLast: 'computeLast',
+        prettyFirst: 'computeFull',
+        prettyLast: 'computeFull'
     },
 
     // the contents of the input fields, so we don't sanitize as the user's
     // typing, possibly removing what he types (e.g. trailing whitespace
     // while he's typing “Mary Ann”).
-    firstTxt: '',
-    lastTxt: '',
+    typedFirst: '',
+    typedLast: '',
 
     // the sanitized values, computed only when their dependencies change
-    _first: '',
-    _last: '',
-    _full: '',
+    prettyFirst: '',
+    prettyLast: '',
+    prettyFull: '',
 
     computeFirst: function() {
-        this._first = this.sanitizeSingleName(this.firstTxt);
+        // can't hurt to protect for null
+        this.prettyFirst = this.sanitizeSingleName(this.typedFirst || '');
     },
     computeLast: function() {
-        this._last = this.sanitizeSingleName(this.lastTxt);
+        this.prettyLast = this.sanitizeSingleName(this.typedLast || '');
     },
     computeFull: function() {
-        this._full = (this.first + ' ' + this.last).trim();
-    },
-
-    // The public API
-    get first() {
-        return this._first;
-    },
-    set first(v) {
-        this.firstTxt = v;
-    },
-
-    get last() {
-        return this._last;
-    },
-    set last(v) {
-        this.lastTxt = v;
-    },
-
-    get full() {
-        return this._full;
-    },
-    set full(v) {
-        throw 'Writing the .full field is forbidden';
+        // either name may be empty
+        this.prettyFull = (this.prettyFirst + ' ' + this.prettyLast).trim();
     },
 
     // utilities

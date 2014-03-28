@@ -1,19 +1,20 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<polymer-element name="full-name" attributes="first last">
+<polymer-element name="full-name" attributes="typedFirst typedLast">
   <template>
     <link rel="stylesheet" href="full-name.css">
 
     <label for="firstInput">First name:</label>
-    <input id="firstInput" type="text" value="{{firstTxt}}" placeholder="First…">
+    <input id="firstInput" type="text" value="{{typedFirst}}"
+        placeholder="First…">
     <br>
     <label for="lastInput">Last name:</label>
-    <input id="lastInput" type="text" value="{{lastTxt}}" placeholder="Last…">
+    <input id="lastInput" type="text" value="{{typedLast}}" placeholder="Last…">
     <br>
     Sanitized: <br>
-    First Name: <span class="pre">“{{first}}”</span> <br>
-    Last Name: <span class="pre">“{{last}}”</span> <br>
-    Full Name: <span class="pre">“{{full}}”</span> <br>
+    First Name: <span class="pre">“{{prettyFirst}}”</span> <br>
+    Last Name: <span class="pre">“{{prettyLast}}”</span> <br>
+    Full Name: <span class="pre">“{{prettyFull}}”</span> <br>
   </template>
   <!-- If we inline the script, chromium warns it has non-latin characters. -->
   <script src="full-name.js"></script>
