@@ -1,0 +1,42 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="edit-simple" attributes="data">
+  <template>
+    Simple edit: <input type="text" value="{{data}}"> (Uppercase: {{dataUp}})
+  </template>
+  <script>
+    Polymer('edit-simple', {
+        data: 'A default text',
+        dataUp: '',
+        dataChanged: function() {
+          this.dataUp = '#' + this.data.toUpperCase() + '#';
+        }
+    });
+  </script>
+</polymer-element>
+
+<polymer-element name="edit-ready" attributes="data">
+  <template>
+    Ready edit: <input type="text" value="{{data}}"> (Uppercase: {{dataUp}})
+  </template>
+  <script>
+    /*
+       The field exists and is null by default, because we've listed it in
+       the polymer-element's attributes list.
+       Set the field's default value in the ready() callback only if
+       Object.hasOwnProperty() is false (so the user set no HTML attribute).
+    */
+    Polymer('edit-ready', {
+        data: '',
+        dataUp: '',
+        dataChanged: function(o, n) {
+            this.dataUp = '#' + this.data.toUpperCase() + '#';
+        },
+        ready: function() {
+          if (!this.hasOwnProperty('data')) {
+            this.data = 'This is the default text';
+          }
+        }
+    });
+  </script>
+</polymer-element>

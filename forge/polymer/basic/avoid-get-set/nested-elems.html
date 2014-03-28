@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="simple-edit" attributes="data">
+  <template>
+    Simple edit: <input type="text" value="{{data}}"> (upperCase: {{dataCaps}})
+  </template>
+  <script>
+    Polymer('simple-edit', {
+        data: '',
+        dataCaps: '',
+        dataChanged: function() {
+          this.dataCaps = this.data.toUpperCase();
+        }
+    });
+  </script>
+</polymer-element>
+
+<polymer-element name="getset-edit" attributes="data">
+  <template>
+    GetSet: <input type="text" value="{{data}}"> (upperCase: {{dataCaps}})
+  </template>
+  <script>
+    Polymer('getset-edit', {
+        _data: '',
+        dataCaps: '',
+        get data() {
+          return this._data;
+        },
+        set data(v) {
+          this._data = v;
+          this.dataCaps = this._data.toUpperCase();
+        }
+    });
+  </script>
+</polymer-element>
+
+<polymer-element name="nested-edit" attributes="data">
+  <template>
+    <div style="border: black 3px solid; display: inline-block;">
+      Nested edit:<br>
+      Outer: <input type="text" value="{{data}}"> (Value is: {{data}})
+      <br>
+      Inner-simple: <simple-edit data="{{data}}"></simple-edit>
+      <br>
+      Inner-get-set: <getset-edit data="{{data}}"></getset-edit>
+    </div>
+  </template>
+  <script>
+    Polymer('nested-edit', {
+        data: 'my nested'
+    });
+  </script>
+</polymer-element>

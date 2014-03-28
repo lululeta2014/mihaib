@@ -7,5 +7,6 @@ I don't know.
 
 But if the inner element has a normal field and a myFieldChanged(),
 the *Changed() still fires and things work as expected.
+This is probably “the Polymer way”.
 
-http://localhost:8000/basic/nested-bind/demo.html
+http://localhost:8000/basic/avoid-get-set/demo.html

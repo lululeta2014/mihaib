@@ -1,0 +1,8 @@
+Check if the *Changed() watchers run for the initial values of properties,
+depending on how we initialize the elements.
+But this probably isn't “polymeric”.
+We could create elements where the default values for computed and non-computed
+fields alike are something like empty strings, so it doesn't matter if the
+*Changed() watchers run on initialization or not.
+
+http://localhost:8000/basic/init-fields/demo.html

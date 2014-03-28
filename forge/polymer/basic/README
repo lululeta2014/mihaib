@@ -1,6 +1,6 @@
 Basic polymer tests & examples
 
-re-compute/	Do an expensive computation every time the template is rendered
-		or do more work to only run it when its dependencies change.
-nested-bind/	Communicate by binding to the same fields, which doesn't work
-		with getters and setters.
+init-fields/	Check what happens the first time fiels are set,
+		via defaults, ready(), or html attributes. Particularly if
+		the mypropertyChanged watchers run.
+avoid-get-set/	Avoid getters and setters, it seems this isn't “polymeric”.

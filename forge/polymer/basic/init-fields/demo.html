@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../../bower_components/platform/platform.js"></script>
+    <link rel="import" href="elems.html">
+    <style>
+      .box {
+        border: 3px solid crimson;
+      }
+    </style>
+  </head>
+  <body>
+    Test if mypropertyChanged() handlers run at initialization.
+    Initialization can be via the element's default value or by setting an
+    HTML attribute.
+    <br>
+    However, all examples in this page should run the *Changed() handler
+    if you type in the field.
+
+    <div class="box">
+      A simple element, with only a change handler.
+      <hr>
+      No HTML attribute set: we see the default value, but the *Changed()
+      handler never runs so Uppercase is not set.<br>
+      <edit-simple></edit-simple>
+      <hr>
+      Setting the HTML attribute runs the *Changed() handler.<br>
+      <edit-simple data="Set via HTML attr"></edit-simple>
+    </div>
+
+    <div class="box">
+      An element which registers the *Changed() handler from the start
+      but sets the field's default value in the ready() lifecycle callback,
+      only if Object.hasOwnProperty() is false (so the user didn't set it).
+      The field exists in the prototype because we've listed it in the
+      polymer-element's ‘attributes’ list.
+      <hr>
+      No HTML attribute set: we see the default value,
+      and the *Changed() handler runs.<br>
+      <edit-ready></edit-ready>
+      <hr>
+      HTML attribute set, the *Changed() handler runs.<br>
+      <edit-ready data="Set by the HTML attribute"></edit-ready>
+    </div>
+  </body>
+</html>
