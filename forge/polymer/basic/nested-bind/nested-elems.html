@@ -1,0 +1,85 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<polymer-element name="simple-edit" attributes="data">
+  <template>
+    Simple edit: <input type="text" value="{{data}}"> (Value is: {{data}})
+  </template>
+  <script>
+    Polymer('simple-edit', {
+        data: '',
+        dataChanged: function(oldV, newV) {
+          console.log('simple-edit .data field changed', oldV, '->', newV);
+        }
+    });
+  </script>
+</polymer-element>
+
+<polymer-element name="getset-edit" attributes="data">
+  <template>
+    GetSet: <input type="text" value="{{data}}"> (upperCase: {{dataCaps}})
+    <button type="button" on-click="{{printFields}}">
+      Click to see model fields
+    </button>
+  </template>
+  <script>
+    Polymer('getset-edit', {
+        _data: '',
+        get data() {
+          return this._data;
+        },
+        set data(v) {
+          this._data = v;
+        },
+
+        dataCaps: '',
+        _dataChanged: function() {
+          this.dataCaps = this._data.toUpperCase();
+        },
+
+        printFields: function() {
+          alert('_data: ' + this._data + ', '
+            + 'data: ' + this.data + ', '
+            + 'dataCaps: ' + this.dataCaps);
+        }
+    });
+  </script>
+</polymer-element>
+
+<polymer-element name="nested-edit" attributes="data">
+  <template>
+    <div style="border: black 3px solid; display: inline-block;">
+      Nested edit:<br>
+      Outer: <input type="text" value="{{data}}"> (Value is: {{data}})
+      <br>
+      Inner: <simple-edit data="{{data}}"></simple-edit>
+    </div>
+  </template>
+  <script>
+    Polymer('nested-edit', {
+        data: 'my nested'
+    });
+  </script>
+</polymer-element>
+
+<polymer-element name="demo-elem" attributes="data">
+  <template>
+    <div style="border: brown 3px solid; display: inline-block;">
+      This is the “demo element” trying to connect everything together.
+      <br>
+      <simple-edit data="{{data}}"></simple-edit>
+      <br>
+      <!--
+        It looks like getset-edit is bound to our data field,
+        so its own getters and setters won't run.
+      -->
+      <getset-edit data="{{data}}"></getset-edit>
+      <br>
+      <nested-edit data="{{data}}"></nested-edit>
+    </div>
+  </template>
+  <script>
+    Polymer('demo-elem', {
+        data: 'my demo'
+    });
+  </script>
+</data>

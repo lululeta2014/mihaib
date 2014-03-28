@@ -1,0 +1,11 @@
+If we bind the field of an outer polymer element to the attribute of an inner
+polymer element, and the inner element has a getter/setter, it doesn't work
+properly anymore (the getter & setter don't run).
+
+Maybe the inner element is now using the field from the outer element's model?
+I don't know.
+
+But if the inner element has a normal field and a myFieldChanged(),
+the *Changed() still fires and things work as expected.
+
+http://localhost:8000/basic/nested-bind/demo.html

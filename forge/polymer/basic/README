@@ -2,3 +2,5 @@ Basic polymer tests & examples
 
 re-compute/	Do an expensive computation every time the template is rendered
 		or do more work to only run it when its dependencies change.
+nested-bind/	Communicate by binding to the same fields, which doesn't work
+		with getters and setters.

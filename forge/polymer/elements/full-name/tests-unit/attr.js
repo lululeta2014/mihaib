@@ -7,18 +7,21 @@ window.addEventListener('polymer-ready', function() {
 function scheduleTests() {
     asyncTest('Start with first name', function() {
         var e = document.getElementById('first-only');
-        deepEqual(e.first, 'James', 'First name');
-        deepEqual(e.last, '', 'Last name empty');
-        deepEqual(e.full, 'James', 'Full name');
+        // If running part1() right now, without the e.async(…),
+        // the name hasn't propagated yet from .firstTxt to ‘get first()’
+        // and the test fails. Firefox shows this every time.
+        e.async(part1);
 
-        (function part1() {
-            e.last = 'Z';
+        function part1() {
+            deepEqual(e.first, 'James', 'First name');
+            deepEqual(e.last, '', 'Last name empty');
+            deepEqual(e.full, 'James', 'Full name');
+            e.last = '   T.\n \t   Kirk';
             e.async(part2);
-        })();
+        }
 
         function part2() {
-            deepEqual(e.full, 'James Z', 'Full name property');
-            deepEqual(e.getAttribute('full'), 'James Z', 'Full name attr');
+            deepEqual(e.full, 'James T. Kirk', 'Full name property');
             start();
         }
     });
@@ -30,14 +33,13 @@ function scheduleTests() {
         strictEqual(e.full, 'Simmons', 'Full name');
 
         (function part1() {
-            e.first = 'Kim';
+            e.first = 'Kim   "Wild"  ';
             e.async(part2);
         })();
 
         function part2() {
-            deepEqual(e.getAttribute('first'), 'Kim', 'First name attr');
-            deepEqual(e.getAttribute('full'), 'Kim Simmons', 'Full name attr');
-            deepEqual(e.full, 'Kim Simmons', 'Full name property');
+            deepEqual(e.getAttribute('first'), 'Kim "Wild"', 'First name attr');
+            deepEqual(e.full, 'Kim "Wild" Simmons', 'Full name property');
             start();
         }
     });
@@ -50,15 +52,14 @@ function scheduleTests() {
 
 
         (function part1() {
-            e.first = 'Minna';
-            e.last = 'Tas';
+            e.first = 'Art';
+            e.last = 'Tas  ';
             e.async(part2);
         })();
 
         function part2() {
-            deepEqual(e.getAttribute('first'), 'Minna', 'First name attr');
-            deepEqual(e.getAttribute('full'), 'Minna Tas', 'Full name attr');
-            deepEqual(e.full, 'Minna Tas', 'Full name property');
+            deepEqual(e.getAttribute('first'), 'Art', 'First name attr');
+            deepEqual(e.full, 'Art Tas', 'Full name property');
             start();
         }
     });
