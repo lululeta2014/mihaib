@@ -1,0 +1,22 @@
+\documentclass{article}
+\usepackage{fontspec}
+
+% http://en.wikibooks.org/wiki/LaTeX/Tables
+
+\begin{document}
+\begin{tabular}{l r}
+	hello & goodbye \\
+	second & row \\
+	\hline
+	\multicolumn{2}{c} {
+		A cell can itself be a table (below)
+	} \\
+	\hline
+	\begin{tabular}{c c c}
+		1 & 2 & 3 \\
+		4 & 555 & 6 \\
+		7 & 8 & 9 \\
+	\end{tabular} &
+	End. \\
+\end{tabular}
+\end{document}
