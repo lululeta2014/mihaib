@@ -181,6 +181,7 @@ xfwm4-themes
 	SSH Keep Alive
 	SSH Multiple keys
 	NTP
+	[Debian] NetworkManager change(edit) Wired Network, e.g. DNS
 -- other
 	[Debian] Gnome2 Remove icons from Desktop
 	[Gnome2] Add applets and launchers to panel from the command line
@@ -927,6 +928,14 @@ Host friendly-domain-name
 
 Use ‘friendly-domain-name’ instead of example.com in commands,
 e.g. ‘github.com.mb-mihaib’.
+]
+
+
+[Debian] NetworkManager change(edit) Wired Network, e.g. DNS [
+If you can't make changes to the Wired Network from NetworkManager,
+comment out its line from /etc/network/interfaces:
+iface eth0 inet dhcp
+Restart and now NetworkManager will let you edit it.
 ]
 
 

@@ -951,6 +951,14 @@ NTP [
 ]
 
 
+[Debian] NetworkManager change(edit) Wired Network, e.g. DNS [
+If you can't make changes to the Wired Network from NetworkManager,
+comment out its line from /etc/network/interfaces:
+iface eth0 inet dhcp
+Restart and now NetworkManager will let you edit it.
+]
+
+
 -- other
 
 
