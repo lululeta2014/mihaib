@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/../sourceme.bash"
 
 echo '--- Go'
 
-LATEST=go1.2.linux-amd64.tar.gz
+LATEST=go1.2.1.linux-amd64.tar.gz
 PATTERN=go[0-9]*.linux-amd64.tar.gz
 download-kit \
 	--file "$MB_KITS_DIR"/"$LATEST" \
