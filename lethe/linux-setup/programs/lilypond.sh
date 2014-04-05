@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/../sourceme.bash"
 
 echo '--- LilyPond'
 
-LATEST=lilypond-2.18.0-1.linux-64.sh
+LATEST=lilypond-2.18.2-1.linux-64.sh
 PATTERN=lilypond-*linux-64.sh
 download-kit \
 	--file "$MB_KITS_DIR"/"$LATEST" \
