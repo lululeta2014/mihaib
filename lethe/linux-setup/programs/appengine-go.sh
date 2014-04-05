@@ -9,16 +9,15 @@ SCRIPT_DIR=`dirname "$SCRIPT"`
 source "$SCRIPT_DIR/../sourceme.bash"
 
 
-echo '--- Google App Engine'
+echo '--- Google App Engine (Go)'
 
-LATEST=appengine-java-sdk-1.9.1.zip
-PATTERN=appengine-java-sdk-*.zip
+LATEST=go_appengine_sdk_linux_amd64-1.9.2.zip
+PATTERN=go_appengine_sdk_linux_amd64-*.zip
 download-kit \
 	--file "$MB_KITS_DIR"/"$LATEST" \
 	--url https://commondatastorage.googleapis.com/appengine-sdks/featured/"$LATEST" \
 	--delete-pattern "$PATTERN"
 
-GAE_DIR="$MB_PRG_DIR"/appengine-java-sdk
+GAE_DIR="$MB_PRG_DIR"/go_appengine
 rm -rf "$GAE_DIR"
 unzip -q -d "$MB_PRG_DIR" "$MB_KITS_DIR"/$PATTERN
-mv "$MB_PRG_DIR"/appengine-java-sdk-* "$MB_PRG_DIR"/appengine-java-sdk

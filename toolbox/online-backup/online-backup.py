@@ -29,6 +29,9 @@ def parse_args():
                 to type the password instead of reading it from stdin.''')
 
     gae_group = parser.add_argument_group('Google App Engine')
+    gae_group.add_argument('--appengine-java-sdk-path',
+            metavar='java_sdk_path', help='''Path to the appengine-java-sdk/
+            directory''')
     gae_group.add_argument('--appengine-app-id', metavar='app_id')
     gae_group.add_argument('--appengine-email', metavar='email')
     gae_group.add_argument('--appengine-version', metavar='version',
@@ -82,11 +85,13 @@ class GoogleAppEngineDest(Destination):
 
     def __init__(self, path, args):
         super().__init__(path)
+        self.javaSdkPath = args.appengine_java_sdk_path
         self.appid = args.appengine_app_id
         self.email = args.appengine_email
         self.version = args.appengine_version
         self.passwd_via_stdin_not_tty = args.passwd_via_stdin_not_tty
-        if not self.appid or not self.email or not self.version:
+        if (not self.javaSdkPath or not self.appid or not self.email
+                or not self.version):
             raise ValueError('Incomplete args for Google App Engine')
 
     def addWebInf(self):
@@ -101,7 +106,9 @@ class GoogleAppEngineDest(Destination):
             passwd = input('Password (via stdin not tty, as you requested): ')
         else:
             passwd = getpass.getpass()
-        p = subprocess.Popen(['appcfg.sh', '--no_cookies', '--passin',
+        p = subprocess.Popen([
+            os.path.join(self.javaSdkPath, 'bin', 'appcfg.sh'),
+            '--no_cookies', '--passin',
             '-A', self.appid, '-e', self.email, '-V', self.version,
             'update', self.path],
             stdin = subprocess.PIPE)

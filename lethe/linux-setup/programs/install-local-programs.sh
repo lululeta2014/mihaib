@@ -24,7 +24,8 @@ which download-kit >/dev/null || "$SCRIPT_DIR"/bootstrap-toolbox.sh
 "$SCRIPT_DIR"/eclipse.sh
 "$SCRIPT_DIR"/texttest.sh
 "$SCRIPT_DIR"/lilypond.sh
-"$SCRIPT_DIR"/appengine.sh
+"$SCRIPT_DIR"/appengine-java.sh
+"$SCRIPT_DIR"/appengine-go.sh
 "$SCRIPT_DIR"/adobe-reader.sh
 "$SCRIPT_DIR"/texlive.sh
 "$SCRIPT_DIR"/node.sh

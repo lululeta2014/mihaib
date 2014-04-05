@@ -45,9 +45,12 @@ add_to_path_start $MB_PRG_DIR/node/bin
 add_to_path_start $MB_PRG_DIR/adobe-reader/Adobe/Reader9/bin
 add_to_path_start $MB_PRG_DIR/pyroom
 add_to_path_start $MB_PRG_DIR/texlive/bin/x86_64-linux
-add_to_path_start $MB_PRG_DIR/appengine-java-sdk/bin
 add_to_path_start $MB_PRG_DIR/lilypond/bin
 add_to_path_start $MB_PRG_DIR/toolbox/bin
+
+APPENG_JAVA=$MB_PRG_DIR/appengine-java-sdk
+APPENG_GO=$MB_PRG_DIR/go_appengine
+export APPENG_JAVA APPENG_GO
 
 GOROOT=$MB_GOROOT
 GOPATH=$MB_GOPATH_DIR
