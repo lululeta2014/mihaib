@@ -1,0 +1,11 @@
+Simple Google Appengine Go App
+It's made up of independent sections, each under its own /path/.
+Some sections have only static files, others also have server-side (app) code.
+
+To run in dev:
+$APPENG_GO/goapp serve app/
+http://localhost:8080/
+
+To deploy:
+Using -A and -V override the app id and version from app/app.yaml:
+$APPENG_GO/appcfg.py update --no_cookies -A mi-hai -V 1 -e your_email app/

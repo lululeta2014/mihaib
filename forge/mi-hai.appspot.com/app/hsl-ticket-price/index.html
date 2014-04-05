@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>HSL season ticket price</title>
+
+    <script type="text/javascript"
+      src="http://code.highcharts.com/adapters/standalone-framework.js">
+    </script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
+    <script type="text/javascript" src="script.js"></script>
+  </head>
+
+  <body>
+    <p>
+      <a href="https://hsl.fi">hsl.fi</a> season ticket price calculator.
+      Default prices taken from
+      <a href="https://www.hsl.fi/sites/default/files/uploads/ticket_prices_2014.pdf">this PDF price list</a>.
+    </p>
+    <label for="basedays">Base days:</label>
+    <input id="basedays" type="number" min="0" value="14"
+      onchange="showChart()">
+    <label for="baseprice">Base price:</label>
+    <input id="baseprice" type="number" min="0" value="24.30"
+      onchange="showChart()">
+    <label for="extradayprice">Extra day price:</label>
+    <input id="extradayprice" type="number" min="0" value="1.39"
+      onchange="showChart()">
+    <label for="maxdays">Max days:</label>
+    <input id="maxdays" type="number" min="0" value="90"
+      onchange="showChart()">
+
+    <div id="chartcontainer">Chart</div>
+  </body>
+</html>
