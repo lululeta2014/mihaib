@@ -2,6 +2,13 @@ Simple Google Appengine Go App
 It's made up of independent sections, each under its own /path/.
 Some sections have only static files, others also have server-side (app) code.
 
+It looks like we should use full paths for all imports (github.com/…),
+both packages inside this app and external ones,
+and deploying to appengine deploys what you have in your local $GOPATH.
+
+Format, Build and Run any unit tests:
+./build.sh
+
 To run in dev:
 $APPENG_GO/goapp serve app/
 http://localhost:8080/

@@ -6,8 +6,9 @@ api_version: go1
 handlers:
 
 - url: /
-  static_files: index.html
-  upload: index\.html
+  script: _go_app
+- url: /root
+  static_dir: root/static
 
 - url: /hsl-ticket-price/
   static_files: hsl-ticket-price/index.html

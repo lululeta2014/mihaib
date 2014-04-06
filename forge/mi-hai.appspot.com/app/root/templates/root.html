@@ -1,0 +1,14 @@
+{{template "html-start.html" .HtmlStart}}
+<body>
+  Tools, independent sub-sites:
+  <ul class="projlist">
+    {{range .Projects}}
+    <li>
+      <a href="{{.Target}}">{{.Title}}</a>
+      <br>
+      {{.Description}}
+    </li>
+    {{end}}
+  </ul>
+</body>
+{{template "html-end.html"}}
