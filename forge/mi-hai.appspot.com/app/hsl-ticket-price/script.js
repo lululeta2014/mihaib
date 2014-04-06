@@ -13,21 +13,32 @@ function showChart() {
     var baseDays = Number(document.getElementById('basedays').value),
         basePrice = Number(document.getElementById('baseprice').value),
         extraDayPrice = Number(document.getElementById('extradayprice').value),
-        maxDays = Number(document.getElementById('maxdays').value);
+        maxDays = Number(document.getElementById('maxdays').value),
+        maxDataPoints = Number(document.getElementById('maxdatapoints').value);
 
     if (isNaN(baseDays) || isNaN(basePrice) || isNaN(extraDayPrice) ||
             isNaN(maxDays) ||
-            baseDays < 0 || maxDays < baseDays) {
+            baseDays < 0 || maxDays < baseDays || maxDataPoints < 1) {
         document.getElementById(chartDivId).textContent =
             'Invalid input values';
         return;
     }
 
-    var totalPrice = [{days: baseDays, price: basePrice}];
-    for (var d = baseDays + 1, p = basePrice; d <= maxDays; d++) {
-        p += extraDayPrice;
-        totalPrice.push({days: d, price: p});
-    }
+    // evenly spaced-out points, at most maxPoints (e.g. 50)
+    var daysArr = (function(min, max, maxPoints) {
+        maxPoints = Math.min(maxPoints, max - min + 1);
+        if (maxPoints == 1) {
+            return [min];
+        }
+        var result = [];
+        for (var i = 0; i < maxPoints; i++) {
+            result.push(Math.round(min + (max-min)*i/(maxPoints-1)));
+        }
+        return result;
+    })(baseDays, maxDays, maxDataPoints);
+    var totalPrice = daysArr.map(function(d) {
+        return {days: d, price: basePrice + (d-baseDays)*extraDayPrice};
+    });
 
     chart = new Highcharts.Chart({
         chart: { renderTo: chartDivId },

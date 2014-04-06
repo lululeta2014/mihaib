@@ -35,8 +35,19 @@
       onchange="showChart()">
     <br>
     <label for="maxdays">Max days:</label>
-    <input id="maxdays" type="number" min="0" value="90"
+    <input id="maxdays" type="number" min="0" value="120"
       onchange="showChart()">
+
+    <p>
+    If you examine a long interval (e.g. 365 days) the chart performs slowly
+    if it shows one data-point for each day.
+    This setting limits the number of points (which spread out to cover
+    larger intervals).
+    <br>
+    <label for="maxdatapoints">Max chart points:</label>
+    <input id="maxdatapoints" type="number" min="0" value="40"
+      onchange="showChart()">
+    </p>
 
     <div id="chartcontainer">Chart</div>
   </body>
