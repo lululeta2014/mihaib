@@ -61,6 +61,7 @@ func handler(w http.ResponseWriter, r *http.Request) *util.AppError {
 		return &util.AppError{err, "Error rendering project list", 500}
 	}
 
+	util.SetHtmlContentType(w)
 	_, err = buf.WriteTo(w)
 	if err != nil {
 		// we might have sent part of the data already,
