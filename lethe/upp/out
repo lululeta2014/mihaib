@@ -340,7 +340,7 @@ https://wiki.ubuntu.com/Grub2
 
 Change first day of the week [
 sed -i \
-	-e 's/^first_weekday	[0-9]$/first_weekday	2/' \
+	-e 's/^first_weekday\t[0-9]$/first_weekday\t2/' \
 	/usr/share/i18n/locales/en_US
 locale-gen	# regenerate the locale
 ]
