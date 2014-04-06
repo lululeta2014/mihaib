@@ -45,8 +45,8 @@ func handler(w http.ResponseWriter, r *http.Request) *util.AppError {
 	projects := []projectT{
 		projectT{
 			"hsl-ticket-price/",
-			"hsl.fi season ticket, price calculator",
-			`Price calculator for hsl.fi season tickets.
+			"HSL.fi season ticket, price calculator",
+			`Price calculator for HSL.fi season tickets.
 	See how the daily or monthly price changes when you get a season ticket
 	for a longer period.`,
 		},

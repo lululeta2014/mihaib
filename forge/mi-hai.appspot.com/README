@@ -15,4 +15,4 @@ http://localhost:8080/
 
 To deploy:
 Using -A and -V override the app id and version from app/app.yaml:
-$APPENG_GO/appcfg.py update --no_cookies -A mi-hai -V 1 -e your_email app/
+$APPENG_GO/appcfg.py update --no_cookies -A mi-hai -V 1 -e YOUR_EMAIL app/
