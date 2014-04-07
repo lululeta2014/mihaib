@@ -14,7 +14,9 @@ source "$DIR/../sourceme.bash"
 # Set the ‘last used tab’ to be ‘resources’ instead of the default ‘disks’,
 # so even the first time we run the program we see the tab we want.
 if [ "$MB_LSB_ID" == 'Debian' ]; then
-	if [ "$MB_LSB_CN" == 'jessie' ]; then
+	if [ "$MB_LSB_CN" == 'wheezy' ]; then
+		true
+	else
 		gsettings set org.gnome.gnome-system-monitor current-tab '"resources"'
 	fi
 else
