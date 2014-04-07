@@ -56,3 +56,4 @@ table.key-valArr th {
 }
 table.key-valArr > tbody > tr:nth-child(odd) {
 	background-color: GhostWhite;
+}
