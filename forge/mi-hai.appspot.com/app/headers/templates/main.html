@@ -15,12 +15,12 @@
     <td>{{.RemoteAddr}}</td>
   </tr>
   <tr>
-    <td>Method:</td>
-    <td>{{.Method}}</td>
-  </tr>
-  <tr>
     <td>Protocol:</td>
     <td>{{.Proto}}</td>
+  </tr>
+  <tr>
+    <td>Method:</td>
+    <td>{{.Method}}</td>
   </tr>
   <tr>
     <td>Host:</td>
@@ -29,6 +29,10 @@
   <tr>
     <td>URL:</td>
     <td>{{.URL}}</td>
+  </tr>
+  <tr>
+    <td>RequestURI:</td>
+    <td>{{.RequestURI}}</td>
   </tr>
 
   <tr>
@@ -89,48 +93,28 @@
   <caption>From Google App Engine</caption>
   <tbody>
   <tr>
-    <td>AppID:</td>
-    <td>{{.AppID}}</td>
-  </tr>
-  <tr>
-    <td>Datacenter:</td>
-    <td>{{.Datacenter}}</td>
+    <td>AppID (ServiceAccount) (VersionID):</td>
+    <td>{{.AppID}} ({{.ServiceAccount}}) ({{.VersionID}})</td>
   </tr>
   <tr>
     <td>DefaultVersionHostname:</td>
     <td>{{.DefaultVersionHostname}}</td>
   </tr>
   <tr>
-    <td>InstanceID:</td>
-    <td>{{.InstanceID}}</td>
+    <td>Datacenter → InstanceID:</td>
+    <td>{{.Datacenter}} → {{.InstanceID}}</td>
   </tr>
   <tr>
-    <td>IsDevAppServer:</td>
-    <td>{{.IsDevAppServer}}</td>
-  </tr>
-  <tr>
-    <td>ModuleHostname:</td>
-    <td>{{.ModuleHostname}}</td>
-  </tr>
-  <tr>
-    <td>ModuleName:</td>
-    <td>{{.ModuleName}}</td>
+    <td>Module Hostname (Name):</td>
+    <td>{{.ModuleHostname}} ({{.ModuleName}})</td>
   </tr>
   <tr>
     <td>RequestID:</td>
     <td>{{.RequestID}}</td>
   </tr>
   <tr>
-    <td>ServerSoftware:</td>
-    <td>{{.ServerSoftware}}</td>
-  </tr>
-  <tr>
-    <td>ServiceAccount:</td>
-    <td>{{.ServiceAccount}}</td>
-  </tr>
-  <tr>
-    <td>VersionID:</td>
-    <td>{{.VersionID}}</td>
+    <td>ServerSoftware (IsDevAppServer):</td>
+    <td>{{.ServerSoftware}} ({{.IsDevAppServer}})</td>
   </tr>
   </tbody>
 </table>
@@ -152,28 +136,16 @@
     </tr>
     {{with .User}}
     <tr>
-      <td>Email:</td>
-      <td>{{.Email}}</td>
-    </tr>
-    <tr>
-      <td>Admin:</td>
-      <td>{{.Admin}}</td>
-    </tr>
-    <tr>
-      <td>AuthDomain:</td>
-      <td>{{.AuthDomain}}</td>
+      <td>Email (AuthDomain) (Admin):</td>
+      <td>{{.Email}} ({{.AuthDomain}}) ({{.Admin}})</td>
     </tr>
     <tr>
       <td>ID:</td>
       <td>{{.ID}}</td>
     </tr>
     <tr>
-      <td>FederatedIdentity:</td>
-      <td>{{.FederatedIdentity}}</td>
-    </tr>
-    <tr>
-      <td>FederatedProvider:</td>
-      <td>{{.FederatedProvider}}</td>
+      <td>Federated ID (Provider):</td>
+      <td>{{.FederatedIdentity}} ({{.FederatedProvider}})</td>
     </tr>
     {{end}}
   {{end}}

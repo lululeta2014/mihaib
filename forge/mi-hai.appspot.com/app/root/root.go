@@ -55,8 +55,8 @@ func handler(w http.ResponseWriter, r *http.Request) *util.AppError {
 			"Your Browser Headers and Google App Engine info",
 			`See data about your web request and the server
 	environment. See most of your browser headers (a few are removed
-	by AppEngine), your IP Address & detected country,
-	user info if you log in (email, domain and user id)
+	by AppEngine), your IP Address (together with detected country
+	and city), user info if you log in (email, domain and user id)
 	and some minimal data about the server environment.
 	This is available to an AppEngine application when it serves you.`,
 		},
