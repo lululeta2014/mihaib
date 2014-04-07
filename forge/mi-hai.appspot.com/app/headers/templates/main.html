@@ -1,0 +1,181 @@
+{{template "html-start.html" .HtmlStart}}
+<body>
+{{template "Appengine" .Appengine}}
+{{template "User" .User}}
+{{template "Request" .Request}}
+</body>
+{{template "html-end.html"}}
+
+{{define "Request"}}
+<table class="top" id="request">
+  <caption>From Go's net/http.Request</caption>
+  <tbody>
+  <tr>
+    <td>Your IP:</td>
+    <td>{{.RemoteAddr}}</td>
+  </tr>
+  <tr>
+    <td>Method:</td>
+    <td>{{.Method}}</td>
+  </tr>
+  <tr>
+    <td>Protocol:</td>
+    <td>{{.Proto}}</td>
+  </tr>
+  <tr>
+    <td>Host:</td>
+    <td>{{.Host}}</td>
+  </tr>
+  <tr>
+    <td>URL:</td>
+    <td>{{.URL}}</td>
+  </tr>
+
+  <tr>
+    <td>Form:</td>
+    <td>{{template "map-string-stringarray" .Form}}</td>
+  </tr>
+  <tr>
+    <td>POST Form:</td>
+    <td>{{template "map-string-stringarray" .PostForm}}</td>
+  </tr>
+
+  <tr>
+    <td>Headers:</td>
+    <td>{{template "map-string-stringarray" .Header}}</td>
+  </tr>
+  <tr>
+    <td>Trailer:</td>
+    <td>{{template "map-string-stringarray" .Trailer}}</td>
+  </tr>
+  </tbody>
+</table>
+{{end}}
+
+{{define "map-string-stringarray"}}
+{{/* Print a map[string][]string */}}
+{{if .}}
+  <table class="key-valArr">
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Value(s)</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {{range $k, $v := .}}
+    <tr>
+      <td>{{$k}}</td>
+      <td>
+        {{range $i, $v := $v}}
+          {{if gt $i 0}}
+            <br>
+            <hr>
+          {{end}}
+
+          {{$v}}
+        {{end}}
+      </td>
+    </tr>
+    {{end}}
+    </tbody>
+  </table>
+{{end}}
+{{end}}
+
+{{define "Appengine"}}
+<table class="top" id="appengine">
+  <caption>From Google App Engine</caption>
+  <tbody>
+  <tr>
+    <td>AppID:</td>
+    <td>{{.AppID}}</td>
+  </tr>
+  <tr>
+    <td>Datacenter:</td>
+    <td>{{.Datacenter}}</td>
+  </tr>
+  <tr>
+    <td>DefaultVersionHostname:</td>
+    <td>{{.DefaultVersionHostname}}</td>
+  </tr>
+  <tr>
+    <td>InstanceID:</td>
+    <td>{{.InstanceID}}</td>
+  </tr>
+  <tr>
+    <td>IsDevAppServer:</td>
+    <td>{{.IsDevAppServer}}</td>
+  </tr>
+  <tr>
+    <td>ModuleHostname:</td>
+    <td>{{.ModuleHostname}}</td>
+  </tr>
+  <tr>
+    <td>ModuleName:</td>
+    <td>{{.ModuleName}}</td>
+  </tr>
+  <tr>
+    <td>RequestID:</td>
+    <td>{{.RequestID}}</td>
+  </tr>
+  <tr>
+    <td>ServerSoftware:</td>
+    <td>{{.ServerSoftware}}</td>
+  </tr>
+  <tr>
+    <td>ServiceAccount:</td>
+    <td>{{.ServiceAccount}}</td>
+  </tr>
+  <tr>
+    <td>VersionID:</td>
+    <td>{{.VersionID}}</td>
+  </tr>
+  </tbody>
+</table>
+{{end}}
+
+{{define "User"}}
+<table class="top" id="user">
+  <caption>From Google App Engine User</caption>
+  <tbody>
+  {{if not .User}}
+    <tr>
+      <td><a href="{{.LoginURL}}">Log in</a></td>
+      <td>You are not logged in.</td>
+    </tr>
+  {{else}}
+    <tr>
+      <td><a href="{{.LogoutURL}}">Log out</a></td>
+      <td>{{.User}}</td>
+    </tr>
+    {{with .User}}
+    <tr>
+      <td>Email:</td>
+      <td>{{.Email}}</td>
+    </tr>
+    <tr>
+      <td>Admin:</td>
+      <td>{{.Admin}}</td>
+    </tr>
+    <tr>
+      <td>AuthDomain:</td>
+      <td>{{.AuthDomain}}</td>
+    </tr>
+    <tr>
+      <td>ID:</td>
+      <td>{{.ID}}</td>
+    </tr>
+    <tr>
+      <td>FederatedIdentity:</td>
+      <td>{{.FederatedIdentity}}</td>
+    </tr>
+    <tr>
+      <td>FederatedProvider:</td>
+      <td>{{.FederatedProvider}}</td>
+    </tr>
+    {{end}}
+  {{end}}
+  </tbody>
+{{end}}

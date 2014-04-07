@@ -1,0 +1,58 @@
+@charset "utf-8";
+
+/* http://css-tricks.com/complete-guide-table-element/ */
+
+table.top {
+	border-collapse: collapse;
+}
+table.top > tbody > tr > td {
+	border: 1px solid Darkgray;
+}
+table.top > tbody > tr > td:first-child {
+	white-space: nowrap;
+}
+table.top > tbody > tr > td:not(:first-child) {
+	font-family: monospace;
+}
+
+
+table#appengine > tbody > tr:nth-child(even) {
+	background-color: Lavender;
+}
+table#appengine > caption {
+	color: SteelBlue;
+}
+
+table#request > tbody > tr:nth-child(even) {
+	background-color: LightGoldenRodYellow;
+}
+table#request > caption {
+	color: IndianRed;
+}
+
+table#user > tbody > tr:nth-child(even) {
+	background-color: MintCream;
+}
+table#user > caption {
+	color: LightSeaGreen;
+}
+
+
+table.key-valArr {
+	border-collapse: collapse;
+}
+table.key-valArr td,
+table.key-valArr th {
+	border: 1px solid Darkgray;
+}
+table.key-valArr td:first-child {
+	white-space: nowrap;
+}
+table.key-valArr td {
+	font-family: monospace;
+}
+table.key-valArr th {
+	text-align: left;
+}
+table.key-valArr > tbody > tr:nth-child(odd) {
+	background-color: GhostWhite;

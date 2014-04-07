@@ -15,3 +15,8 @@ handlers:
   upload: hsl-ticket/price/index\.html
 - url: /hsl-ticket-price
   static_dir: hsl-ticket-price
+
+- url: /headers/
+  script: _go_app
+- url: /headers
+  static_dir: headers/static

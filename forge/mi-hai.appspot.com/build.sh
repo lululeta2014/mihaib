@@ -14,6 +14,7 @@ golink --replace "$PKG_ROOT" "$DIR"/app
 for X in \
 	util \
 	root \
+	headers \
 ;do
 	#$APPENG_GO/goapp get -d "$PKG_ROOT"/"$X"
 	$APPENG_GO/goapp fmt "$PKG_ROOT"/"$X"
