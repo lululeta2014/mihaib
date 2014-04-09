@@ -11,8 +11,8 @@ source "$SCRIPT_DIR/../sourceme.bash"
 
 echo '--- eclipse'
 
-LATEST=eclipse-java-kepler-SR1-linux-gtk-x86_64.tar.gz
-REL_DIR=kepler/SR1
+LATEST=eclipse-java-kepler-SR2-linux-gtk-x86_64.tar.gz
+REL_DIR=kepler/SR2
 PATTERN=eclipse-java-*-x86_64.tar.gz
 download-kit \
 	--file "$MB_KITS_DIR"/"$LATEST" \
