@@ -10,7 +10,7 @@ import (
 
 // Returns a new filter which returns its source token stream
 // and an extra '\n' token if the source token stream wasn't empty
-// and its last rune didn't end with '\n'.
+// and its last token didn't end with '\n'.
 func NewNewlineAtEnd(r TokenReader) TokenReader {
 	return &newNewlineAtEnd{wrapped: r}
 }
