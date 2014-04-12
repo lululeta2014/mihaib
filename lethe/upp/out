@@ -928,6 +928,13 @@ Host friendly-domain-name
 
 Use ‘friendly-domain-name’ instead of example.com in commands,
 e.g. ‘github.com.mb-mihaib’.
+
+Host github.com.mb-mihaib
+	HostName github.com
+	IdentityFile ~/.ssh/mykey-id_rsa
+
+Host mihaib.unfuddle.com
+	IdentityFile ~/.ssh/mykey-id_rsa
 ]
 
 
