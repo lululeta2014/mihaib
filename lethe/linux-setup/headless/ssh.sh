@@ -12,7 +12,9 @@ source "$DIR/../sourceme.bash"
 if [ $MB_PRIVATE_COMP == 1 -a "$MB_MYSELF" == 'true' ]; then
 	mkdir -p ~/.ssh
 	# don't fail if there are no keys
-	cp /mnt/haven/craft/misc/ssh/* ~/.ssh || true
+	if [ -v MB_SSH_DIR ]; then
+		cp "$MB_SSH_DIR"/* ~/.ssh || true
+	fi
 	chmod go-rwx ~/.ssh/*id_rsa || true
 
 	# Generated (so we can run this script offline) using:

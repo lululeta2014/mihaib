@@ -58,16 +58,19 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 	export MB_BROWSER_WIDTH MB_BROWSER_HEIGHT
 
 	if [ "$MB_PRIVATE_COMP" == "1" -a "$MB_MYSELF" == "true" ]; then
-		MB_CHECKGMAIL_USERS_FILE='/mnt/haven/craft/misc/mb-checkgmail-users'
-		MB_BROWSER_GMAIL_USERS_FILE='/mnt/haven/craft/misc/mb-browser-gmail-users'
+		MB_SSH_DIR=/mnt/haven/craft/misc/ssh
+		export MB_SSH_DIR
+
+		MB_CHECKGMAIL_USERS_FILE=/mnt/haven/craft/misc/mb-checkgmail-users
+		MB_BROWSER_GMAIL_USERS_FILE=/mnt/haven/craft/misc/mb-browser-gmail-users
 		export MB_CHECKGMAIL_USERS_FILE MB_BROWSER_GMAIL_USERS_FILE
 
-		MB_ONLINE_BACKUP_FILE='/mnt/haven/craft/misc/mb-online-backup.json'
+		MB_ONLINE_BACKUP_FILE=/mnt/haven/craft/misc/mb-online-backup.json
 		export MB_ONLINE_BACKUP_FILE
 	fi
 
-	### fork Gmail start ###
-	### fork Gmail end ###
+	### fork SSH, Gmail, online backup start ###
+	### fork SSH, Gmail, online backup end ###
 
 	MB_BROWSER_ALT_PROFILE=lowmen
 	# don't conflict with the default user-wide ‘.opera’
