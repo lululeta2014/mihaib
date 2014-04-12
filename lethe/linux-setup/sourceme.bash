@@ -42,11 +42,12 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 		export MB_REPOS_DIR
 	fi
 
+	MB_MYSELF=false
 	if [ "$MB_WHOAMI" == mihai ]; then
 		MB_MYSELF=true
-	else
-		MB_MYSELF=false
 	fi
+	### fork MB_WHOAMI start ###
+	### fork MB_WHOAMI end ###
 	export MB_MYSELF
 
 	MB_LINK_DESKTOP="$MB_MYSELF"
@@ -64,6 +65,9 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 		MB_ONLINE_BACKUP_FILE='/mnt/haven/craft/misc/mb-online-backup.json'
 		export MB_ONLINE_BACKUP_FILE
 	fi
+
+	### fork Gmail start ###
+	### fork Gmail end ###
 
 	MB_BROWSER_ALT_PROFILE=lowmen
 	# don't conflict with the default user-wide ‘.opera’
@@ -88,78 +92,93 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 	export MB_KB_LAYOUT_DIR MB_KB_LAYOUT_NAME MB_KB_LAYOUT_PATH
 
 	MB_SCREENSAVER_MINS=30
+	### fork MB_SCREENSAVER_MINS start ###
+	### fork MB_SCREENSAVER_MINS end ###
 	export MB_SCREENSAVER_MINS
+
+	if [ "$MB_HOSTNAME" == "Hermes" ]; then
+		MB_DPI=110
+	elif [ "$MB_HOSTNAME" == "Castor" ]; then
+		MB_DPI=90
+	fi
+	### fork MB_DPI start ###
+	### fork MB_DPI end ###
+	export MB_DPI
 
 
 	# desktop background
-	if [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-wheezy' ]; then
-		if [ $MB_PRIVATE_COMP == 1 -a "$MB_MYSELF" == "true" ]; then
-			MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-orange.jpg'"
-			#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+	if [ "$MB_MYSELF" == true ]; then
+		if [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-wheezy' ]; then
+			if [ $MB_PRIVATE_COMP == 1 ]; then
+				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-orange.jpg'"
+				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+			fi
+			### fork start ###
+			### fork end ###
 		fi
-	fi
-	if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
-		if [ $MB_PRIVATE_COMP == 1 -a "$MB_MYSELF" == "true" ]; then
-			MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-green.jpg'"
-			#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
+			if [ $MB_PRIVATE_COMP == 1 ]; then
+				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-green.jpg'"
+				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+			fi
 		fi
-	fi
-	if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.10' ]; then
-		if [ $MB_HOSTNAME == "Hermes" -a "$MB_MYSELF" == "true" ]; then
-			MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Waves.jpg'"
-			#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.10' ]; then
+			if [ $MB_HOSTNAME == "Hermes" ]; then
+				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Waves.jpg'"
+				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+			fi
 		fi
-	fi
-	if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.04' ]; then
-		if [ $MB_HOSTNAME == "Hermes" -a "$MB_MYSELF" == "true" ]; then
-			MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/Winter_Fog_by_Daniel_Vesterskov.jpg'"
-			#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.04' ]; then
+			if [ $MB_HOSTNAME == "Hermes" ]; then
+				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/Winter_Fog_by_Daniel_Vesterskov.jpg'"
+				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+			fi
 		fi
-	fi
-	if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
-		if [ $MB_HOSTNAME == "Hermes" -a "$MB_MYSELF" == "true" ]; then
-			MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-green.jpg'"
-			#MB_GNOME_PICTURE_OPTIONS="'zoom'"
-		fi
-		if [ $MB_HOSTNAME == "Castor" -a "$MB_MYSELF" == "true" ]; then
-			MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/Taxus_baccata_by_baubusiukas.jpg'"
+		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
+			if [ $MB_HOSTNAME == "Hermes" ]; then
+				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-green.jpg'"
+				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+			fi
+			if [ $MB_HOSTNAME == "Castor" ]; then
+				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/Taxus_baccata_by_baubusiukas.jpg'"
+			fi
+			### fork start ###
+			### fork end ###
 		fi
 	fi
 	export MB_GNOME_PICTURE_URI MB_GNOME_PICTURE_OPTIONS
 
-	if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
-		if [ "$MB_HOSTNAME" == "Castor" -a "$MB_MYSELF" == "true" ]; then
-			MB_XFCE_IMAGE_PATH=/usr/share/xfce4/backdrops/alone.jpg
+	if [ "$MB_MYSELF" == true ]; then
+		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
+			if [ "$MB_HOSTNAME" == "Castor" ]; then
+				MB_XFCE_IMAGE_PATH=/usr/share/xfce4/backdrops/alone.jpg
+			fi
 		fi
-	fi
-	if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
-		if [ "$MB_HOSTNAME" == "Hermes" -a "$MB_MYSELF" == "true" ]; then
-			MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/Thingvellir_by_pattersa.jpg
+		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
+			if [ "$MB_HOSTNAME" == "Hermes" ]; then
+				MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/Thingvellir_by_pattersa.jpg
+			fi
+			if [ "$MB_HOSTNAME" == "Castor" ]; then
+				MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/Savannah_Lilian_Blot_by_a_Blot_on_the_landscape.jpg
+			fi
+			### fork start ###
+			### fork end ###
 		fi
-		if [ "$MB_HOSTNAME" == "Castor" -a "$MB_MYSELF" == "true" ]; then
-			MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/Savannah_Lilian_Blot_by_a_Blot_on_the_landscape.jpg
-		fi
-	fi
-	if [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-jessie' ]; then
-		if [ "$MB_HOSTNAME" == "Hermes" -a "$MB_MYSELF" == "true" ]; then
-			MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/gnome/Dark_Ivy.jpg
-		fi
+		if [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-jessie' ]; then
+			if [ "$MB_HOSTNAME" == "Hermes" ]; then
+				MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/gnome/Dark_Ivy.jpg
+			fi
 
-		if [ "$MB_HOSTNAME" == "Castor" -a "$MB_MYSELF" == "true" ]; then
-			MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/gnome/Dark_Ivy.jpg
+			if [ "$MB_HOSTNAME" == "Castor" ]; then
+				MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/gnome/Dark_Ivy.jpg
+			fi
+			### fork start ###
+			### fork end ###
 		fi
 	fi
 	export MB_XFCE_IMAGE_PATH
 
-	if [ "$MB_HOSTNAME" == "Hermes" ]; then
-		MB_DPI=110
-	fi
-	if [ "$MB_HOSTNAME" == "Castor" ]; then
-		MB_DPI=90
-	fi
-	export MB_DPI
 
-
-	# Extend this script in your fork below this line
+	# You may also extend this script in your fork below this line
 
 fi
