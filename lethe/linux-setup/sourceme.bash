@@ -43,7 +43,7 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 	fi
 
 	MB_MYSELF=false
-	if [ "$MB_WHOAMI" == mihai ]; then
+	if [ "$MB_PRIVATE_COMP" == 1 -a "$MB_WHOAMI" == mihai ]; then
 		MB_MYSELF=true
 	fi
 	### fork MB_WHOAMI start ###
