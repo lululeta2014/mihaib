@@ -36,6 +36,15 @@
   </tr>
 
   <tr>
+    <td>Headers:</td>
+    <td>{{template "map-string-stringarray" .Header}}</td>
+  </tr>
+  <tr>
+    <td>Trailer:</td>
+    <td>{{template "map-string-stringarray" .Trailer}}</td>
+  </tr>
+
+  <tr>
     <td>Form:</td>
     <td>{{template "map-string-stringarray" .Form}}</td>
   </tr>
@@ -70,15 +79,6 @@
         <button type="submit">Submit (POST)</button>
       </form>
     </td>
-  </tr>
-
-  <tr>
-    <td>Headers:</td>
-    <td>{{template "map-string-stringarray" .Header}}</td>
-  </tr>
-  <tr>
-    <td>Trailer:</td>
-    <td>{{template "map-string-stringarray" .Trailer}}</td>
   </tr>
   </tbody>
 </table>
