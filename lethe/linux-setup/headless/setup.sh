@@ -140,9 +140,11 @@ if [ "$MB_LINK_DESKTOP" == true ]; then
 	fi
 fi
 
-if [ "$MB_PRIVATE_COMP" == 1 -a "$MB_MYSELF" == true ]; then
-	if [ ! -e ~/repos -a ! -L ~/repos ]; then
-		ln -s -T "$MB_REPOS_DIR" ~/repos
+if [ "$MB_MYSELF" == true ]; then
+	if [ "$MB_PRIVATE_COMP" == 1 ]; then
+		if [ ! -e ~/repos -a ! -L ~/repos ]; then
+			ln -s -T "$MB_REPOS_DIR" ~/repos
+		fi
 	fi
 	if [ ! -e ~/prg -a ! -L ~/prg ]; then
 		ln -s -T "$MB_PRG_DIR" ~/prg
