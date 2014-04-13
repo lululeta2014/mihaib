@@ -40,8 +40,36 @@
     <td>{{template "map-string-stringarray" .Form}}</td>
   </tr>
   <tr>
+    <td></td>
+    <td>
+      <form action="" method="get">
+        <label for="seat">Seat:</label>
+        <input type="text" id="seat" name="seat" value="7A"/>
+        <label for="flight1">Flight:</label>
+        <input type="text" id="flight1" name="flight" value="AB-1020"/>
+        <label for="flight2">Flight:</label>
+        <input type="text" id="flight2" name="flight" value="CD-3545"/>
+        <button type="submit">Submit (GET)</button>
+      </form>
+    </td>
+  </tr>
+  <tr>
     <td>POST Form:</td>
     <td>{{template "map-string-stringarray" .PostForm}}</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+      <form action="" method="post">
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" value="57"/>
+        <label for="item1">Item:</label>
+        <input type="text" id="item1" name="item" value="bread"/>
+        <label for="item2">Item:</label>
+        <input type="text" id="item2" name="item" value="milk"/>
+        <button type="submit">Submit (POST)</button>
+      </form>
+    </td>
   </tr>
 
   <tr>
