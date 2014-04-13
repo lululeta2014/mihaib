@@ -126,6 +126,9 @@ prefs_js_lines = [
 
         # Mozilla Firefox is slow to start… don't tell me again
         'user_pref("browser.slowStartup.notificationDisabled", true);',
+
+        # Hide the New Tab Page
+        'user_pref("browser.newtabpage.enabled", false);',
 ]
 
 # On a private computer, remember browsing and form&search histories
