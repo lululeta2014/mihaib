@@ -139,6 +139,17 @@ if private_computer:
         'user_pref("privacy.clearOnShutdown.history", false);',
     ])
 
+# putting this inside a function just so the variables are limited to its scope
+# instead of being global
+def setDpi():
+    dpi = os.getenv('MB_DPI')
+    if dpi:
+        dpi = int(dpi)
+        prefs_js_lines.append(
+            'user_pref("layout.css.devPixelsPerPx", "{:.4f}");'.format(dpi/96)
+        )
+setDpi()
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
