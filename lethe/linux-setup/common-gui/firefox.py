@@ -142,11 +142,15 @@ if private_computer:
 # putting this inside a function just so the variables are limited to its scope
 # instead of being global
 def setDpi():
-    dpi = os.getenv('MB_DPI')
+    """Set dpi config option only if dpi > standard 96"""
+    stdDpi, dpi = 96, os.getenv('MB_DPI')
     if dpi:
         dpi = int(dpi)
+        if dpi <= stdDpi:
+            return
         prefs_js_lines.append(
-            'user_pref("layout.css.devPixelsPerPx", "{:.4f}");'.format(dpi/96)
+            'user_pref("layout.css.devPixelsPerPx", "{:.4f}");'
+            .format(dpi/stdDpi)
         )
 setDpi()
 
