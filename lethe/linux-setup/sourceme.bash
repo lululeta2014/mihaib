@@ -113,73 +113,64 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 	if [ "$MB_MYSELF" == true ]; then
 		if [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-wheezy' ]; then
 			if [ $MB_PRIVATE_COMP == 1 ]; then
-				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-orange.jpg'"
-				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Terraform-orange.jpg
 			fi
 			### fork start ###
 			### fork end ###
 		fi
 		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
 			if [ $MB_PRIVATE_COMP == 1 ]; then
-				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-green.jpg'"
-				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Terraform-green.jpg
 			fi
 		fi
 		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.10' ]; then
 			if [ $MB_HOSTNAME == "Hermes" ]; then
-				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Waves.jpg'"
-				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Waves.jpg
 			fi
 		fi
 		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.04' ]; then
 			if [ $MB_HOSTNAME == "Hermes" ]; then
-				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/Winter_Fog_by_Daniel_Vesterskov.jpg'"
-				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/Winter_Fog_by_Daniel_Vesterskov.jpg
 			fi
 		fi
 		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
 			if [ $MB_HOSTNAME == "Hermes" ]; then
-				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/gnome/Terraform-green.jpg'"
-				#MB_GNOME_PICTURE_OPTIONS="'zoom'"
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Terraform-green.jpg
 			fi
 			if [ $MB_HOSTNAME == "Castor" ]; then
-				MB_GNOME_PICTURE_URI="'file:///usr/share/backgrounds/Taxus_baccata_by_baubusiukas.jpg'"
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/Taxus_baccata_by_baubusiukas.jpg
 			fi
 			### fork start ###
 			### fork end ###
 		fi
-	fi
-	export MB_GNOME_PICTURE_URI MB_GNOME_PICTURE_OPTIONS
-
-	if [ "$MB_MYSELF" == true ]; then
 		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
 			if [ "$MB_HOSTNAME" == "Castor" ]; then
-				MB_XFCE_IMAGE_PATH=/usr/share/xfce4/backdrops/alone.jpg
+				MB_WALLPAPER_FILE=/usr/share/xfce4/backdrops/alone.jpg
 			fi
 		fi
 		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
 			if [ "$MB_HOSTNAME" == "Hermes" ]; then
-				MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/Thingvellir_by_pattersa.jpg
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/Thingvellir_by_pattersa.jpg
 			fi
 			if [ "$MB_HOSTNAME" == "Castor" ]; then
-				MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/Savannah_Lilian_Blot_by_a_Blot_on_the_landscape.jpg
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/Savannah_Lilian_Blot_by_a_Blot_on_the_landscape.jpg
 			fi
 			### fork start ###
 			### fork end ###
 		fi
 		if [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-jessie' ]; then
 			if [ "$MB_HOSTNAME" == "Hermes" ]; then
-				MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/gnome/Dark_Ivy.jpg
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Dark_Ivy.jpg
 			fi
 
 			if [ "$MB_HOSTNAME" == "Castor" ]; then
-				MB_XFCE_IMAGE_PATH=/usr/share/backgrounds/gnome/Dark_Ivy.jpg
+				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Dark_Ivy.jpg
 			fi
 			### fork start ###
 			### fork end ###
 		fi
 	fi
-	export MB_XFCE_IMAGE_PATH
+	export MB_WALLPAPER_FILE
 
 
 	# You may also extend this script in your fork below this line

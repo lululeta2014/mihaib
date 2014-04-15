@@ -237,12 +237,6 @@ xfconf-query -c thunar-volman -p '/automount-drives/enabled' -t bool -s false -n
 xfconf-query -c thunar-volman -p '/autobrowse/enabled' -t bool -s true -n
 
 
-# Desktop background
-if [ -v MB_XFCE_IMAGE_PATH ]; then
-	xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/image-path -t string -s "$MB_XFCE_IMAGE_PATH" -n
-fi
-
-
 # Close laptop lid
 xfconf-query -c xfce4-power-manager \
 	-p /xfce4-power-manager/lid-action-on-ac -t uint -s 1 -n

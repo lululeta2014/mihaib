@@ -6,7 +6,6 @@ trap "echo $0 failed because a command in the script failed" ERR
 
 SCRIPT=`readlink -f "$0"`
 DIR=`dirname "$SCRIPT"`
-SCRIPTS_SRC=`dirname "$DIR"`/scripts
 
 source "$DIR/../sourceme.bash"
 

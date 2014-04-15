@@ -103,14 +103,6 @@ else
 fi
 gsettings set org.gnome.libgnomekbd.keyboard options "['grp\tgrp:shifts_toggle']"
 
-# desktop background
-if [ -v MB_GNOME_PICTURE_URI ]; then
-	gsettings set org.gnome.desktop.background picture-uri "$MB_GNOME_PICTURE_URI"
-fi
-if [ -v MB_GNOME_PICTURE_OPTIONS ]; then
-	gsettings set org.gnome.desktop.background picture-options "$MB_GNOME_PICTURE_OPTIONS"
-fi
-
 # screensaver
 gsettings set org.gnome.desktop.screensaver lock-enabled true
 gsettings set org.gnome.desktop.screensaver lock-delay 'uint32 0'

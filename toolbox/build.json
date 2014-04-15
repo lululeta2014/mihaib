@@ -17,6 +17,8 @@
         "pec": "PyEncConv/pyencconv.py",
         "jec": "JEncConv/jencconv.sh",
         "dl": "DiceLottery/dicelottery.sh",
+        "pick-random-file": "pick-random-file.py",
+        "chance-k-n": "chance-k-n.py",
 
         "noop": "noop.sh"
     },
