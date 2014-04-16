@@ -278,6 +278,34 @@ def hide_menu_bar(profile_dirname):
         doc.writexml(f)
 
 
+def hide_addon_bar(profile_dirname):
+    'Ctrl+Shift+/ in the Gmail profile prevents the WebDriver add-on bar.'
+
+    xmlfile = os.path.join(get_profile_path(profile_dirname), 'localstore.rdf')
+
+    doc = xml.dom.minidom.parse(xmlfile)
+    e = doc.documentElement
+
+    x = doc.createElement('RDF:Description')
+    x.setAttribute('RDF:about',
+            'chrome://browser/content/browser.xul#addon-bar')
+    x.setAttribute('collapsed', 'true')
+    e.appendChild(x)
+
+    for c in e.childNodes:
+        if c.nodeType == c.ELEMENT_NODE and c.tagName == 'RDF:Description':
+            if (c.getAttribute('RDF:about') ==
+                    'chrome://browser/content/browser.xul'):
+                x = doc.createElement('NC:persist')
+                x.setAttribute('RDF:resource',
+                        'chrome://browser/content/browser.xul#addon-bar')
+                c.appendChild(x)
+                break
+
+    with open(xmlfile, 'w', encoding='utf-8') as f:
+        doc.writexml(f)
+
+
 def get_adblock_plus_download_location():
     return os.path.join('/tmp', 'abp-' + os.getenv('MB_WHOAMI') + '.xpi')
 
@@ -363,6 +391,7 @@ if __name__ == '__main__':
         set_prefs(profile_path)
         set_window_size_and_position(profile_path)
         hide_menu_bar(profile_path)
+        hide_addon_bar(profile_path)
         if has_adblock_plus:
             install_adblock_plus(profile_path)
 
