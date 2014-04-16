@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 # The crontab entry looks like:
-# 30 * * * *	bash --login ~/.mb-tools/wallpaper/cron.sh /path/to/images 1 6 >/tmp/wallpaper-out 2>/tmp/wallpaper-err
+# */30 * * * *	bash --login ~/.mb-tools/wallpaper/cron.sh /path/to/images 1 6 >/tmp/out-wallpaper 2>/tmp/err-wallpaper
 
 SCRIPT=`readlink -f "$0"`
 DIR=`dirname "$SCRIPT"`

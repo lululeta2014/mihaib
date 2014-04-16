@@ -1,7 +1,8 @@
 Mihai's collection of tools and projects.
 Many of the nested subdirectories contain a tool or project.
-Below is an overview of the root structure followed by a short selection of
-items which may be of interest to a visitor.
+Below is an overview of the root structure and a short project selection.
+
+Originally at https://github.com/MihaiB/mihaib this may have forks & backups.
 
 toolbox	Useful tools and project examples which try to use good practices
 	for development and testing. See the project's README for how to build
