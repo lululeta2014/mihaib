@@ -79,9 +79,6 @@ if [ -e "$MB_KB_LAYOUT_PATH" ]; then
 	if [ "$MB_LSB_ID" == 'Debian' ]; then
 		gsettings set org.gnome.libgnomekbd.keyboard layouts \
 			"['mb', 'mb\tumlaut', 'us\taltgr-intl']"
-	elif [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
-		gsettings set org.gnome.libgnomekbd.keyboard layouts \
-			"['mb', 'mb\tumlaut', 'us\taltgr-intl']"
 	else
 		gsettings set org.gnome.desktop.input-sources sources \
 			"[('xkb', 'mb'), ('xkb', 'mb+umlaut'), ('xkb', 'us+intl')]"
@@ -91,17 +88,12 @@ else
 	if [ "$MB_LSB_ID" == 'Debian' ]; then
 		gsettings set org.gnome.libgnomekbd.keyboard layouts \
 			"['ro', 'us\taltgr-intl']"
-	elif [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
-		gsettings set org.gnome.libgnomekbd.keyboard layouts \
-			"['ro', 'us\taltgr-intl']"
 	else
 		gsettings set org.gnome.desktop.input-sources sources \
 			"[('xkb', 'ro'), ('xkb', 'us+intl')]"
 	fi
 fi
 if [ "$MB_LSB_ID" == 'Debian' ]; then
-	gsettings set org.gnome.libgnomekbd.keyboard options "['grp\tgrp:shifts_toggle']"
-elif [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
 	gsettings set org.gnome.libgnomekbd.keyboard options "['grp\tgrp:shifts_toggle']"
 else
 	gsettings set org.gnome.desktop.wm.keybindings switch-input-source "['<Shift>Shift_R']"
