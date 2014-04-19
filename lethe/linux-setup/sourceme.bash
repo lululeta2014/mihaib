@@ -118,12 +118,9 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 			### fork start ###
 			### fork end ###
 		fi
-		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
+		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-14.04' ]; then
 			if [ $MB_HOSTNAME == "Hermes" ]; then
 				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Terraform-green.jpg
-			fi
-			if [ $MB_HOSTNAME == "Castor" ]; then
-				MB_WALLPAPER_FILE=/usr/share/backgrounds/Taxus_baccata_by_baubusiukas.jpg
 			fi
 			### fork start ###
 			### fork end ###
