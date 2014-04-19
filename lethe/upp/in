@@ -682,6 +682,22 @@ set root=(hd1,6)
 multiboot /boot/grub/core.img
 }
 
+menuentry "ISO Ubuntu 14.04 Live" {
+set isofile="/isos/ubuntu-14.04-desktop-amd64.iso"
+loopback loop (hd0,2)$isofile
+# commenting quiet&splash options below
+linux (loop)/casper/vmlinuz.efi iso-scan/filename=$isofile file=/cdrom/preseed/ubuntu.seed boot=casper #quiet splash
+initrd (loop)/casper/initrd.lz
+}
+
+menuentry "ISO Ubuntu 14.04 Install" {
+set isofile="/isos/ubuntu-14.04-desktop-amd64.iso"
+loopback loop (hd0,2)$isofile
+# commenting quiet&splash options below
+linux (loop)/casper/vmlinuz.efi iso-scan/filename=$isofile file=/cdrom/preseed/ubuntu.seed boot=casper only-ubiquity #quiet splash
+initrd (loop)/casper/initrd.lz
+}
+
 menuentry "ISO Ubuntu 13.10 Live" {
 set isofile="/isos/ubuntu-13.10-desktop-amd64.iso"
 loopback loop (hd0,2)$isofile
