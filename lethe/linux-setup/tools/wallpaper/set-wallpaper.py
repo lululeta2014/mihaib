@@ -18,6 +18,19 @@ def parseArgs():
     args.image = os.path.abspath(args.image)
     return args
 
+def getLsbInfo():
+    '''Returns ID, release, codename from lsb_release.'''
+    def getInfo(s):
+        i = s.index(':')
+        return s[i+1:]
+    result = []
+    for arg in ['-i', '-r', '-c']:
+        line = (subprocess.check_output(['lsb_release', arg])
+                .decode('utf-8').strip())
+        result.append(getInfo(line))
+    return result
+lsb_id, lsb_rel, lsb_cn = getLsbInfo()
+
 xfceResizeDict = {
     'scaled': '4',
     'zoomed': '5',
@@ -31,24 +44,44 @@ gnomeResizeDict = {
 }
 
 def setXfce(args):
-    subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
-        '-p', '/backdrop/screen0/monitor0/image-path', '-t', 'string',
-        '-s', args.image, '-n'])
-    if args.resize:
+    if (lsb_id == 'Debian' or (lsb_id + '-' + lsb_rel) == 'Ubuntu-13.10'):
         subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
-            '-p', '/backdrop/screen0/monitor0/image-style', '-t', 'int',
-            '-s', xfceResizeDict[args.resize], '-n'])
-    if args.black_bg:
-        # solid color
+            '-p', '/backdrop/screen0/monitor0/image-path', '-t', 'string',
+            '-s', args.image, '-n'])
+        if args.resize:
+            subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
+                '-p', '/backdrop/screen0/monitor0/image-style', '-t', 'int',
+                '-s', xfceResizeDict[args.resize], '-n'])
+        if args.black_bg:
+            # solid color
+            subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
+                '-p', '/backdrop/screen0/monitor0/color-style', '-t', 'int',
+                '-s', '0', '-n'])
+            subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
+                '-p', '/backdrop/screen0/monitor0/color1', '-n',
+                '-t', 'uint', '-s', '0',
+                '-t', 'uint', '-s', '0',
+                '-t', 'uint', '-s', '0',
+                '-t', 'uint', '-s', '65535'])
+    else:
         subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
-            '-p', '/backdrop/screen0/monitor0/color-style', '-t', 'int',
-            '-s', '0', '-n'])
-        subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
-            '-p', '/backdrop/screen0/monitor0/color1', '-n',
-            '-t', 'uint', '-s', '0',
-            '-t', 'uint', '-s', '0',
-            '-t', 'uint', '-s', '0',
-            '-t', 'uint', '-s', '65535'])
+            '-p', '/backdrop/screen0/monitorLVDS/workspace0/last-image',
+            '-t', 'string', '-s', args.image, '-n'])
+        if args.resize:
+            subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
+                '-p', '/backdrop/screen0/monitorLVDS/workspace0/image-style',
+                '-t', 'int', '-s', xfceResizeDict[args.resize], '-n'])
+        if args.black_bg:
+            # solid color
+            subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
+                '-p', '/backdrop/screen0/monitorLVDS/workspace0/color-style',
+                '-t', 'int', '-s', '0', '-n'])
+            subprocess.check_call(['xfconf-query', '-c', 'xfce4-desktop',
+                '-p', '/backdrop/screen0/monitorLVDS/workspace0/color1', '-n',
+                '-t', 'uint', '-s', '0',
+                '-t', 'uint', '-s', '0',
+                '-t', 'uint', '-s', '0',
+                '-t', 'uint', '-s', '65535'])
 
 def setGnomeFallback(args):
     subprocess.check_call(['gsettings', 'set',
