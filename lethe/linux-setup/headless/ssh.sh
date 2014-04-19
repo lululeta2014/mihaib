@@ -9,7 +9,7 @@ DIR=`dirname "$SCRIPT"`
 
 source "$DIR/../sourceme.bash"
 
-if [ $MB_PRIVATE_COMP == 1 -a "$MB_MYSELF" == 'true' ]; then
+if [ "$MB_MYSELF" == 'true' ]; then
 	mkdir -p ~/.ssh
 	# don't fail if there are no keys
 	if [ -v MB_SSH_DIR ]; then
