@@ -67,7 +67,7 @@ public class ReverseMapping {
 	 * @param mapper
 	 *            the EventMapper to use
 	 * @throws IllegalArgumentException
-	 *             if solutionCount is < 1 or > {@link EventMapper#Q}
+	 *             if solutionCount is &lt; 1 or &gt; {@link EventMapper#Q}
 	 */
 	public ReverseMapping(Event destEvent, int solutionCount, EventMapper mapper)
 			throws IllegalArgumentException {

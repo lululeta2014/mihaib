@@ -40,6 +40,16 @@ public abstract class IndexGenerator {
 	/**
 	 * Caches the last returned instance and reuses it if the next call has the
 	 * same arguments.
+	 * 
+	 * @param inpSrcType
+	 *            –
+	 * @param itemCount
+	 *            –
+	 * @return –
+	 * @throws IllegalArgumentException
+	 *             –
+	 * @throws MalformedURLException
+	 *             –
 	 */
 	public static synchronized IndexGenerator getInstance(
 			InputSourceType inpSrcType, BigInteger itemCount)

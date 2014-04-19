@@ -29,7 +29,9 @@ import java.util.concurrent.ExecutionException;
  * <code>done()</code> method on the Event Dispatch Thread.
  * 
  * @param <T>
+ *            –
  * @param <V>
+ *            –
  */
 public interface ResultHandler<T, V> {
 	// TODO remove type parameter V

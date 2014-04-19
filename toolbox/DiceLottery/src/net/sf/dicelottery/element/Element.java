@@ -45,6 +45,7 @@ public class Element {
 	 * @param userRepres
 	 *            the user representation
 	 * @throws IllegalArgumentException
+	 *             –
 	 */
 	public Element(BigInteger index, String userRepres)
 			throws IllegalArgumentException {

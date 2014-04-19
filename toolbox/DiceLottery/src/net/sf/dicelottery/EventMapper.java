@@ -207,7 +207,7 @@ public class EventMapper {
 	 *            the zero-based aggregated index
 	 * @return an array of {@link #srcRepeats} computed source Events
 	 * @throws IllegalArgumentException
-	 *             if the specified parameter is >=
+	 *             if the specified parameter is ≥
 	 *             {@link #validAggregatedSrcEvents}
 	 */
 	public Event[] deAggregateSrcEvents(BigInteger aggregatedSrcEventIndex)
@@ -251,10 +251,10 @@ public class EventMapper {
 	 *            checks if the worker has been canceled – in which case the
 	 *            computation is aborted by throwing a CancellationException)
 	 * @return the computed Mapping
-	 * @throws IllegalArgumentException
-	 * @throws EOFException
-	 * @throws IOException
-	 * @throws CancellationException
+	 * @throws IllegalArgumentException –
+	 * @throws EOFException –
+	 * @throws IOException –
+	 * @throws CancellationException –
 	 */
 	public Mapping map(InputSourceType inpSrcType, Reader r,
 			Worker<Mapping, String> worker) throws IllegalArgumentException,
@@ -327,10 +327,10 @@ public class EventMapper {
 	 *            checks if the worker has been canceled – in which case the
 	 *            computation is aborted by throwing a CancellationException)
 	 * @return the computed ReverseMapping
-	 * @throws IllegalArgumentException
-	 * @throws EOFException
-	 * @throws IOException
-	 * @throws CancellationException
+	 * @throws IllegalArgumentException –
+	 * @throws EOFException –
+	 * @throws IOException –
+	 * @throws CancellationException –
 	 */
 	public ReverseMapping reverseMap(final InputSourceType inpSrcType,
 			final Reader r, final int solutionCount,

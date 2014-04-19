@@ -29,7 +29,9 @@ import java.util.List;
  * <code>InterimHandler</code> for processing the interim results.
  * 
  * @param <T>
+ *            –
  * @param <V>
+ *            –
  */
 // TODO remove type parameter T and use Worker<Object, V> ?
 public interface InterimHandler<T, V> {

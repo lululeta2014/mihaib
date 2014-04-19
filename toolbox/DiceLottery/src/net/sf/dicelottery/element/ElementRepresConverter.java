@@ -77,9 +77,13 @@ public class ElementRepresConverter {
 	 *            include whitespace). Ignored if <code>sepFile</code> is
 	 *            <code>null</code>.
 	 * @throws UnsupportedOperationException
+	 *             –
 	 * @throws FileNotFoundException
+	 *             –
 	 * @throws IOException
+	 *             –
 	 * @throws IllegalArgumentException
+	 *             –
 	 */
 	public ElementRepresConverter(final ElementRepresentation elemRepr,
 			final BigInteger nr, final String stringsFileName,
@@ -208,9 +212,13 @@ public class ElementRepresConverter {
 	 *            the Reader to read the Element's user representation from
 	 * @return the first Element read from the supplied Reader
 	 * @throws IllegalArgumentException
+	 *             –
 	 * @throws UnsupportedOperationException
+	 *             –
 	 * @throws EOFException
+	 *             –
 	 * @throws IOException
+	 *             –
 	 */
 	public Element readElement(Reader r) throws IllegalArgumentException,
 			UnsupportedOperationException, EOFException, IOException {
@@ -246,7 +254,9 @@ public class ElementRepresConverter {
 	 *            the desired element index
 	 * @return the Element with the specified index
 	 * @throws IllegalArgumentException
+	 *             –
 	 * @throws UnsupportedOperationException
+	 *             –
 	 */
 	public Element getElement(BigInteger elementIndex)
 			throws IllegalArgumentException, UnsupportedOperationException {

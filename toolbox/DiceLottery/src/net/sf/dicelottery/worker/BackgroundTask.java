@@ -26,8 +26,8 @@ package net.sf.dicelottery.worker;
  * to the calling Worker.
  * 
  * @param <T>
- *            the result type of this <code>BackgroundTask</code>'s <compute>
- *            method
+ *            the result type of this <code>BackgroundTask</code>'s
+ *            <code>compute</code> method
  * @param <V>
  *            the type used for intermediate results passed to the
  *            <code>Worker</code>'s <code>publish()</code> method
@@ -43,6 +43,7 @@ public interface BackgroundTask<T, V> {
 	 *            the computation, otherwise ignored
 	 * @return the computed value
 	 * @throws Exception
+	 *             –
 	 */
 	T compute(Worker<T, V> worker) throws Exception;
 
