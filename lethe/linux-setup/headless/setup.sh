@@ -203,3 +203,4 @@ fi
 "$DIR"/online-backup.sh
 "$DIR"/jfs.sh
 "$DIR/copy-tools.sh"
+"$DIR"/ibus-keyboard.sh

@@ -76,14 +76,37 @@ fi
 
 # keyboard layouts
 if [ -e "$MB_KB_LAYOUT_PATH" ]; then
-	gsettings set org.gnome.libgnomekbd.keyboard layouts \
-		"['mb', 'mb\tumlaut', 'us\taltgr-intl']"
+	if [ "$MB_LSB_ID" == 'Debian' ]; then
+		gsettings set org.gnome.libgnomekbd.keyboard layouts \
+			"['mb', 'mb\tumlaut', 'us\taltgr-intl']"
+	elif [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
+		gsettings set org.gnome.libgnomekbd.keyboard layouts \
+			"['mb', 'mb\tumlaut', 'us\taltgr-intl']"
+	else
+		gsettings set org.gnome.desktop.input-sources sources \
+			"[('xkb', 'mb'), ('xkb', 'mb+umlaut'), ('xkb', 'us+intl')]"
+	fi
 else
 	echo "$MB_KB_LAYOUT_PATH" missing
-	gsettings set org.gnome.libgnomekbd.keyboard layouts \
-		"['ro', 'us\taltgr-intl']"
+	if [ "$MB_LSB_ID" == 'Debian' ]; then
+		gsettings set org.gnome.libgnomekbd.keyboard layouts \
+			"['ro', 'us\taltgr-intl']"
+	elif [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
+		gsettings set org.gnome.libgnomekbd.keyboard layouts \
+			"['ro', 'us\taltgr-intl']"
+	else
+		gsettings set org.gnome.desktop.input-sources sources \
+			"[('xkb', 'ro'), ('xkb', 'us+intl')]"
+	fi
 fi
-gsettings set org.gnome.libgnomekbd.keyboard options "['grp\tgrp:shifts_toggle']"
+if [ "$MB_LSB_ID" == 'Debian' ]; then
+	gsettings set org.gnome.libgnomekbd.keyboard options "['grp\tgrp:shifts_toggle']"
+elif [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
+	gsettings set org.gnome.libgnomekbd.keyboard options "['grp\tgrp:shifts_toggle']"
+else
+	gsettings set org.gnome.desktop.wm.keybindings switch-input-source "['<Shift>Shift_R']"
+	gsettings set org.gnome.desktop.wm.keybindings switch-input-source-backward "['<Shift><Super>Shift_R']"
+fi
 
 # screensaver
 gsettings set org.gnome.desktop.screensaver lock-enabled true
@@ -288,6 +311,19 @@ dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cus
 dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/command "'$MB_TOOLS_DEST/toggle-bottom-gnome3-panel.sh'"
 dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/binding "'<Super>j'"
 
+# Currently, can't get custom keyboard shortcuts to work in Ubuntu 14.04.
+# But when we do:
+# In Ubuntu 14.04, Super+S opens the Applications menu. Disable it.
+if [ "$MB_LSB_ID" == 'Debian' ]; then
+	true
+elif [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
+	true
+else
+	true
+	# default is "['<Super>s', '<Alt>F1']"
+	#gsettings set org.gnome.desktop.wm.keybindings \
+		#panel-main-menu "['<Alt>F1']"
+fi
 custom_count="$((custom_count+1))"
 dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/name "'Sound Preferencees'"
 dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom"$custom_count"/command "'gnome-control-center sound'"

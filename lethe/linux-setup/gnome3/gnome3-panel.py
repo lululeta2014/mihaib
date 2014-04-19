@@ -220,7 +220,8 @@ def config_system_monitor(objname):
 
     if os.getenv('MB_LSB_ID') == 'Debian':
         pass
-    else:
+    elif (os.getenv('MB_LSB_ID') == 'Ubuntu'
+            and os.getenv('MB_LSB_REL') == '13.10'):
         items.update({
             # background colors
             'cpuload_color4': '#4E4E4E',
@@ -229,6 +230,8 @@ def config_system_monitor(objname):
             'swapload_color1': '#4E4E4E',
             'diskload_color2': '#4E4E4E',
             })
+    else:
+        pass
     gconf2_set_panel_obj(objname, items)
 
 

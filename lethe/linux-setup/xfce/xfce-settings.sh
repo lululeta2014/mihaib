@@ -256,3 +256,6 @@ xfconf-query -c xfce4-power-manager \
 
 # Notification settings
 xfconf-query -c xfce4-notifyd -p /expire-timeout -t int -s 5 -n
+
+
+"$DIR"/keyboard-layout.sh
