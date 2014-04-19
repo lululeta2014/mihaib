@@ -9,11 +9,6 @@ DIR=`dirname "$SCRIPT"`
 
 source "$DIR/../sourceme.bash"
 
-if [ "$MB_LSB_REL" == "12.04" -o "$MB_LSB_REL" == "12.10" ]; then
-	"$DIR"/old-chromium.sh --force
-	exit
-fi
-
 if [ "$MB_LSB_ID" == "Debian" ]; then
 	CHROMIUM_BIN='chromium'
 else

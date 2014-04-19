@@ -9,9 +9,7 @@ DIR=`dirname "$SCRIPT"`
 source "$DIR/../sourceme.bash"
 
 
-if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
-	TERM_CONFIG_DIR=~/.config/Terminal/terminalrc
-elif [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-wheezy' ]; then
+if [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-wheezy' ]; then
 	TERM_CONFIG_DIR=~/.config/Terminal/
 else
 	TERM_CONFIG_DIR=~/.config/xfce4/terminal/

@@ -143,11 +143,7 @@ xfconf-query -c xfwm4 -p '/general/wrap_layout' -t bool -s false
 xfconf-query -c xfwm4 -p '/general/wrap_windows' -t bool -s false
 xfconf-query -c xfwm4 -p '/general/workspace_count' -t int -s 4
 
-if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.04' -o \
-	"$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.10' -o \
-	"$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
-	xfconf-query -c xfwm4 -p '/general/theme' -t string -s "Default-4.8"	# default "Default"
-elif [ "$MB_LSB_ID" == 'Debian' ]; then
+if [ "$MB_LSB_ID" == 'Debian' ]; then
 	xfconf-query -c xfwm4 -p '/general/theme' -t string -s "Default-4.8"	# default "Default"
 else
 	xfconf-query -c xfwm4 -p '/general/theme' -t string -s "Default"	# default "Default"

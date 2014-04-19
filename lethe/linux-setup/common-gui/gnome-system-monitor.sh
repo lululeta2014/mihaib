@@ -19,6 +19,6 @@ if [ "$MB_LSB_ID" == 'Debian' ]; then
 		gsettings set org.gnome.gnome-system-monitor current-tab '"resources"'
 	fi
 else
-	# Ubuntu 13.10 gives an error (the key wants an int).
-	true
+	# Ubuntu 14.04 and 13.10 wants an int value for this key
+	gsettings set org.gnome.gnome-system-monitor current-tab 1
 fi

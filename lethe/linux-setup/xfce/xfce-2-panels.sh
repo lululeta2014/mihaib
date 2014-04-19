@@ -107,10 +107,7 @@ setup_launcher $i gnome-system-monitor.desktop
 i="$((i+1))"
 setup_launcher $i disk-usage-analyzer.desktop
 
-if [ "$MB_LSB_ID"'-'"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
-	i="$((i+1))"
-	setup_launcher $i disk-utility.desktop
-elif [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-wheezy' ]; then
+if [ "$MB_LSB_ID"-"$MB_LSB_CN" == 'Debian-wheezy' ]; then
 	i="$((i+1))"
 	setup_launcher $i disk-utility.desktop
 else

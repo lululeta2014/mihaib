@@ -118,21 +118,6 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 			### fork start ###
 			### fork end ###
 		fi
-		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
-			if [ $MB_PRIVATE_COMP == 1 ]; then
-				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Terraform-green.jpg
-			fi
-		fi
-		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.10' ]; then
-			if [ $MB_HOSTNAME == "Hermes" ]; then
-				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Waves.jpg
-			fi
-		fi
-		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.04' ]; then
-			if [ $MB_HOSTNAME == "Hermes" ]; then
-				MB_WALLPAPER_FILE=/usr/share/backgrounds/Winter_Fog_by_Daniel_Vesterskov.jpg
-			fi
-		fi
 		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
 			if [ $MB_HOSTNAME == "Hermes" ]; then
 				MB_WALLPAPER_FILE=/usr/share/backgrounds/gnome/Terraform-green.jpg
@@ -142,11 +127,6 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 			fi
 			### fork start ###
 			### fork end ###
-		fi
-		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-12.04' ]; then
-			if [ "$MB_HOSTNAME" == "Castor" ]; then
-				MB_WALLPAPER_FILE=/usr/share/xfce4/backdrops/alone.jpg
-			fi
 		fi
 		if [ "$MB_LSB_ID"-"$MB_LSB_REL" == 'Ubuntu-13.10' ]; then
 			if [ "$MB_HOSTNAME" == "Hermes" ]; then

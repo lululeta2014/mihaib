@@ -36,11 +36,7 @@ launchers_templ_map = {name: os.getenv(name) for name in
         ('MB_PRG_DIR', 'MB_BYHAND_PRG_DIR', 'MB_OPERA_REG_PROF_PATH')}
 
 # define top-panel and bottom-panel names
-if (os.getenv('MB_LSB_ID')+'-'+os.getenv('MB_LSB_REL') in
-        {'Ubuntu-13.04', 'Ubuntu-12.10', 'Ubuntu-12.04'}):
-    top_panel_name = 'top-panel'
-    bottom_panel_name = 'bottom-panel'
-elif os.getenv('MB_LSB_ID') == 'Debian' and os.getenv('MB_LSB_CN') == 'wheezy':
+if os.getenv('MB_LSB_ID') == 'Debian' and os.getenv('MB_LSB_CN') == 'wheezy':
     top_panel_name = 'top-panel'
     bottom_panel_name = 'bottom-panel'
 else:
@@ -56,10 +52,6 @@ def warn_if_unknown_obj_list():
         else:
             known = ['menu-bar-0', 'clock-0', 'notification-area-0',
                     'user-menu-0', 'window-list-0', 'workspace-switcher-0']
-    elif (os.getenv('MB_LSB_ID')+'-'+os.getenv('MB_LSB_REL') in
-            {'Ubuntu-13.04', 'Ubuntu-12.10', 'Ubuntu-12.04'}):
-        known = ['menu-bar', 'indicators', 'show-desktop', 'window-list',
-                'workspace-switcher']
     else:
         known = ['menu-bar-0', 'indicators-0', 'show-desktop-0',
                 'window-list-0', 'workspace-switcher-0']
@@ -174,9 +166,7 @@ def add_launchers(obj_list):
     n += 1
     make_launcher(obj_list, 'disk-usage-analyzer', n)
     n += 1
-    if (os.getenv('MB_LSB_ID')+'-'+os.getenv('MB_LSB_REL') == 'Ubuntu-12.04' or
-            os.getenv('MB_LSB_ID')+'-'+os.getenv('MB_LSB_CN')
-            == 'Debian-wheezy'):
+    if os.getenv('MB_LSB_ID')+'-'+os.getenv('MB_LSB_CN') == 'Debian-wheezy':
         make_launcher(obj_list, 'disk-utility', n)
         n += 1
     else:
@@ -191,8 +181,7 @@ def gconf2_set_panel_obj(objname, items):
 
 
 def config_clock(objname):
-    if (os.getenv('MB_LSB_ID')+'-'+os.getenv('MB_LSB_REL') == 'Ubuntu-12.04' or
-            os.getenv('MB_LSB_ID') == 'Debian'):
+    if os.getenv('MB_LSB_ID') == 'Debian':
         gconf2_set_panel_obj(objname, {
             'format': '24-hour',
             'temperature_unit': 'C',
@@ -229,8 +218,7 @@ def config_system_monitor(objname):
             'diskload_color0': '#24C600',
             }
 
-    if (os.getenv('MB_LSB_ID')+'-'+os.getenv('MB_LSB_REL') != 'Ubuntu-12.04' or
-            os.getenv('MB_LSB_ID') == 'Debian'):
+    if os.getenv('MB_LSB_ID') == 'Debian':
         pass
     else:
         items.update({
