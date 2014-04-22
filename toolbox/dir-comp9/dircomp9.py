@@ -11,6 +11,7 @@ if __name__ == '__main__':
     sys.path.append(pyPathDir)
 
 from toolbox import comp9
+from toolbox.util import printExit
 
 
 def parseArgs():
@@ -19,21 +20,29 @@ def parseArgs():
         such that sorting them lexicographically ascending
         arranges them in reverse chronological order''')
     p.add_argument('rootdir', help='Root of directory tree to process')
-    return p.parse_args()
+    p.add_argument('--start-at', default='α',
+            help='''where to start transposing, must be a single character;
+                use 10 unicode code points, starting with this one.
+                Default ‘%(default)s’.''')
+    args = p.parse_args()
+    if len(args.start_at) != 1:
+        printExit('Invalid --start-at ‘' + args.start_at +
+                '’, must be 1 character')
+    return args
 
 
-def processTree(root):
+def processTree(root, startAt):
     for name in os.listdir(root):
         path = os.path.join(root, name)
-        path = moveIfNeeded(path)
+        path = moveIfNeeded(path, startAt)
         if os.path.isdir(path):
-            processTree(path)
+            processTree(path, startAt)
 
 
-def moveIfNeeded(path):
+def moveIfNeeded(path, startAt):
     parent, name = os.path.split(path)
     if matchesPattern(name):
-        newPath = os.path.join(parent, getNewName(name))
+        newPath = os.path.join(parent, getNewName(name, startAt))
         if os.path.lexists(newPath):
             raise ValueError('While renaming ' + path + ': '
                     + newPath + ' already exists!')
@@ -48,7 +57,7 @@ def matchesPattern(name):
 pattern = re.compile('^[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}([^0-9]|$)')
 
 
-def getNewName(name):
+def getNewName(name, startAt):
     m = pattern.match(name)
     if not m:
         raise ValueError(name + ' doesn\'t match the required pattern')
@@ -61,7 +70,7 @@ def getNewName(name):
     for x in name[:end]:
         # convert only digits
         try:
-            result += comp9.num2chr(comp9.comp9(int(x)), 'α')
+            result += comp9.num2chr(comp9.comp9(int(x)), startAt)
         except ValueError:
             pass
     return result + '-' + name
@@ -69,4 +78,4 @@ def getNewName(name):
 
 if __name__ == '__main__':
     args = parseArgs()
-    processTree(args.rootdir)
+    processTree(args.rootdir, args.start_at)
