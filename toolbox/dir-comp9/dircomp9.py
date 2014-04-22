@@ -54,7 +54,7 @@ def moveIfNeeded(path, startAt):
 def matchesPattern(name):
     return True if pattern.match(name) else False
 
-pattern = re.compile('^[0-9]{4}\\.[0-9]{2}\\.[0-9]{2}([^0-9]|$)')
+pattern = re.compile('^[0-9]{4}\\.[0-9]{2}(\\.[0-9]{2})?(-|$)')
 
 
 def getNewName(name, startAt):
