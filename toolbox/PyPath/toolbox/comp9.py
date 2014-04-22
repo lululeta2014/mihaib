@@ -12,12 +12,10 @@ def comp9(x):
     raise ValueError(str(x) + ' must be int, ≥0 and ≤9')
 
 
-def num2alpha(x, lowerCase=False):
+def num2chr(x, startAt='A'):
     """
-    0→A, 1→B … 9→J, ValueError for any other x.
-
-    lowerCase changes the returned value from A…J to a…j.
+    0→A, 1→B … 9→J (if startAt unchanged), ValueError for any other x.
     """
     if type(x) == int and 0 <= x and x <= 9:
-        return chr(ord('a' if lowerCase else 'A') + x)
+        return chr(ord(startAt) + x)
     raise ValueError(str(x) + ' must be int, ≥0 and ≤9')

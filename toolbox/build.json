@@ -7,6 +7,7 @@
         "ft": "file-transfer/ft.sh",
         "sync-diff.py": "sync-diff.py",
         "dir-index": "dir-index.py",
+        "dir-comp9": "dir-comp9/dircomp9.py",
         "online-backup": "online-backup/online-backup.py",
         "golink": "golink.py",
         "gopath-destroy": "gopath-destroy.py",
@@ -35,6 +36,7 @@
         "simpleswing/build.sh",
         "JEncConv/build.sh",
         "DiceLottery/build.sh",
+        "dir-comp9/test.sh",
 
         "noop.sh"
     ]
