@@ -10,7 +10,9 @@ DIR=`dirname "$SCRIPT"`
 source "$DIR"/../sourceme.bash
 
 rm -rf ~/.mb-gmail
-if [ -v MB_BROWSER_GMAIL_USERS_FILE -a -e "$MB_BROWSER_GMAIL_USERS_FILE" ]; then
-	mkdir ~/.mb-gmail
-	cp "$MB_BROWSER_GMAIL_USERS_FILE" ~/.mb-gmail/users
+if [ -v MB_BROWSER_GMAIL_USERS_FILE ]; then
+	if [ -e "$MB_BROWSER_GMAIL_USERS_FILE" ]; then
+		mkdir ~/.mb-gmail
+		cp "$MB_BROWSER_GMAIL_USERS_FILE" ~/.mb-gmail/users
+	fi
 fi
