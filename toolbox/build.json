@@ -23,6 +23,7 @@
         "noop": "noop.sh"
     },
     "build": [
+        "PyPath/test.sh",
         "money-trail/build.sh",
         "checkgmail-gnome-keyring/build.sh",
         "file-transfer/build.sh",
