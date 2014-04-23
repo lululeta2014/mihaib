@@ -7,19 +7,28 @@
   </head>
 
   <body>
+    <h1>Browser length units</h1>
+    <p>
+      You may see elements on this page at a different size
+      than they are defined.
+      The <a href="http://www.w3.org/TR/CSS21/syndata.html#length-units">W3C
+        CSS specification</a> puts pixels and physical units (e.g. cm, inches)
+      in a fixed ratio of 96dpi.
+    </p>
+    <p>
+      If your display has a different DPI (e.g. 110) you can tell Firefox
+      about the ratio 110/96 ≈ 1.1458.
+      Type <code>about:config</code> in the address bar and set
+      <code>layout.css.devPixelsPerPx</code> to <code>1.1458</code>.
+    </p>
+
     <h1>Centimeters</h1>
     <p>This box is 10cm wide and 1cm tall.</p>
     <div class="black-border width-10cm height-1cm"></div>
 
     <h1>Pixels and DPI (dots per inch)</h1>
     <p>
-      The <a href="http://www.w3.org/TR/CSS21/syndata.html#length-units">W3C
-        CSS specification</a> puts pixels and physical units (e.g. cm, inches)
-      in a fixed ratio
-      “because too much existing content relies on the assumption of 96dpi”.
-    </p>
-    <p>
-      So the boxes below should have the same size.
+      The boxes below should have the same size.
       The first one is 3×0.5 inches, the second is 288×48 pixels.
     </p>
     <div class="black-border width-3in height-05in"></div>
