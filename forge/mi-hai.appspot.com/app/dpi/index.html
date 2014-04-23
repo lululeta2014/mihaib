@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Browser length units (cm, inches, pixels) and DPI test</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+
+  <body>
+    <h1>Centimeters</h1>
+    <p>This box is 10cm wide and 1cm tall.</p>
+    <div class="black-border width-10cm height-1cm"></div>
+
+    <h1>Pixels and DPI (dots per inch)</h1>
+    <p>
+      The <a href="http://www.w3.org/TR/CSS21/syndata.html#length-units">W3C
+        CSS specification</a> puts pixels and physical units (e.g. cm, inches)
+      in a fixed ratio
+      “because too much existing content relies on the assumption of 96dpi”.
+    </p>
+    <p>
+      So the boxes below should have the same size.
+      The first one is 3×0.5 inches, the second is 288×48 pixels.
+    </p>
+    <div class="black-border width-3in height-05in"></div>
+    <br>
+    <div class="black-border width-288px height-48px"></div>
+  </body>
+</html>

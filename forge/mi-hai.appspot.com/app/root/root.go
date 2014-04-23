@@ -62,6 +62,14 @@ func handler(w http.ResponseWriter, r *http.Request) *util.AppError {
 	and some minimal data about the server environment.
 	This is available to an AppEngine application when it serves you.`,
 		},
+		projectT{
+			"dpi/",
+			`Browser length units (cm, inches, pixels) and
+			DPI (dots per inch)`,
+			`Check how your browser displays length units
+		(centimeters, inches, pixels). The pixel size is linked to
+		real-world units by the W3C CSS specification.`,
+		},
 	}
 
 	rootData := &rootDataT{

@@ -1,0 +1,30 @@
+.black-border {
+	border: 1px solid black;
+}
+
+
+.width-10cm {
+	width: 10cm;
+}
+
+.height-1cm {
+	height: 1cm;
+}
+
+
+.width-3in {
+	width: 3in;
+}
+
+.height-05in {
+	height: 0.5in;
+}
+
+
+.width-288px {
+	width: 288px;
+}
+
+.height-48px {
+	height: 48px;
+}

@@ -20,3 +20,9 @@ handlers:
   script: _go_app
 - url: /headers
   static_dir: headers/static
+
+- url: /dpi/
+  static_files: dpi/index.html
+  upload: dpi/index\.html
+- url: /dpi
+  static_dir: dpi
