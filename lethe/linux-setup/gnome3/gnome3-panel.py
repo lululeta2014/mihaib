@@ -217,21 +217,6 @@ def config_system_monitor(objname):
             'view_diskload': True,
             'diskload_color0': '#24C600',
             }
-
-    if os.getenv('MB_LSB_ID') == 'Debian':
-        pass
-    elif (os.getenv('MB_LSB_ID') == 'Ubuntu'
-            and os.getenv('MB_LSB_REL') == '13.10'):
-        items.update({
-            # background colors
-            'cpuload_color4': '#4E4E4E',
-            'memload_color4': '#4E4E4E',
-            'netload2_color3': '#4E4E4E',
-            'swapload_color1': '#4E4E4E',
-            'diskload_color2': '#4E4E4E',
-            })
-    else:
-        pass
     gconf2_set_panel_obj(objname, items)
 
 
