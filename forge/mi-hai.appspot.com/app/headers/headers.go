@@ -7,6 +7,7 @@ import (
 	"github.com/MihaiB/mihaib/forge/mi-hai.appspot.com/app/util"
 	"html/template"
 	"net/http"
+	"strings"
 )
 
 var (
@@ -49,6 +50,7 @@ func newAppengineT(r *http.Request) (*appengineT, error) {
 	if err != nil {
 		return nil, err
 	}
+	serviceAccount = strings.Replace(serviceAccount, "@", " ", -1)
 
 	return &appengineT{
 		AppID:                  appengine.AppID(c),
