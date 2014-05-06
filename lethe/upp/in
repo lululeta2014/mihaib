@@ -802,15 +802,14 @@ If there's an old, leftover unencrypted swap partition, mark it as ‘not used�
 won't let you proceed if you have encrypted volumes & decrypted swap.
 When you finish the partitioning step confirm you want to proceed without swap.
 
+Treat the new unencrypted /boot partition normally.
+
 Ubuntu:
 In the graphical partitioner, for the / (root) partition select:
 Change…→physical volume for encryption
 After this, a new partition will appear at the top of the list under:
 /dev/mapper/sda999_crypt
 Set its filesystem and mount point (/) there.
-
-Treat the new unencrypted /boot partition normally,
-from its normal place in the list.
 
 Debian:
 In the partitioner, for the / (root) partition select:
@@ -821,16 +820,23 @@ to avoid waiting for a very long disk wiping.
 NOTE: If this is the first time you're installing an OS on this computer,
 also mark the shared partitions (/mnt/my-data, swap) the same way for
 encryption. See above for ‘shared partitions are encrypted only once’.
+Below we will format them (except swap), but not mount them.
+If this is not the first OS you're installing, only set /boot and / (root) and
+do nothing about other partitions. We'll decrypt and mount them after the
+installation has finished.
 
+Create the encrypted volumes:
 From above the list of partitions (scroll up) select the entry:
 Configure encrypted volumes
 Might ask to write existing partition changes to disk, confirm it.
-Select: Finish
+In the next dialog, Select: Finish
 You'll get one password dialog box for each volume you're encrypting.
 
 Now you're back to the partitioning tool and the newly encrypted volumes are
 at the top as /dev/mapper/sda999_crypt each with a partition under it.
-Set the filesystem and mountpoint here.
+Set the filesystem (for all partitions except swap) and the mountpoint (only
+for the / (root) partition) here.
+Make sure ‘swap’ is marked ‘Do not use this partition’.
 
 Mounting the shared partitions and swap:
 =======================================
@@ -1355,16 +1361,51 @@ There is a boot partition, the main partition, and a recovery partition.
 Disk Utility only shows the main partition. Resizing it will also move
 the recovery partition, such that free space will be at the end.
 
-Install rEFIt, reboot computer a few times (the boot menu won't show at first).
-rEFIt boot order:
-edit /efi/refit/refit.conf to uncomment ‘#legacyfirst’ and change timeout.
+Install rEFInd.
+Edit /efi/refind/refind.conf
+timeout 3
 
-If you try to boot Linux (or just GRUB on a dedicated partition), rEFIt says:
-‘No bootable device’.
-Go into the rEFIt Partitioning Tool and let it update the MBR.
-Since only 4 partitions fit into the MBR, it might be a good idea to have your
-GRUB partition after the first 3 Apple partitions (its boot, main, recovery).
+Boot the Ubuntu or Debian installation disc in EFI mode (e.g. make a bootable
+USB, hold Alt during boot, you'll see 1 or 2 USB entries, at least one will
+say ‘UFI Boot’).
+Prepare 3 partitions:
+/boot/efi, pre-formatted as FAT32, 100 MB
+/boot (you may omit this one if you're not using encryption), 200 MB
+/ (root)
 
+We're doing this because each os creates the /boot/efi/distribution-name
+directory, so several Debians or Ubuntus would clash.
+
+In the partitioner:
+sda1 → change to ‘Do not use this partition’
+/boot/efi → change to use as ‘EFI boot partition’
+If any other FAT32 partitions are marked as ‘EFI boot partition’, set them to
+‘Do not use’.
+
+If it asks you where to install the bootloader (e.g. Ubuntu does this) select
+the /boot partition (or the / (root) partition if there's no separate /boot).
+
+After the installation, rEFInd will detect the EFI bootloader.
+Of course you can instead write rEFInd menuentries by hand,
+with a custom title, pointing to these bootloaders.
+
+Why not to use the old BIOS method (& grub chainloading) or BIOS boot
+(e.g. from the USB stick entry which appears in the rEFInd menu):
+In May 2014 some Macs seem to have a bug if you use BIOS instead of EFI boot.
+Several Debian and Ubuntu versions boot fine as live CDs, but after installing
+them and booting from GRUB there's a blank screen. Removing ‘quiet splash’ from
+the grub entry shows they stop when detecting SMP. Putting ‘nr_cpus=1’ on that
+grub line solves the problem.
+
+If the Mac now boots directly into your new Linux installation instead of
+showing the rEFInd screen, there are 2 ways to get to rEFInd:
+1. Hold ‘Alt’ while starting up, and selecting the first entry ‘EFI boot’ shows
+rEFInd's menu.
+2. Use step 1. to go into Mac OS, then (re-)download rEFInd and install it
+(./install.sh). This is a supported way of upgrading it, and it overwrites
+your existing installation (but your existing config file isn't overwritten).
+
+≈≈≈ old notes start
 The Ubuntu 12.04.1 ISO gives a kernel panic: add the ‘noapic’ kernel option
 (by editing the GRUB menu entry each time you boot either the install CD
 or the new system).
@@ -1382,6 +1423,7 @@ It may also require linux-headers-generic.
 https://help.ubuntu.com/community/MacBook
 (e.g. https://help.ubuntu.com/community/MacBookPro6-2/Lucid)
 Has instructions for adding a repository and nvidia/pommed packages.
+≈≈≈ old notes end
 
 Fn key fix (F1-F12 without Fn) method 1 {
 In /etc/pommed.conf set fnmode = 2
@@ -1399,10 +1441,6 @@ https://help.ubuntu.com/community/AppleKeyboard
 
 gsettings set org.gnome.settings-daemon.peripherals.touchpad disable-while-typing true
 gsettings set org.gnome.settings-daemon.peripherals.touchpad scroll-method "'two-finger-scrolling'"
-
-# 113 / 96 = 1.177... but the UI will set it to one decimal
-# next time you use gnome-tweak-tool; just do it now.
-gsettings set org.gnome.desktop.interface text-scaling-factor 1.2
 ]
 
 
