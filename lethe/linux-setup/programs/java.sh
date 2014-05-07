@@ -11,8 +11,8 @@ source "$SCRIPT_DIR/../sourceme.bash"
 
 echo '--- Java'
 
-SRV_DIR=8-b132
-LATEST=jdk-8-linux-x64.tar.gz
+SRV_DIR=8u5-b13
+LATEST=jdk-8u5-linux-x64.tar.gz
 PATTERN='jdk-8*.tar.gz'
 download-kit \
 	--delete-pattern "$PATTERN" \

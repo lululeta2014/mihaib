@@ -1344,6 +1344,8 @@ the recovery partition, such that free space will be at the end.
 Install rEFInd.
 Edit /efi/refind/refind.conf
 timeout 3
+default_selection 2
+# see options for default_selection on rEFInd's website
 
 Boot the Ubuntu or Debian installation disc in EFI mode (e.g. make a bootable
 USB, hold Alt during boot, you'll see 1 or 2 USB entries, at least one will
