@@ -30,3 +30,5 @@ elif [ "$MB_WHOAMI"'@'"$MB_HOSTNAME" == 'mihai@Hermes' ]; then
 elif [ "$MB_PRIVATE_COMP" == "1" -a "$MB_MYSELF" == "true" ]; then
 	echo "Don't know git name and email for $MB_WHOAMI@$MB_HOSTNAME"
 fi
+
+# extend in your fork below this line
