@@ -795,6 +795,9 @@ Change…→physical volume for encryption
 After this, a new partition will appear at the top of the list under:
 /dev/mapper/sda999_crypt
 Set its filesystem and mount point (/) there.
+Re-check /dev/sda1 (and the /boot/efi of other OSes) and re-mark it as
+‘do not use this partition’. It auto-marks it again as ‘used as efi’ after
+the encryption step.
 
 Debian:
 In the partitioner, for the / (root) partition select:
@@ -823,7 +826,7 @@ at the top as /dev/mapper/sda999_crypt each with a partition under it.
 If you're installing as EFI, you must *again* check all the fat32 partitions
 (except your own /boot/efi) and mark them as ‘do not use this partition’
 even if you already did this before. After the ‘configure encrypted volumes’
-step (at least on Debian) they're auto-marked again for use.
+step they're auto-marked again for use.
 
 Set the filesystem (for all partitions except swap) and the mountpoint (only
 for the / (root) partition) here.
