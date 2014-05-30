@@ -819,6 +819,12 @@ You'll get one password dialog box for each volume you're encrypting.
 
 Now you're back to the partitioning tool and the newly encrypted volumes are
 at the top as /dev/mapper/sda999_crypt each with a partition under it.
+
+If you're installing as EFI, you must *again* check all the fat32 partitions
+(except your own /boot/efi) and mark them as ‘do not use this partition’
+even if you already did this before. After the ‘configure encrypted volumes’
+step (at least on Debian) they're auto-marked again for use.
+
 Set the filesystem (for all partitions except swap) and the mountpoint (only
 for the / (root) partition) here.
 Make sure ‘swap’ is marked ‘Do not use this partition’.
