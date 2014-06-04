@@ -24,4 +24,4 @@ def parseArgs():
 
 if __name__ == '__main__':
     args = parseArgs()
-    sys.exit(random.randrange(args.N) < args.K)
+    sys.exit(0 if random.randrange(args.N) < args.K else 1)
