@@ -6,4 +6,5 @@ trap "echo $0 failed because a command in the script failed" ERR
 
 
 gsettings set org.gnome.totem show-visualizations false
-gsettings set org.gnome.totem lock-screensaver-on-audio false
+# key missing in Debian Jessie
+#gsettings set org.gnome.totem lock-screensaver-on-audio false
