@@ -12,6 +12,9 @@ sys.path.append(util_dir)
 
 from util import gsettings_get, gsettings_set, toGvariant
 
+from util import check_sourceme_bash_or_exit
+check_sourceme_bash_or_exit(os.path.dirname(os.path.abspath(program_dir)))
+
 
 def setup_draw_spaces_plugin():
     plugins = ast.literal_eval(
@@ -22,8 +25,18 @@ def setup_draw_spaces_plugin():
         plugins.append(plgName)
         gsettings_set('org.gnome.gedit.plugins', 'active-plugins', plugins)
 
-    # untick View -> Show White Space
-    gsettings_set('org.gnome.gedit.plugins.drawspaces', 'enable', False)
+    if os.getenv('MB_LSB_ID') == 'Debian':
+        if os.getenv('MB_LSB_CN') == 'wheezy':
+            # untick View -> Show White Space
+            gsettings_set('org.gnome.gedit.plugins.drawspaces', 'enable', False)
+        else:
+            # draw spaces, but only if they are trailing
+            items = ['tab', 'space', 'trailing']
+            gsettings_set('org.gnome.gedit.plugins.drawspaces', 'draw-spaces',
+                    items)
+    else:
+        # untick View -> Show White Space
+        gsettings_set('org.gnome.gedit.plugins.drawspaces', 'enable', False)
 
 
 def setup_window_size():
