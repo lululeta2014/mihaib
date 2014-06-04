@@ -13,7 +13,10 @@ func delay(min, max int) {
 	time.Sleep(time.Duration(t) * time.Millisecond)
 }
 
-func pipe(r io.Reader, w io.Writer) {
+func pipe(r *net.TCPConn, w *net.TCPConn) {
+	// Calling CloseRead() and CloseWrite() no matter what keeps printing
+	// this error: ‘transport endpoint is not connected’.
+	// Instead, we'll conditionally close read/write.
 	var err error
 	defer func() {
 		if err != nil && err != io.EOF {
@@ -27,6 +30,16 @@ func pipe(r io.Reader, w io.Writer) {
 		var n int
 		n, err = r.Read(buf)
 		if n <= 0 {
+			if err != io.EOF {
+				err2 := r.CloseRead()
+				if err != nil {
+					err = err2
+				}
+			}
+			err2 := w.CloseWrite()
+			if err2 != nil && (err == nil || err == io.EOF) {
+				err = err2
+			}
 			return
 		}
 
@@ -38,12 +51,13 @@ func pipe(r io.Reader, w io.Writer) {
 
 		_, err = w.Write(buf[:n])
 		if err != nil {
+			r.CloseRead()
 			return
 		}
 	}
 }
 
-func handleSync(conn net.Conn) {
+func handleSync(conn *net.TCPConn) {
 	var err error
 	defer func() {
 		if err != nil {
@@ -51,23 +65,13 @@ func handleSync(conn net.Conn) {
 		}
 	}()
 
-	defer func() {
-		err2 := conn.Close()
-		if err == nil {
-			err = err2
-		}
-	}()
-
-	conn2, err := net.Dial("tcp", cmdline.caddr)
+	conn2, err := net.DialTCP("tcp", nil, cmdline.caddr)
 	if err != nil {
+		// The pipe() functions close both connections, but close conn
+		// here because something went wrong and we won't reach them.
+		conn.Close()
 		return
 	}
-	defer func() {
-		err2 := conn2.Close()
-		if err == nil {
-			err = err2
-		}
-	}()
 
 	if cmdline.maxPreDelay > 0 {
 		delay(cmdline.minPreDelay, cmdline.maxPreDelay)
@@ -86,6 +90,6 @@ func handleSync(conn net.Conn) {
 	<-ch
 }
 
-func handleAsync(conn net.Conn) {
+func handleAsync(conn *net.TCPConn) {
 	go handleSync(conn)
 }

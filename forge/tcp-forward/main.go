@@ -6,14 +6,14 @@ import (
 )
 
 func main() {
-	l, err := net.Listen("tcp", cmdline.laddr)
+	l, err := net.ListenTCP("tcp", cmdline.laddr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for {
-		var conn net.Conn
-		conn, err = l.Accept()
+		var conn *net.TCPConn
+		conn, err = l.AcceptTCP()
 		if err != nil {
 			log.Print(err)
 			continue
