@@ -73,9 +73,16 @@ toolbox/textproc/cmd/	Command-line tool making available the above Go
 	Some examples are simple text formatting and calculating frequencies
 	(most common characters or words, or groups of characters or words).
 
-forge/tcp-forward/	Program which listens on a local port and forwards
-	all TCP connections to a specific IP and port. It can also introduce
-	delays before and during the data transfer, to simulate a slow network.
+toolbox/tcp-forward/	Small server which listens for connections on a local
+	port and connects to a given IP:port everytime it receives a
+	connection, forwarding the data between these 2 connections. It can
+	also introduce delays before and during the data transfer.
+	Use it to simulate a slow network (e.g. point your browser to
+	localhost:9090 where this program listens and forwards to your
+	webserver at localhost:8080 while introducing delays) or to redirect a
+	program configured to talk with a specific host:port (e.g. listen on
+	localhost:27017 because a program is configured to use this address but
+	forward connections to some.mongodb.server:27017).
 
 forge/eclipse-test/	Automated runner for Eclipse JUnit run configurations.
 	Consists of 3 decoupled tools (a test runner, a webserver to examine

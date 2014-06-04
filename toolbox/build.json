@@ -20,6 +20,7 @@
         "dl": "DiceLottery/dicelottery.sh",
         "pick-random-file": "pick-random-file.py",
         "chance-k-n": "chance-k-n.py",
+        "tcp-forward": "tcp-forward/tcp-forward",
 
         "noop": "noop.sh"
     },
@@ -37,6 +38,7 @@
         "JEncConv/build.sh",
         "DiceLottery/build.sh",
         "dir-comp9/test.sh",
+        "tcp-forward/build.sh",
 
         "noop.sh"
     ]
