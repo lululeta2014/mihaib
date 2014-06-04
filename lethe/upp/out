@@ -7,7 +7,7 @@ indicator-messages indicator-me policykit-desktop-privileges apt-listchanges
 Packages to install:
 
 @
-synaptic python3-tk python3-keyring meld git-gui gitk checkgmail libextutils-pkgconfig-perl libgnome-keyring-dev libfile-sharedir-perl libpod-readme-perl libtest-pod-coverage-perl vlc unrar unace-nonfree p7zip p7zip-full perl-tk wine gimp inkscape imagemagick libgtk2.0-0:i386 kid3 gparted soundconverter gstreamer0.10-plugins-ugly gstreamer0.10-ffmpeg jack flac vorbis-tools rhythmbox conky numlockx gconf-editor alltray kdocker geany ttf-mscorefonts-installer libnotify-bin
+synaptic python3-tk python3-keyring meld git-gui gitk checkgmail libextutils-pkgconfig-perl libgnome-keyring-dev libfile-sharedir-perl libpod-readme-perl libtest-pod-coverage-perl vlc unrar unace-nonfree p7zip p7zip-full perl-tk wine gimp inkscape imagemagick libgtk2.0-0:i386 kid3 gparted soundconverter gstreamer0.10-plugins-ugly gstreamer0.10-ffmpeg jack flac vorbis-tools rhythmbox conky numlockx gconf-editor alltray kdocker geany uuid-runtime ttf-mscorefonts-installer libnotify-bin
 
 @audio@
 ardour timidity wildmidi alsaplayer-jack
@@ -166,6 +166,7 @@ xfwm4-themes
 	AdblockPlus
 	PEP8 linter
 	nginx
+	uuidgen
 -- sysadmin
 	Remove old kernels
 	GRUB2 Dedicated Partition
