@@ -97,3 +97,5 @@ Exec=$MB_TOOLS_DEST/conky.sh
 StartupNotify=false
 Hidden=false
 "
+
+# Extend this script in your fork below this line
