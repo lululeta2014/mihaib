@@ -22,7 +22,7 @@ def getLsbInfo():
     '''Returns ID, release, codename from lsb_release.'''
     def getInfo(s):
         i = s.index(':')
-        return s[i+1:]
+        return s[i+1:].strip()
     result = []
     for arg in ['-i', '-r', '-c']:
         line = (subprocess.check_output(['lsb_release', arg])
