@@ -28,31 +28,53 @@ type argsT struct {
 }
 
 func getCmdlineArgs() *argsT {
-	description := "Process text through successive transformations. " +
-		"The input is split into strings of arbitrary length " +
-		"called tokens. A filter consumes a token stream " +
-		"and produces a new token stream. The input token stream " +
-		"is passed through a sequence of filters and the output " +
-		"tokens of the last filter are concatenated and written to " +
-		"output. Filters which don't mention the token stream " +
-		"produce the same output string (after concatenating " +
-		"their output tokens) regardless of how their input string " +
-		"was split into tokens."
+	description := `Process text through successive transformations.
+
+	The input is split into strings of arbitrary length called tokens.
+	This stream of tokens is passed through a sequence of filters.
+	A filter consumes a token stream and produces a new token stream.
+	The output tokens of the last filter are concatenated
+	and written to output.
+
+	Filters which don't mention the input tokens in their description
+	produce the same output string
+	(after their output tokens are concatenated)
+	regardless of how their input string is split into tokens
+	(e.g. a filter which converts everything to lowercase
+	behaves this way by definition).`
 	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage: "+os.Args[0]+
 			" [options] [filters]")
 		flag.PrintDefaults()
 		fmt.Fprintln(os.Stderr)
-		fmt.Fprintln(os.Stderr, description)
-		fmt.Fprintln(os.Stderr, "A filter is: "+
-			"‘filterName[:opt1:opt2:…]’ where:")
-		fmt.Fprintln(os.Stderr,
-			"― you pass the first N options, N≥0")
-		fmt.Fprintln(os.Stderr, `― to include ‘:’ in an option `+
-			`value pass ‘\:’, to include ‘\’ pass ‘\\’. `+
-			`A ‘\’ not followed by one of these is illegal`)
 
-		fmt.Fprintln(os.Stderr)
+		{
+			logPar := textproc.NewLogicalParagraphs
+			brk := textproc.NewBreakLines
+			bytes, _ := ioutil.ReadAll(textproc.NewReader(
+				brk(logPar(textproc.NewTokenReader(
+					strings.NewReader(description))), 79)))
+			fmt.Fprintln(os.Stderr, string(bytes))
+		}
+
+		{
+			filterDef := `
+			A filter is: ‘filterName[:opt1:opt2:…]’ where:
+
+			― you pass the first N options, N≥0
+
+			― to include ‘:’ in an option value pass ‘\:’,
+			to include ‘\’ pass ‘\\’.
+			A ‘\’ not followed by one of these is illegal.
+			`
+			logPar := textproc.NewLogicalParagraphs
+			brk := textproc.NewBreakLines
+			bytes, _ := ioutil.ReadAll(textproc.NewReader(
+				brk(logPar(textproc.NewTokenReader(
+					strings.NewReader(filterDef))), 79)))
+			fmt.Fprintln(os.Stderr, string(bytes))
+		}
+
 		fmt.Fprintln(os.Stderr, "Filters:")
 		filterNames := make([]string, 0, len(filterCatalogue))
 		for name := range filterCatalogue {
