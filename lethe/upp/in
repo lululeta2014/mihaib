@@ -1668,6 +1668,38 @@ rm ~/.mysql_history
 ]
 
 
+PostgreSQL [
+? libreadline-dev
+To use with Django, also:
+? python-dev
+
+Maybe put its bin/ at the start of your $PATH because ‘pip install psycopg2’
+uses pg_config to find out your installed version of PostgreSQL,
+and you might already have a system-wide pg_config (e.g. on Debian Jessie).
+
+• Download the source code.
+./configure --prefix=…
+make
+make install
+
+• Create a DB Cluster:
+bin/initdb -D data-dir
+
+• Start server:
+bin/postgres -D data-dir
+
+• Stop server:
+bin/pg_ctl stop -D data-dir
+
+• Command-line client:
+bin/psql -l	# list dbs
+
+• Create and Drop a database:
+bin/createdb my-db
+bin/dropdb my-db
+]
+
+
 GlassFish [
 asadmin start-domain --verbose
 asadmin stop-domain

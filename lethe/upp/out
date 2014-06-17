@@ -64,7 +64,7 @@ xfce4 xfce4-goodies xfce4-power-manager-plugins scrot parole gtk3-engines-xfce c
 Optional packages:
 
 ?
-nvidia-detect idle3 sun-java6-jdk sun-java6-plugin sun-java6-fonts git-doc mozilla-plugin-vlc ttf-xfree86-nonfree xz-utils tkdiff ghc6 lm-sensors hddtemp xchat ttf-lyx libpcre3-dev libssl-dev winbind ttf-dejavu fonts-droid bison gawk mercurial libboost-dev flex bison compizconfig-settings-manager compiz-fusion-plugins-extra lsb-cxx cuetools shntool hplip
+nvidia-detect idle3 sun-java6-jdk sun-java6-plugin sun-java6-fonts git-doc mozilla-plugin-vlc ttf-xfree86-nonfree xz-utils tkdiff ghc6 lm-sensors hddtemp xchat ttf-lyx libpcre3-dev libssl-dev winbind ttf-dejavu fonts-droid bison gawk mercurial libboost-dev flex bison compizconfig-settings-manager compiz-fusion-plugins-extra lsb-cxx cuetools shntool hplip libreadline-dev python-dev
 
 ?debian-wheezy?
 ia32-libs-gtk
@@ -214,6 +214,7 @@ xfwm4-themes
 	VirtualBox
 	VMWare Player
 	MySQL
+	PostgreSQL
 	GlassFish
 	Apache & PHP
 	Phabricator
@@ -1641,6 +1642,38 @@ GRANT FILE
 
 § Delete input history
 rm ~/.mysql_history
+]
+
+
+PostgreSQL [
+? libreadline-dev
+To use with Django, also:
+? python-dev
+
+Maybe put its bin/ at the start of your $PATH because ‘pip install psycopg2’
+uses pg_config to find out your installed version of PostgreSQL,
+and you might already have a system-wide pg_config (e.g. on Debian Jessie).
+
+• Download the source code.
+./configure --prefix=…
+make
+make install
+
+• Create a DB Cluster:
+bin/initdb -D data-dir
+
+• Start server:
+bin/postgres -D data-dir
+
+• Stop server:
+bin/pg_ctl stop -D data-dir
+
+• Command-line client:
+bin/psql -l	# list dbs
+
+• Create and Drop a database:
+bin/createdb my-db
+bin/dropdb my-db
 ]
 
 
