@@ -15,4 +15,4 @@ else
 	CR_BIN=chromium-browser
 fi
 
-"$CR_BIN" --user-data-dir="$DIR"/`lsb_release -rs`-profile/
+"$CR_BIN" --user-data-dir="$DIR"/`lsb_release -cs`-profile/
