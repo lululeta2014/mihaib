@@ -836,3 +836,28 @@ func (r *tokenGroupFrequency) ReadToken() ([]rune, error) {
 	}
 	return r.r.ReadToken()
 }
+
+// Returns a new TokenReader which outputs one '\n'-terminated line for each
+// input rune, showing the rune, its unicode codepoint and its UTF-8 bytes.
+func NewRuneExplainer(r TokenReader) TokenReader {
+	return &runeExplainer{r: NewFixedTokenSize(r, 1)}
+}
+
+type runeExplainer struct {
+	r TokenReader
+}
+
+func (r *runeExplainer) ReadToken() (token []rune, err error) {
+	token, err = r.r.ReadToken()
+	if len(token) == 0 {
+		return nil, err
+	}
+
+	rn := token[0]
+	// Can't use fmt.Sprintf("%4q", myRune) because of bug:
+	// https://code.google.com/p/go/issues/detail?id=8275
+	// But we still want to print '\n' not "\n" – for no reason – so we'll
+	// pad with spaces afterwards.
+	quoted := fmt.Sprintf("%q", rn)
+	return []rune(fmt.Sprintf("%-4s %U  % x\n", quoted, rn, string(rn))), nil
+}

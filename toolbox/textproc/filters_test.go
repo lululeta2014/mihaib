@@ -419,3 +419,18 @@ func TestNewTokenGroupFrequency(t *testing.T) {
 `
 	chainS(t, in, want, getFixCons(1), getCons(1, -1))
 }
+
+func TestNewRuneExplainer(t *testing.T) {
+	cons := textproc.NewRuneExplainer
+	for in, want := range map[string]string {
+		"": "",
+		" ": "' '  U+0020  20\n",
+		"a": "'a'  U+0061  61\n",
+		"\n": "'\\n' U+000A  0a\n",
+		"€": "'€'  U+20AC  e2 82 ac\n",
+		"§≈": "'§'  U+00A7  c2 a7\n" + "'≈'  U+2248  e2 89 88\n",
+		"⌘": "'⌘'  U+2318  e2 8c 98\n",
+	} {
+		chainS(t, in, want, cons)
+	}
+}

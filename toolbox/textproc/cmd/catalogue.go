@@ -161,6 +161,12 @@ func makeCatalogue() map[string]filterData {
 		optionNames: []string{"groupSize", "toShow"},
 	}
 
+	c["cp"] = filterData{
+		absFact: absFactFromFact(textproc.NewRuneExplainer),
+		description: `Show unicode code point (cp) and UTF-8 bytes
+			for each codepoint in the input.`,
+	}
+
 	return c
 }
 
