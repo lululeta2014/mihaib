@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/../sourceme.bash"
 
 echo '--- texttest'
 
-LATEST=texttest-3.26-with-tests.zip
+LATEST=texttest-3.26.zip
 REL_DIR=3.26
 PATTERN=texttest-*.zip
 download-kit \
