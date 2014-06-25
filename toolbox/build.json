@@ -21,6 +21,7 @@
         "pick-random-file": "pick-random-file.py",
         "chance-k-n": "chance-k-n.py",
         "tcp-forward": "tcp-forward/tcp-forward",
+        "runes": "runes/runes.py",
 
         "noop": "noop.sh"
     },
@@ -39,6 +40,7 @@
         "DiceLottery/build.sh",
         "dir-comp9/test.sh",
         "tcp-forward/build.sh",
+        "runes/test.sh",
 
         "noop.sh"
     ]
