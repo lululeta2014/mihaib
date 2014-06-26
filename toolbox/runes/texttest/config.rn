@@ -1,11 +1,8 @@
 # Full path to the System Under Test (or Java Main Class name)
 executable:$TEXTTEST_ROOT/../runes.py
 
-# From looking at the texttest sources:
-# TextTest looks at the file extension to choose an interpreter (.jar, etc)
-# and chooses ‘python’ for ‘.py’. From looking at the sources, found we can
-# override it with this config option.
-interpreter:python3
+# See toolbox/no-interpreter for an explanation
+interpreter:no-interpreter
 
 # Naming scheme to use for files for stdin,stdout and stderr
 filename_convention_scheme:standard
