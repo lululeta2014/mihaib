@@ -183,6 +183,7 @@ xfwm4-themes
 	SSH Multiple keys
 	NTP
 	[Debian] NetworkManager change(edit) Wired Network, e.g. DNS
+	Disable IPv6
 -- other
 	[Debian] Gnome2 Remove icons from Desktop
 	[Gnome2] Add applets and launchers to panel from the command line
@@ -976,6 +977,12 @@ If you can't make changes to the Wired Network from NetworkManager,
 comment out its line from /etc/network/interfaces:
 iface eth0 inet dhcp
 Restart and now NetworkManager will let you edit it.
+]
+
+
+Disable IPv6 [
+Add ipv6.disable=1 to the kernel line (e.g. edit the boot like in the
+Debian installer).
 ]
 
 
