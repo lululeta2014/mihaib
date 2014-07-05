@@ -1,0 +1,3 @@
+A Chrome Extension adding a context menu item to Google Search by Image.
+
+Run ./generate-icons.py and the extension is ready in extension-root/.
