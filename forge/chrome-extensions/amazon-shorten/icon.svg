@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+  width="128" height="128">
+  <!-- 8px border; scale 8 → drawing area 14×14 -->
+  <g transform="scale(8) translate(1 1)">
+    <text y="10" dy="0 4"
+      style="font-size: 12px; font-weight: bold;"
+      fill="DarkOrange"
+    >az</text>
+  </g>
+</svg>
