@@ -9,7 +9,7 @@ SCRIPT_DIR=`dirname "$SCRIPT"`
 source "$SCRIPT_DIR/../sourceme.bash"
 
 
-echo '--- Vagrant'
+echo '--- vagrant'
 
 LATEST=vagrant_1.6.3_x86_64.deb
 PATTERN=vagrant_[0-9]*_x86_64.deb
