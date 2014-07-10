@@ -32,5 +32,6 @@ ar p "$MB_KITS_DIR"/$PATTERN data.tar.gz | tar xz
 # future versions putting more files in that dir, and thus in our PATH,
 # we'll make ./bin/ with one symlink to ./opt/vagrant/bin/vagrant and put ./bin
 # in our PATH. Both ways probably work fine.
+rm -rf usr/
 mkdir bin
 ln -s ../opt/vagrant/bin/vagrant bin/vagrant
