@@ -46,8 +46,8 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 	if [ "$MB_PRIVATE_COMP" == 1 -a "$MB_WHOAMI" == mihai ]; then
 		MB_MYSELF=true
 	fi
-	### fork MB_WHOAMI start ###
-	### fork MB_WHOAMI end ###
+	### fork MB_MYSELF start ###
+	### fork MB_MYSELF end ###
 	export MB_MYSELF
 
 	MB_LINK_DESKTOP="$MB_MYSELF"
@@ -67,10 +67,12 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 
 		MB_ONLINE_BACKUP_FILE=/mnt/haven/craft/misc/mb-online-backup.json
 		export MB_ONLINE_BACKUP_FILE
+
+		# Define MB_VBOX_VMS_DIR, MB_VAGRANT_HOME only for MB_MYSELF
 	fi
 
-	### fork SSH, Gmail, online backup start ###
-	### fork SSH, Gmail, online backup end ###
+	### fork SSH, Gmail, online backup, VBox, Vagrant start ###
+	### fork SSH, Gmail, online backup, VBox, Vagrant end ###
 
 	MB_BROWSER_ALT_PROFILE=lowmen
 	# don't conflict with the default user-wide ‘.opera’

@@ -29,3 +29,4 @@ which download-kit >/dev/null || "$SCRIPT_DIR"/bootstrap-toolbox.sh
 "$SCRIPT_DIR"/adobe-reader.sh
 "$SCRIPT_DIR"/texlive.sh
 "$SCRIPT_DIR"/node.sh
+"$SCRIPT_DIR"/vagrant.sh
