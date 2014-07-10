@@ -9,7 +9,7 @@ DIR=`dirname "$SCRIPT"`
 
 cd "$DIR"
 
-bower install polymer Polymer/polymer-elements Polymer/polymer-ui-elements
+bower install polymer Polymer/polymer
 #bower update
 
 npm install selenium-webdriver
