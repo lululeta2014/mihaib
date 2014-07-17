@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/MihaiB/mihaib/toolbox/gosqlite/sqlite"
+	"github.com/MihaiB/mihaib/toolbox/money-trail/sqlite"
 	"log"
 	"net/http"
 	"net/url"

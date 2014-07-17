@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/MihaiB/mihaib/toolbox/gosqlite/sqlite"
+	"github.com/MihaiB/mihaib/toolbox/money-trail/sqlite"
 	"net/http"
 )
 

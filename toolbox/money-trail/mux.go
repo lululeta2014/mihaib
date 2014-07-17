@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"github.com/MihaiB/mihaib/toolbox/gosqlite/sqlite"
+	"github.com/MihaiB/mihaib/toolbox/money-trail/sqlite"
 	"log"
 	"net/http"
 	"strings"
