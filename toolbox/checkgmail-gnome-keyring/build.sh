@@ -14,6 +14,11 @@ PATTERN=Passwd-Keyring-Gnome-*.tar.gz
 download-kit \
 	--file "$SCRIPT_DIR"/"$LATEST" \
 	--url http://search.cpan.org/CPAN/authors/id/M/ME/MEKK/"$LATEST" \
+	--delete-pattern "$PATTERN" \
+	|| \
+	download-kit \
+	--file "$SCRIPT_DIR"/"$LATEST" \
+	--url http://cpan.metacpan.org/authors/id/M/ME/MEKK/"$LATEST" \
 	--delete-pattern "$PATTERN"
 
 PERL_LIBS_DIR="$SCRIPT_DIR"/perl-libs
