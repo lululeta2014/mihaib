@@ -43,6 +43,7 @@
         "tcp-forward/build.sh",
         "no-interpreter/test.sh",
         "runes/test.sh",
+        "kvstore/memkv/test.sh",
 
         "noop.sh"
     ]
