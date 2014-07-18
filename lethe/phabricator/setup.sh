@@ -34,7 +34,7 @@ KITS_DIR="$SCRIPT_DIR"/kits
 #rm -rf "$KITS_DIR"
 mkdir -p "$KITS_DIR"
 
-HTTPD_LATEST=httpd-2.4.6.tar.bz2
+HTTPD_LATEST=httpd-2.4.9.tar.bz2
 HTTPD_PATTERN=httpd-*.tar.bz2
 HTTPD_SRC_DIR="$INSTALL_DIR"/httpd-src
 HTTPD_TARGET_DIR="$INSTALL_DIR"/httpd
@@ -43,7 +43,7 @@ download-kit \
 	--url http://archive.apache.org/dist/httpd/"$HTTPD_LATEST" \
 	--delete-pattern "$HTTPD_PATTERN"
 
-PHP_LATEST=php-5.5.4.tar.xz
+PHP_LATEST=php-5.5.14.tar.xz
 PHP_PATTERN=php-*.tar.xz
 PHP_SRC_DIR="$INSTALL_DIR"/php-src
 PHP_TARGET_DIR="$INSTALL_DIR"/php
@@ -54,7 +54,7 @@ download-kit \
 	--delete-pattern "$PHP_PATTERN"
 
 MYSQL_SRV_DIR=MySQL-5.6
-MYSQL_LATEST=mysql-5.6.14-linux-glibc2.5-x86_64.tar.gz
+MYSQL_LATEST=mysql-5.6.19-linux-glibc2.5-x86_64.tar.gz
 MYSQL_PATTERN=mysql-*-linux-glibc*-x86_64.tar.gz
 MYSQL_DIR="$INSTALL_DIR"/mysql
 download-kit \
