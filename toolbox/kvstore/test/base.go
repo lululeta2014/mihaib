@@ -8,6 +8,12 @@ import (
 )
 
 func TestKVStore(t *testing.T, s kvstore.KVStore) {
+	testBasicKVStore(t, s)
+	testPrefixStore(t, s)
+}
+
+// Test the basic KVStore methods, with nothing on top of it
+func testBasicKVStore(t *testing.T, s kvstore.KVStore) {
 	var (
 		err error
 		v   []rune
@@ -167,6 +173,35 @@ func TestKVStore(t *testing.T, s kvstore.KVStore) {
 	checkErr(kvstore.ErrNotFound)
 }
 
+// Make a PrefixStore on top of the basic store
+func testPrefixStore(t *testing.T, s kvstore.KVStore) {
+	for _, pref := range [][]rune{nil, []rune(""), []rune("!"),
+		[]rune("§Pref°")} {
+		prefS := kvstore.NewPrefixStore(s, pref)
+		testBasicKVStore(t, prefS)
+
+		for _, k := range [][]rune{nil, []rune(""), []rune("∞≈")} {
+			underlyingKey := append(pref, k...)
+			val := []rune("€¢")
+			err := prefS.Set(k, val)
+			if err != nil {
+				t.Error(err.Error())
+			}
+			got, err := s.Get(underlyingKey)
+			if err != nil {
+				t.Error(err.Error())
+			}
+			if string(got) != string(val) {
+				t.Errorf("Want %v got %v", got, val)
+			}
+			err = prefS.Delete(k)
+			if err != nil {
+				t.Error(err.Error())
+			}
+		}
+	}
+}
+
 // Test one or more transactional stores pointing to the same backing store.
 func TestTransStore(t *testing.T, stores ...kvstore.TransStore) {
 	if len(stores) < 1 {
@@ -287,7 +322,7 @@ func TestTransStore(t *testing.T, stores ...kvstore.TransStore) {
 		}
 		n := 0
 		for _ = range stores {
-			if <- ch {
+			if <-ch {
 				n++
 			}
 		}

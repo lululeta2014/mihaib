@@ -40,3 +40,28 @@ type TransStore interface {
 	Commit() error
 	Rollback() error
 }
+
+func NewPrefixStore(s KVStore, prefix []rune) KVStore {
+	return &prefixStore{s, append(prefix, []rune(nil)...)}
+}
+
+type prefixStore struct {
+	s      KVStore
+	prefix []rune
+}
+
+func (s *prefixStore) addPrefix(key []rune) []rune {
+	return append(s.prefix, key...)
+}
+
+func (s *prefixStore) Set(key, value []rune) error {
+	return s.s.Set(s.addPrefix(key), value)
+}
+
+func (s *prefixStore) Get(key []rune) (value []rune, err error) {
+	return s.s.Get(s.addPrefix(key))
+}
+
+func (s *prefixStore) Delete(key []rune) error {
+	return s.s.Delete(s.addPrefix(key))
+}
