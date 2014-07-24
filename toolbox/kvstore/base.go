@@ -20,9 +20,7 @@ type KVStore interface {
 }
 
 // A transactional key-value store. All operations between Begin() and Commit()
-// or Rollback() form a transaction. Any method call M() from KVStore, if
-// called outside of a Begin … Commit or Rollback sequence, forms a transaction
-// (i.e. M() is equivalent to Begin(); M(); Commit()).
+// or Rollback() form a transaction.
 //
 // Calling Begin() during a transaction returns ErrNestedTransaction.
 // Calling Commit() or Rollback() outside a transaction returns
@@ -35,8 +33,7 @@ type KVStore interface {
 // beginning of the transaction, while other databases return the value passed
 // to Set().
 // The operations will produce the expected result once the transaction is
-// committed, it's only the return values which are undefined in the situation
-// above.
+// committed, only the return values are undefined in the situation above.
 type TransStore interface {
 	KVStore
 	Begin() error
