@@ -6,6 +6,7 @@ trap "echo $0 failed because a command in the script failed" ERR
 
 SCRIPT=`readlink -f "$0"`
 DIR=`dirname "$SCRIPT"`
+source "$DIR/sourceme.bash"
 
 
 if [ -v MB_ALT_DPI ]; then
