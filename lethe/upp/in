@@ -1706,6 +1706,14 @@ bin/dropdb my-db
 ]
 
 
+RabbitMQ [
+? erlang
+
+rabbitmq-server start
+rabbitmqctl stop
+]
+
+
 GlassFish [
 asadmin start-domain --verbose
 asadmin stop-domain
