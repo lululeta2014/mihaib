@@ -30,3 +30,5 @@ which download-kit >/dev/null || "$SCRIPT_DIR"/bootstrap-toolbox.sh
 "$SCRIPT_DIR"/texlive.sh
 "$SCRIPT_DIR"/node.sh
 "$SCRIPT_DIR"/vagrant.sh
+
+# Extend this script in your fork below this line

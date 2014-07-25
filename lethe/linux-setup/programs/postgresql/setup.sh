@@ -10,6 +10,14 @@ source "$SCRIPT_DIR/../../sourceme.bash"
 
 
 echo '--- PostgreSQL'
+echo -n "Compile from sources install PostgreSQL? [y/N] "
+read OK
+if [ "$OK" == "y" -o "$OK" == "Y" ]; then
+	true
+else
+	echo "Canceled"
+	exit
+fi
 
 VERSION=9.3.5
 LATEST=postgresql-"$VERSION".tar.bz2
