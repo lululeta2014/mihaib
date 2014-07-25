@@ -63,6 +63,16 @@ download-kit \
 	--delete-pattern "$MYSQL_PATTERN"
 
 
+REPOS_DIR="$INSTALL_DIR"/repos
+echo -n "DELETE local repositories in $REPOS_DIR? [y/N] "
+read OK
+if [ "$OK" != y -a "$OK" != Y ]; then
+	exit 0
+fi
+rm -rf "$REPOS_DIR"
+mkdir "$REPOS_DIR"
+
+
 echo -n 'This will DELETE httpd, php and mysql. Continue? [y/N] '
 read OK
 if [ "$OK" != y -a "$OK" != Y ]; then
@@ -176,7 +186,8 @@ port		= 3306
 pid-file	= mysql.pid
 log-error	= mysql.err
 basedir		= $MYSQL_DIR
-datadir		= $MYSQL_DIR/data/"
+datadir		= $MYSQL_DIR/data/
+sql_mode        = STRICT_ALL_TABLES"
 (
 cd "$MYSQL_DIR"
 ./scripts/mysql_install_db --no-defaults --basedir=. --datadir=./data
@@ -264,9 +275,47 @@ git submodule update --init
 
 "$INSTALL_DIR"/mysql-up &
 sleep 5
-"$INSTALL_DIR"/run-with-php.sh "$INSTALL_DIR"/phabricator/bin/storage upgrade
+"$INSTALL_DIR"/run-with-php.sh "$INSTALL_DIR"/phabricator/bin/storage upgrade --force
 "$INSTALL_DIR"/mysql-down
 EOF
 chmod u+x phb-update
 
-echo "Running ./phb-update should do the DB initialization"
+echo "→ Initializing your DB"
+./phb-update
+
+
+echo "Solving initial ‘setup issues’"
+
+./up-phb
+
+echo "→ Setting your base-uri"
+./run-with-php.sh ./phabricator/bin/config set phabricator.base-uri "http://$SERVER_NAME:$SERVER_PORT/"
+
+echo "→ Setting repository.default-local-path"
+./run-with-php.sh ./phabricator/bin/config set repository.default-local-path "$REPOS_DIR"
+
+echo "→ Creating an admin account (user a/pass a)"
+echo 'Paste this:
+"""
+y
+a
+
+A
+a@example.com
+a
+
+y
+
+"""
+'
+./run-with-php.sh ./phabricator/bin/accountadmin
+
+./run-with-php.sh ./phabricator/bin/auth recover a
+echo "→ Go to the URL above, then to http://$SERVER_NAME:$SERVER_PORT/auth/config/new/"
+echo "and Add the Username/Password provider."
+echo -n "Hit ENTER when done "
+read OK
+
+./down-phb
+
+echo "✓ setup complete"
