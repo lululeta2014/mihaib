@@ -52,14 +52,14 @@ type prefixHelper struct {
 }
 
 func (p *prefixHelper) addPrefix(key []rune) []rune {
-	result := make([]rune, 0, len(p.prefix) + len(key))
+	result := make([]rune, 0, len(p.prefix)+len(key))
 	result = append(result, p.prefix...)
 	result = append(result, key...)
 	return result
 }
 
-// Create a new KVStore, backed by s, which prepends prefix to keys before
-// forwarding all operations to s.
+// Return a new KVStore which forwards all operation to s after prepending
+// prefix to keys.
 //
 // Can be used to create isolated namespaces if the prefix is not empty and the
 // user ensures collisions won't happen. E.g. prefix ‘ab’ and key ‘c’ collides
@@ -69,7 +69,7 @@ func NewPrefixStore(s KVStore, prefix []rune) KVStore {
 }
 
 type prefixStore struct {
-	s      KVStore
+	s KVStore
 	*prefixHelper
 }
 
