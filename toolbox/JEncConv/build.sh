@@ -20,10 +20,10 @@ cd "$SCRIPT_DIR"/tests
 # touch on both the ‘new’ files and the ‘.bak’ files, with different dates.
 # This problem in this case (cloning-moving-building) is hard to reproduce,
 # but has happened.
-touch -d yesterday \
+touch -d 'last month' \
 	Overwrite/ExistingBakFileForce/f2.bak \
 	Overwrite/ExistingBakFileForce/f4.bak
-touch \
+touch -d 'last week' \
 	Overwrite/ExistingBakFileForce/f2 \
 	Overwrite/ExistingBakFileForce/f4
 texttest.py -b arg_required_but_ignored
