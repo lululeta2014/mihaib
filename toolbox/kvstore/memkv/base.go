@@ -74,6 +74,10 @@ type transClientT struct {
 	deletedData   map[string]interface{}
 }
 
+func (c *transClientT) InTransaction() bool {
+	return c.inTransaction
+}
+
 func (c *transClientT) Begin() error {
 	if c.inTransaction {
 		return kvstore.ErrNestedTransaction
@@ -114,7 +118,7 @@ func (c *transClientT) Commit() error {
 }
 
 func (c *transClientT) Get(key []rune) (value []rune, err error) {
-	if !c.inTransaction {
+	if !c.InTransaction() {
 		c.Begin()
 		defer c.Commit()
 	}
@@ -122,7 +126,7 @@ func (c *transClientT) Get(key []rune) (value []rune, err error) {
 }
 
 func (c *transClientT) Set(key, value []rune) error {
-	if !c.inTransaction {
+	if !c.InTransaction() {
 		c.Begin()
 		defer c.Commit()
 	}
@@ -132,7 +136,7 @@ func (c *transClientT) Set(key, value []rune) error {
 }
 
 func (c *transClientT) Delete(key []rune) error {
-	if !c.inTransaction {
+	if !c.InTransaction() {
 		c.Begin()
 		defer c.Commit()
 	}

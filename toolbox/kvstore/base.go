@@ -24,7 +24,7 @@ type KVStore interface {
 //
 // Calling Begin() during a transaction returns ErrNestedTransaction.
 // Calling Commit() or Rollback() outside a transaction returns
-// ErrNoTransaction.
+// ErrNoTransaction. InTransaction() shows if a transaction is in progress.
 //
 // During a transaction, after calling Set() or Delete(), the return values
 // for subsequent Get() or Delete() calls with that same key are undefined.
@@ -39,6 +39,7 @@ type TransStore interface {
 	Begin() error
 	Commit() error
 	Rollback() error
+	InTransaction() bool
 }
 
 // Create a prefixHelper, used by the the two Prefix Stores.
