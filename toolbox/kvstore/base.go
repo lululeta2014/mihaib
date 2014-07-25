@@ -41,17 +41,36 @@ type TransStore interface {
 	Rollback() error
 }
 
+// Create a prefixHelper, used by the the two Prefix Stores.
+// Encapsulate the boilerplate slice copying.
+func newPrefixHelper(prefix []rune) *prefixHelper {
+	return &prefixHelper{append([]rune(nil), prefix...)}
+}
+
+type prefixHelper struct {
+	prefix []rune
+}
+
+func (p *prefixHelper) addPrefix(key []rune) []rune {
+	result := make([]rune, 0, len(p.prefix) + len(key))
+	result = append(result, p.prefix...)
+	result = append(result, key...)
+	return result
+}
+
+// Create a new KVStore, backed by s, which prepends prefix to keys before
+// forwarding all operations to s.
+//
+// Can be used to create isolated namespaces if the prefix is not empty and the
+// user ensures collisions won't happen. E.g. prefix ‘ab’ and key ‘c’ collides
+// with prefix ‘a’ and key ‘bc’.
 func NewPrefixStore(s KVStore, prefix []rune) KVStore {
-	return &prefixStore{s, append(prefix, []rune(nil)...)}
+	return &prefixStore{s, newPrefixHelper(prefix)}
 }
 
 type prefixStore struct {
 	s      KVStore
-	prefix []rune
-}
-
-func (s *prefixStore) addPrefix(key []rune) []rune {
-	return append(s.prefix, key...)
+	*prefixHelper
 }
 
 func (s *prefixStore) Set(key, value []rune) error {
@@ -64,4 +83,26 @@ func (s *prefixStore) Get(key []rune) (value []rune, err error) {
 
 func (s *prefixStore) Delete(key []rune) error {
 	return s.s.Delete(s.addPrefix(key))
+}
+
+// Like NewPrefixStore, but for a TransStore.
+func NewTransPrefixStore(s TransStore, prefix []rune) TransStore {
+	return &transPrefixStore{s, newPrefixHelper(prefix)}
+}
+
+type transPrefixStore struct {
+	TransStore
+	*prefixHelper
+}
+
+func (s *transPrefixStore) Set(key, value []rune) error {
+	return s.TransStore.Set(s.addPrefix(key), value)
+}
+
+func (s *transPrefixStore) Get(key []rune) (value []rune, err error) {
+	return s.TransStore.Get(s.addPrefix(key))
+}
+
+func (s *transPrefixStore) Delete(key []rune) error {
+	return s.TransStore.Delete(s.addPrefix(key))
 }
