@@ -8,6 +8,16 @@ SCRIPT=`readlink -f "$0"`
 DIR=`dirname "$SCRIPT"`
 
 
+if [ -v MB_ALT_DPI ]; then
+	echo -n "Set alternative ($MB_ALT_DPI) DPI ? [y/N] "
+	read OK
+	if [ "$OK" == "y" -o "$OK" == "Y" ]; then
+		MB_DPI="$MB_ALT_DPI"
+	fi
+	unset OK
+fi
+
+
 if [ "$DESKTOP_SESSION" == "gnome-fallback" ]; then
 	"$DIR"/gnome3/setup.sh
 elif [ "$DESKTOP_SESSION" == "xfce" ]; then

@@ -41,6 +41,10 @@ echo >>~/.profile "
 add_to_path_end /sbin	# useful on Debian, e.g. /sbin/ifconfig
 add_to_path_end $MB_PRG_DIR/chromedriver
 add_to_path_end $MB_PRG_DIR/texttest/source/bin
+# postgresql must be at start of path because some programs (e.g. psycopg2)
+# use pg_config to find out your installed version and you might already have
+# a system-wide one available.
+add_to_path_start $MB_PRG_DIR/postgresql/bin
 add_to_path_start $MB_PRG_DIR/vagrant/bin
 add_to_path_start $MB_PRG_DIR/node/bin
 add_to_path_start $MB_PRG_DIR/adobe-reader/Adobe/Reader9/bin

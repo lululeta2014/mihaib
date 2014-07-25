@@ -106,8 +106,8 @@ if [ ! -v MB_SOURCEME_BASH ]; then
 	elif [ "$MB_HOSTNAME" == "Castor" ]; then
 		MB_DPI=90
 	fi
-	### fork MB_DPI start ###
-	### fork MB_DPI end ###
+	### fork MB_DPI, MB_ALT_DPI start ###
+	### fork MB_DPI, MB_ALT_DPI end ###
 	export MB_DPI
 
 
